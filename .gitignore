@@ -47,3 +47,6 @@ Desktop.ini
 
 # PowerPoint temporary
 ~$*.ppt*
+
+#Jetbeans Folder
+.idea
