@@ -9,6 +9,8 @@ return array(
     'CreateAnswersTable' => $baseDir . '/database/migrations/2016_04_18_125157_create_answers_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreateQuestionsTable' => $baseDir . '/database/migrations/2016_04_18_124025_create_questions_table.php',
+    'CreatePhasesTable' => $baseDir . '/database/migrations/2016_04_18_125056_create_phases_table.php',
+    'CreateProjectsTable' => $baseDir . '/database/migrations/2016_04_18_122359_create_projects_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
