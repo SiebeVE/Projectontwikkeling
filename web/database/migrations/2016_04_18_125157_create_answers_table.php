@@ -21,11 +21,11 @@ class CreateAnswersTable extends Migration
 				->on('questions')
 				->onDelete('cascade')
 				->onUpdate('cascade');
-			
+
 			$table->integer('user_id')->unsigned();
 			$table->foreign('user_id')
 				->references('id')
-				->on('user')
+				->on('users')
 				->onDelete('cascade')
 				->onUpdate('cascade');
 

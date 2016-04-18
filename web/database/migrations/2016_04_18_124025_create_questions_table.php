@@ -16,11 +16,6 @@ class CreateQuestionsTable extends Migration
             $table->increments('id');
 
 			$table->integer('phase_id')->unsigned();
-			$table->foreign('phase_id')
-				->references('id')
-				->on('phases')
-				->onDelete('cascade')
-				->onUpdate('cascade');
 
 			$table->string('sort');
 			$table->string('question');
