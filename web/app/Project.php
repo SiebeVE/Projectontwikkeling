@@ -18,11 +18,11 @@ class Project extends Model
 
     public function users() {
 
-        $this->belongsTo('App\User');
+        return $this->belongsTo('App\User');
     }
 
     public function phases() {
 
-        $this->hasMany('App\Phase');
+        return $this->hasMany('App\Phase');
     }
 }

@@ -19,11 +19,11 @@ class Phase extends Model
 
     public function projects() {
 
-        $this->belongsTo('App\Project');
+        return $this->belongsTo('App\Project');
     }
 
     public function questions() {
 
-        $this->hasMany('App\Question');
+        return $this->hasMany('App\Question');
     }
 }
