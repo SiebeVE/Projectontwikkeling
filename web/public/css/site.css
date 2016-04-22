@@ -1,0 +1,47 @@
+.footer
+{
+	position: relative;
+	margin-top: 15px;
+	width: 100%;
+	height: 50px;
+	background-color: #F5F5F5;
+}
+
+
+form[name=create] label,
+form[name=create] b.control-label
+{
+	/*font-size: 1.5em;*/
+}
+
+#placeholder-picture
+{
+	width:100%;
+	height: 275px;
+	background-color: #3d3d3d;
+}
+
+form[name=create] textarea#description
+{
+	height: 12em;
+}
+
+form[name=create] #phases .phase:last-child
+{
+	margin-bottom: 15px;
+}
+form[name=create] #phases .phase:not(:last-child)
+{
+	padding-bottom: 30px;
+	border-bottom: 1px solid #EEEEEE;
+}
+
+form[name=create] #phases .phase:not(:first-of-type)
+{
+	padding-top: 30px;
+}
+
+form[name=create] #phases .row:not(:last-child)
+{
+	margin-bottom: 15px;
+}
