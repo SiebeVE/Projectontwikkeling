@@ -42,7 +42,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            
+
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="{{ url('/')}}./images/Tweekleurig_A-LOGO/sRGB/SVG/A_logo_RGB.svg"/>
@@ -53,7 +53,7 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/home') }}">Home</a>
-                    <li><a href="{{ url('/project/overzicht') }}">Projectbeheer</a></li>
+                    <li><a href="{{ url('/project/dashboard') }}">Projectbeheer</a></li>
                     <li><a href="{{ url('/info') }}">Info</a></li>
                     <li><a href="{{ url('/contact') }}">Contact</a></li>
                 </ul>
@@ -90,6 +90,7 @@
 <!-- JavaScripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="{{ url('/') }}./js/projectbeheer.js"></script>
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>
 </html>

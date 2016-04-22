@@ -27,4 +27,12 @@ class ProjectController extends Controller
 	{
 		return view('projects.make');
 	}
+
+	public function dashboard() {
+		return view('projects.dashboard');
+	}
+
+	public function edit() {
+		return view('projects.edit');
+	}
 }

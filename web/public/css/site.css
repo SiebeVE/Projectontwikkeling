@@ -45,3 +45,118 @@ form[name=create] #phases .row:not(:last-child)
 {
 	margin-bottom: 15px;
 }
+
+.panel-default>.panel-heading {
+	background-color: #CF0039;
+	color: white;
+}
+
+.panel-default {
+	border-color: #CF0039;
+}
+
+.dashboard-table tr:first-child:hover {
+	background-color: inherit;
+}
+
+/********************************************#94450B	NAV	*****************************/
+
+nav.navbar, footer.footer {
+	background-color:#CF0039;
+}
+
+nav .container .navbar-header {
+	height: 90px;
+}
+
+nav .container .navbar-header .navbar-brand img {
+	height: 90px;
+}
+
+nav .container .navbar-brand {
+	padding: 0;
+	height: 90px;
+}
+
+#app-navbar-collapse ul{
+	vertical-align: middle;
+	margin-top: 20px;
+
+}
+
+#app-navbar-collapse ul li a, p.text-muted {
+	color: white;
+}
+
+p.text-muted {
+	margin-top: 15px;
+}
+
+/********************************************************** DROPDOWN **********************/
+/**********************************************************http://cssdeck.com/labs/pure-css3-expand-collapse**/
+
+ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+.phase label{
+	border-radius: 5px;
+	padding: 3px;
+	padding-left: 25px;
+	color: white;
+	background-color:#CF0039;
+	width: 100%;
+	height: 40px;
+	font-size: 1.5em;
+}
+.phase li {
+
+	margin: 10px;
+	padding: 5px;
+}
+.phase input[type=checkbox] {
+	display: none;
+}
+.phase input[type=checkbox] ~ div.phase-edit {
+	max-height: 0;
+	max-width: 100%;
+	opacity: 0;
+	border-bottom: solid 1px #eee;
+	background-color: white;
+	overflow: hidden;
+	white-space:nowrap;
+	-webkit-transition:all 1s ease;
+	-moz-transition:all 1s ease;
+	-o-transition:all 1s ease;
+	transition:all 1s ease;
+
+}
+.phase input[type=checkbox]:checked ~ div.phase-edit {
+	max-height: 100%;
+	opacity: 1;
+}
+.phase input[type=checkbox] + label:before{
+	transform-origin:25% 50%;
+	border: 8px solid transparent;
+	border-width: 8px 12px;
+	border-left-color: white;
+	margin-left: -20px;
+	width: 0;
+	height: 0;
+	display: inline-block;
+	text-align: center;
+	content: '';
+	color: #AAAFAB;
+	-webkit-transition:all .5s ease;
+	-moz-transition:all .5s ease;
+	-o-transition:all .5s ease;
+	transition:all .5s ease;
+	position: absolute;
+	margin-top: 7px;
+}
+.phase input[type=checkbox]:checked + label:before {
+	transform: rotate(90deg);
+	/*margin-top: 6px;
+  margin-left: -25px;*/
+}
+

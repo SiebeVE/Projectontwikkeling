@@ -38,4 +38,8 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/home', 'HomeController@index');
 
 	Route::get('project/maken', 'ProjectController@make');
+
+    Route::get('project/dashboard', 'ProjectController@dashboard');
+
+    Route::get('project/edit', 'ProjectController@edit');
 });
