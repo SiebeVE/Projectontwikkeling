@@ -4,7 +4,7 @@
     <div class="container">
         <div class="col-md-12">
             <h1>Nieuw project aanmaken</h1>
-            <form name="create" action="POST">
+            <form name="create" action="POST" enctype='multipart/form-data'>
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="name">Project titel</label>
@@ -16,7 +16,16 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div id="placeholder-picture"></div>
+                    <div class="upload">
+                        <label class="label-control" for="image">Upload foto</label>
+                        <div id="imagePlaceholder">
+                            <img src="#" alt="Project afbeelding">
+                            <label for="image">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                            </label>
+                            <input type="file" name="image" id="image">
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-12" id="phases">
                     <hr>
