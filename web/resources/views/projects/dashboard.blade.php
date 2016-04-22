@@ -19,7 +19,7 @@
                     <td>01/02/2016</td>
                     <td>Denis</td>
                     <td>
-                        <a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a href="{{ url('/project/edit') }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                     </td>
                 </tr>
                 <tr>
@@ -28,7 +28,7 @@
                     <td>01/02/2016</td>
                     <td>Denis</td>
                     <td>
-                        <a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a href="{{ url('/project/edit') }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                     </td>
                 </tr>
                 <tr>
@@ -37,13 +37,13 @@
                     <td>01/02/2016</td>
                     <td>Denis</td>
                     <td>
-                        <a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a href="{{ url('/project/edit') }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                     </td>
                 </tr>
             </table>
 
             <div>
-                <button type="button" class="btn btn-primary">Creeër Project</button>
+                <a href="{{ url('project/maken') }}">Project aanmaken</a>
             </div>
         </div>
     </div>

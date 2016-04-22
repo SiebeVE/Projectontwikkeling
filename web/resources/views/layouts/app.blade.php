@@ -30,6 +30,8 @@
     </style>
 </head>
 <body id="app-layout">
+<div id="wrapper">
+<div id="content">
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container">
         <div class="navbar-header">
@@ -81,6 +83,8 @@
 </nav>
 
 @yield('content')
+</div>
+</div>
 
 <footer class="footer">
     <div class="container text-center">

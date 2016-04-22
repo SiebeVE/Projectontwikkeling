@@ -1,10 +1,27 @@
+html, body, #wrapper{
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body > #wrapper {
+	height: auto;
+	min-height: 100%;
+	font-family: Arial, serif;
+}
+#content {
+	padding-bottom: 7em;
+}
+
 .footer
 {
 	position: relative;
-	margin-top: 15px;
 	width: 100%;
-	height: 50px;
 	background-color: #F5F5F5;
+	clear: both;
+	z-index: 10;
+	height: 6em;
+	margin-top: -6em;
 }
 
 form[name=create] label,
@@ -126,28 +143,31 @@ p.text-muted {
 /********************************************************** DROPDOWN **********************/
 /**********************************************************http://cssdeck.com/labs/pure-css3-expand-collapse**/
 
-ul {
+.phase ul {
 	list-style-type: none;
 	padding-left: 0;
+	margin-top: 10px;
 }
-.phase label{
+
+.label-header{
 	border-radius: 5px;
-	padding: 3px;
+	padding: 5px;
 	padding-left: 25px;
 	color: white;
 	background-color:#CF0039;
 	width: 100%;
 	height: 40px;
 	font-size: 1.5em;
+	margin-top: 5px;
+	margin-botton: -7px;
 }
-.phase li {
-
-	margin: 10px;
-	padding: 5px;
+.phase li .label-header:hover {
+	background-color: #81001F;
 }
 .phase input[type=checkbox] {
 	display: none;
 }
+
 .phase input[type=checkbox] ~ div.phase-edit {
 	max-height: 0;
 	max-width: 100%;
@@ -163,7 +183,7 @@ ul {
 
 }
 .phase input[type=checkbox]:checked ~ div.phase-edit {
-	max-height: 100%;
+	max-height: 800px;
 	opacity: 1;
 }
 .phase input[type=checkbox] + label:before{
@@ -190,4 +210,27 @@ ul {
 	/*margin-top: 6px;
   margin-left: -25px;*/
 }
+
+.phase-edit .col-md-8, .phase-edit .col-md-4 {
+	margin-top:20px;
+	margin-bottom:15px;
+}
+
+.locatieplaceholder {
+	display: block;
+	width: 100%;
+	height: 18em;
+	border: 1px solid #CCCCCC;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	margin: 0 auto;
+	overflow: hidden;
+	position: relative;
+	cursor: move;
+	text-align: center;
+}
+
+/*********************************************************	FOOTER 	*********************/
+
 
