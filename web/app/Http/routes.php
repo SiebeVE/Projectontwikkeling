@@ -35,7 +35,7 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::auth();
 
-    Route::get('/home', 'HomeController@home');
+    Route::get('/home', 'HomeController@index');
 
 	Route::get('project/maken', 'ProjectController@make');
 });
