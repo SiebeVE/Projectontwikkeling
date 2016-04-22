@@ -4,7 +4,7 @@
     <div class="container">
         <div class="col-md-12">
             <h1>Nieuw project aanmaken</h1>
-            <form name="create" action="POST" enctype='multipart/form-data'>
+            <form name="create" method="POST" enctype='multipart/form-data'>
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="name">Project titel</label>
