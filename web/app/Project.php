@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     protected $fillable = [
-
-        'user_id',
         'name',
         'description',
-
+        'photo_left_offset',
+        'latitude',
+        'longitude'
     ];
 
     protected $dates = ['deleted_at'];

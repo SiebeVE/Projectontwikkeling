@@ -30,16 +30,21 @@
 |
 */
 
-Route::group(['middleware' => 'web'], function () {
-	Route::get('/', function(){return view('welcome');});
-
-    Route::auth();
-
-    Route::get('/home', 'HomeController@index');
-
-	Route::get('project/maken', 'ProjectController@make');
-
-    Route::get('project/dashboard', 'ProjectController@dashboard');
-
-    Route::get('project/edit', 'ProjectController@edit');
+//Route::group(['middleware' => 'web'], function () {
+//Don't put it in the middleware web, is automatically loaded aand when twice, it breaks the roors
+Route::get('/', function ()
+{
+	return view('welcome');
 });
+
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
+
+Route::get('project/maken', 'ProjectController@make');
+Route::post('project/maken', 'ProjectController@postMake');
+
+Route::get('project/dashboard', 'ProjectController@dashboard');
+
+Route::get('project/bewerk/{project}', 'ProjectController@edit');
+//});

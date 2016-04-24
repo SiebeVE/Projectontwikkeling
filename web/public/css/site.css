@@ -1,15 +1,19 @@
-html, body, #wrapper{
+html, body, #wrapper
+{
 	height: 100%;
 	margin: 0;
 	padding: 0;
 }
 
-body > #wrapper {
+body > #wrapper
+{
 	height: auto;
 	min-height: 100%;
 	font-family: Arial, serif;
 }
-#content {
+
+#content
+{
 	padding-bottom: 7em;
 }
 
@@ -94,100 +98,119 @@ form[name=create] #phases .row:not(:last-child)
 	margin-bottom: 15px;
 }
 
-.panel-default>.panel-heading {
+.panel-default > .panel-heading
+{
 	background-color: #CF0039;
 	color: white;
 }
 
-.panel-default {
+.panel-default
+{
 	border-color: #CF0039;
 }
 
-.dashboard-table tr:first-child:hover {
+.dashboard-table tr:first-child:hover
+{
 	background-color: inherit;
 }
 
 /********************************************#94450B	NAV	*****************************/
 
-nav.navbar, footer.footer {
-	background-color:#CF0039;
+nav.navbar, footer.footer
+{
+	background-color: #CF0039;
 }
 
-nav .container .navbar-header {
+nav .container .navbar-header
+{
 	height: 90px;
 }
 
-nav .container .navbar-header .navbar-brand img {
+nav .container .navbar-header .navbar-brand img
+{
 	height: 90px;
 }
 
-nav .container .navbar-brand {
+nav .container .navbar-brand
+{
 	padding: 0;
 	height: 90px;
 }
 
-#app-navbar-collapse ul{
+#app-navbar-collapse ul
+{
 	vertical-align: middle;
 	margin-top: 20px;
 
 }
 
-#app-navbar-collapse ul li a, p.text-muted {
+#app-navbar-collapse ul li a, p.text-muted
+{
 	color: white;
 }
 
-p.text-muted {
+p.text-muted
+{
 	margin-top: 15px;
 }
 
 /********************************************************** DROPDOWN **********************/
 /**********************************************************http://cssdeck.com/labs/pure-css3-expand-collapse**/
 
-.phase ul {
+.phase ul
+{
 	list-style-type: none;
 	padding-left: 0;
 	margin-top: 10px;
 }
 
-.label-header{
+.label-header
+{
 	border-radius: 5px;
-	padding: 5px;
-	padding-left: 25px;
+	padding: 5px 5px 5px 25px;
 	color: white;
-	background-color:#CF0039;
+	background-color: #CF0039;
 	width: 100%;
 	height: 40px;
 	font-size: 1.5em;
 	margin-top: 5px;
-	margin-botton: -7px;
 }
-.phase li .label-header:hover {
+
+.phase li .label-header:hover
+{
 	background-color: #81001F;
 }
-.phase input[type=checkbox] {
+
+.phase input[type=checkbox]
+{
 	display: none;
 }
 
-.phase input[type=checkbox] ~ div.phase-edit {
+.phase input[type=checkbox] ~ div.phase-edit
+{
 	max-height: 0;
 	max-width: 100%;
 	opacity: 0;
-	border-bottom: solid 1px #eee;
+	border-bottom: solid 1px #EEE;
 	background-color: white;
 	overflow: hidden;
-	white-space:nowrap;
-	-webkit-transition:all 1s ease;
-	-moz-transition:all 1s ease;
-	-o-transition:all 1s ease;
-	transition:all 1s ease;
+	white-space: nowrap;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	transition: all 1s ease;
 
 }
-.phase input[type=checkbox]:checked ~ div.phase-edit {
+
+.phase input[type=checkbox]:checked ~ div.phase-edit
+{
 	max-height: 800px;
 	opacity: 1;
 }
-.phase input[type=checkbox] + label:before{
-	transform-origin:25% 50%;
+
+.phase input[type=checkbox] + label:before
+{
+	transform-origin: 25% 50%;
 	border: 8px solid transparent;
 	border-width: 8px 12px;
 	border-left-color: white;
@@ -198,25 +221,29 @@ p.text-muted {
 	text-align: center;
 	content: '';
 	color: #AAAFAB;
-	-webkit-transition:all .5s ease;
-	-moz-transition:all .5s ease;
-	-o-transition:all .5s ease;
-	transition:all .5s ease;
+	-webkit-transition: all .5s ease;
+	-moz-transition: all .5s ease;
+	-o-transition: all .5s ease;
+	transition: all .5s ease;
 	position: absolute;
 	margin-top: 7px;
 }
-.phase input[type=checkbox]:checked + label:before {
+
+.phase input[type=checkbox]:checked + label:before
+{
 	transform: rotate(90deg);
 	/*margin-top: 6px;
   margin-left: -25px;*/
 }
 
-.phase-edit .col-md-8, .phase-edit .col-md-4 {
-	margin-top:20px;
-	margin-bottom:15px;
+.phase-edit .col-md-8, .phase-edit .col-md-4
+{
+	margin-top: 20px;
+	margin-bottom: 15px;
 }
 
-.locatieplaceholder {
+.locatieplaceholder
+{
 	display: block;
 	width: 100%;
 	height: 18em;
