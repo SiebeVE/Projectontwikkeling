@@ -32,7 +32,7 @@
                         <label class="label-control" for="image">Upload foto</label>
                         <div id="imagePlaceholder">
                             <img src="{{ old("hashImage") != "" ? url('/images/tempProject', old("hashImage")) : "" }}"
-                                 alt="Project afbeelding" style="left: {{ old("photoOffset") }};">
+                                 alt="Project afbeelding">
                             <label for="image">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </label>
