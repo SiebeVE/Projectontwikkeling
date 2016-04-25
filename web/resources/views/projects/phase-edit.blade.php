@@ -21,11 +21,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
-            <div class="locatieplaceholder">
-                <p>Locatieplaceholder</p>
-            </div>
-        </div>
         <div class="col-md-4">
             <div class="col-md-12">
                 <label class="control-label" for="startDate">Start datum</label>

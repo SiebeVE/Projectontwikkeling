@@ -27,6 +27,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-12">
+                    <div class="locatieplaceholder" id="map">
+                        <p>Locatieplaceholder</p>
+                    </div>
+                </div>
                 <div class="col-md-12" id="phases">
                     <hr>
                     <div class="phase">
