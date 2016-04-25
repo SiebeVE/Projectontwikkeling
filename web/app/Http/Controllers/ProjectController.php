@@ -6,6 +6,7 @@ use App\Project;
 use finfo;
 use Storage;
 use Illuminate\Http\Request;
+use App\User;
 
 use App\Http\Requests;
 
@@ -149,7 +150,9 @@ class ProjectController extends Controller
 	 */
 	public function dashboard()
 	{
-		return view('projects.dashboard');
+
+		$projects = Project::all();
+		return view('projects.dashboard', compact('projects'));
 	}
 
 	/**
@@ -161,6 +164,7 @@ class ProjectController extends Controller
 	 */
 	public function edit(Project $project)
 	{
-		return view('projects.edit');
+
+		return view('projects.edit', compact('project'));
 	}
 }

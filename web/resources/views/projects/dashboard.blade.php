@@ -13,33 +13,18 @@
                     <th>Gecreeërd door</th>
                     <th></th>
                 </tr>
-                <tr>
-                    <td>Groen</td>
-                    <td>01/01/2016</td>
-                    <td>01/02/2016</td>
-                    <td>Denis</td>
-                    <td>
-                        <a href="{{ url('/project/edit') }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Groen</td>
-                    <td>01/01/2016</td>
-                    <td>01/02/2016</td>
-                    <td>Denis</td>
-                    <td>
-                        <a href="{{ url('/project/edit') }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Groen</td>
-                    <td>01/01/2016</td>
-                    <td>01/02/2016</td>
-                    <td>Denis</td>
-                    <td>
-                        <a href="{{ url('/project/edit') }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                    </td>
-                </tr>
+
+                @foreach($projects as $project)
+                    <tr>
+                        <td>{{ $project->name }}</td>
+                        <td>01/01/2016</td>
+                        <td>01/02/2016</td>
+                        <td>{{ $project->created_by }}</td>
+                        <td>
+                            <a href="{{ url('/project/bewerk', $project->id) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        </td>
+                    </tr>
+                @endforeach
             </table>
 
             <div>
