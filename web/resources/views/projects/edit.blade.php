@@ -8,11 +8,11 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="name">Project titel</label>
-                        <input type="text" id="name" name="name" class="form-control input-lg">
+                        <input type="text" id="name" name="name" class="form-control input-lg" placeholder="{{ $project->name }}">
                     </div>
                     <div class="form-group">
                         <label for="description">Beschrijving</label>
-                        <textarea name="description" id="description" class="form-control" maxlength="600"></textarea>
+                        <textarea name="description" id="description" class="form-control" maxlength="600">{{ $project->description }}</textarea>
                     </div>
                 </div>
                 <div class="col-md-4">
