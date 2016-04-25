@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Phase extends Model
 {
     protected $fillable = [
-
-        'project_id',
         'name',
+        'description',
         'start',
         'end',
 

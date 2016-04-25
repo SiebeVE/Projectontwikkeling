@@ -16,14 +16,15 @@ jQuery.noConflict();
             var widthImage = $image[0].clientWidth;
             var widthPlace = document.getElementById("imagePlaceholder").clientWidth;
             var leftOfHolder = $("form[name=create] #imagePlaceholder").offset().left;
-            console.log(leftOfHolder);
+            // console.log(leftOfHolder);
             var containWidth = widthImage - widthPlace;
-            console.log(containWidth);
+            // console.log(containWidth);
             $image.draggable({
                 containment: [leftOfHolder - containWidth + 1, 0, leftOfHolder + 1, 0], //1 px border on each side
                 axis: "x",
                 scroll: false
             });
+            // console.log("done2");
         };
 
         /**
@@ -39,6 +40,7 @@ jQuery.noConflict();
                     $('#imagePlaceholder').find('img').attr('src', e.target.result);
                     // console.log("loaded");
                     makeImageDraggable(); //Loaded here because other the image isn't loaded when handling width
+                    // console.log("done1");
                 };
                 // console.log("added");
                 reader.readAsDataURL(input.files[0]);
@@ -56,16 +58,21 @@ jQuery.noConflict();
         {
             // Make the image visible and draggable when there is one
             makeImageDraggable();
+            // console.log("done");
             // Apply previous offset
             var previousOffset = $("#photoOffset").val();
             $("form[name=create] #imagePlaceholder img").css("left", previousOffset);
             // console.log(imageSrc);
         }
 
-        // When sumbiting the creat project form, get the offset of the picture and put it in the input field
+        // When submitting the create project form, get the offset of the picture and put it in the input field
         $("form[name=create]").submit(function(e){
             // Search the image and get the left offset
             var leftOffset = $(this).find("#imagePlaceholder img").css("left");
+            if(leftOffset == 'auto')
+            {
+                leftOffset = "0px";
+            }
             // Put the offset in the input field
             $(this).find("#photoOffset").val(leftOffset);
         });

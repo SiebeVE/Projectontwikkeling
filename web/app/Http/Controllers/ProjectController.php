@@ -47,6 +47,7 @@ class ProjectController extends Controller
 		$publicSaveFolder = '/images/project/head';
 		$finalSaveFolder = base_path('public' . $publicSaveFolder);
 
+		// Image handler, check if real image and upload to temp
 		if ($request->hasFile('image') && $request->file('image')->isValid())
 		{
 			$file = $request->file('image')->getRealPath();
@@ -70,7 +71,6 @@ class ProjectController extends Controller
 
 					$request->merge(array("hashImage" => $nameFile)); //Put hash in hidden input field
 					//$request->hashImage = $hashImage;
-					//dd($fileInfo);
 				}
 				else
 				{
@@ -89,32 +89,54 @@ class ProjectController extends Controller
 			// Check for project
 			'name'        => 'required',
 			'description' => 'required|string|max:600',];
+
+		// Phase validation handler, get all inputs of phase and put in validation array
+		//dd($request->numberOfPhases);
+		for ($curPhase = 1; $curPhase <= $request->numberOfPhases; $curPhase++)
+		{
+			// Make validation array
+			$toValidate['phaseName' . $curPhase] = 'required';
+			$toValidate['startDate' . $curPhase] = 'required|date';
+			$toValidate['phaseDescription' . $curPhase] = 'string|max:600';
+			$toValidate['endDate' . $curPhase] = 'required|date|after:' . $request->input('startDate' . $curPhase);
+		}
+		//dd($toValidate);
 		$this->validate($request, $toValidate);
 
-		if ($notAnImage)
+		if ($notAnImage || $request->hashImage == "")
 		{
 			// When the file has failed on mime or php getimagesize
-			return redirect("project/maken")->withErrors(["Het bestand is geen foto."])->withInput();
+			return redirect("project/maken")->withErrors(["U moet een foto toevoegen."])->withInput();
 		}
 
-		// All checks completed, move picture and rename and save in database
-		if ($request->hashImage != "")
+
+		// All checks completed
+		// Save in database
+		$project = $request->user()->projects()->create([
+			"name"              => $request->name,
+			"description"       => $request->description,
+			"photo_left_offset" => $request->photoOffset,
+			//"longitude" => $request->longitude,
+			//"latitude" => $request->latitude,
+		]);
+
+		// Move picture and rename and save path in database
+		$extension = substr($request->hashImage, strrpos($request->hashImage, '.') + 1);
+		$newImageName = "projectHead" . $project->id . "." . $extension;
+		rename($tempSaveFolder . "/" . $request->hashImage, $finalSaveFolder . "/" . $newImageName);
+
+		$project->photo_path = $publicSaveFolder . "/" . $newImageName;
+		$project->save();
+
+		// Phase database handler, save the phase data in the database
+		for ($curPhase = 1; $curPhase <= $request->numberOfPhases; $curPhase++)
 		{
-			// Save in database
-			$project = $request->user()->projects()->create([
-				"name" => $request->name,
-				"description" => $request->description,
-				"photo_left_offset" => $request->photoOffset,
-				//"longitude" => $request->longitude,
-				//"latitude" => $request->latitude,
+			$project->phases()->create([
+				"name"        => $request->input('phaseName' . $curPhase),
+				"description" => $request->input('phaseDescription' . $curPhase),
+				"start"       => $request->input('startDate' . $curPhase),
+				"end"         => $request->input('endDate' . $curPhase),
 			]);
-
-			$extension = substr($request->hashImage, strrpos($request->hashImage, '.') + 1);
-			$newImageName = "projectHead" . $project->id . "." . $extension;
-			rename($tempSaveFolder . "/" . $request->hashImage, $finalSaveFolder . "/" . $newImageName);
-
-			$project->photo_path = $publicSaveFolder."/".$newImageName;
-			$project->save();
 		}
 
 		dd("Toegevoegd!");
