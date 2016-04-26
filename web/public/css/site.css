@@ -277,6 +277,10 @@ p.text-muted
 	text-align: center;
 }
 
+#buttonbar {
+	margin-bottom: 0.5em;
+}
+
 /*********************************************************	FOOTER 	*********************/
 
 

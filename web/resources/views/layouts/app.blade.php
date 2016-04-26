@@ -98,29 +98,7 @@
 <script src="{{ url('/') }}/scripts/site.js"></script>
 <script src="{{ url('/') }}/js/projectbeheer.js"></script>
 <script>
-    var map;
-    var mapDiv = document.getElementById('map');
 
-    function initMap() {
-        map = new google.maps.Map(mapDiv, {
-            center: {lat: 51.21945, lng: 4.40246},
-            zoom: 12
-        });
-        google.maps.event.addListener(map, 'click', function(event) {
-            placeMarker(event.latLng);
-        });
-
-        function placeMarker(location) {
-            var marker = new google.maps.Marker({
-                position: location,
-                map: map,
-            });
-            var infowindow = new google.maps.InfoWindow({
-                content: 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng()
-            });
-            infowindow.open(map,marker);
-        }
-    }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&region=BE"
         async defer></script>

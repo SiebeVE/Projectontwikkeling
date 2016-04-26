@@ -4,7 +4,7 @@
     <div class="container">
         <div class="col-md-12">
             <h1>Projectnaam bewerken</h1>
-            <form method="POST" action="/project/bewerk/{{ $project->id }}" enctype='multipart/form-data'>
+            <form id="form" name="create" method="POST" action="/project/bewerk/{{ $project->id }}" enctype='multipart/form-data'>
                 {{ csrf_field() }}
                 {{ method_field('PATCH') }}
                 <div class="col-md-8">
@@ -33,8 +33,14 @@
                     </div>
                 </div>
                 <div class="col-md-12">
+                    <div id="buttonbar" class="mine pull-right">
+                        <button type="button" id="labels">verberg/toon labels</button>
+                        <button type="button" id="addMarker">marker toevoegen</button>
+                        <button type="button" id="removeMarker">marker verwijderen</button>
+                        <input id="nptsearch" type="text" placeholder="Antwerpen" />
+                    </div>
                     <div class="locatieplaceholder" id="map">
-                        <p>Locatieplaceholder</p>
+
                     </div>
                 </div>
                 <div class="col-md-12" id="phases">
