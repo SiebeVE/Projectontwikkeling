@@ -93,7 +93,7 @@ class ProjectController extends Controller
 
 		// Phase validation handler, get all inputs of phase and put in validation array
 		//dd($request->numberOfPhases);
-		for ($curPhase = 1; $curPhase <= $request->numberOfPhases; $curPhase++)
+		for ($curPhase = 1; $curPhase < $request->numberOfPhases; $curPhase++)
 		{
 			// Make validation array
 			$toValidate['phaseName-' . $curPhase] = 'required';
