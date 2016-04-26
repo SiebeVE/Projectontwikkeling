@@ -164,7 +164,32 @@ class ProjectController extends Controller
 	 */
 	public function edit(Project $project)
 	{
+		$phases = $project->phases;
+		return view('projects.edit', compact('project', 'phases'));
+	}
 
-		return view('projects.edit', compact('project'));
+	public function update(Request $request, Project $project) {
+
+
+		$project->update($request->all());
+		$phases = $project->phases;
+
+		foreach($phases as $phase ) {
+
+			$phase->update(
+				[
+					$phase->name = $request->input('phase_name' . $phase->id),
+					$phase->description = $request->input('phase_description' . $phase->id),
+					$phase->start = $request->input('phaseStartDate' . $phase->id),
+					$phase->end = $request->input('phaseEndDate' . $phase->id)
+				]
+			);
+
+		}
+
+
+		//dd($request->all());
+
+		return redirect('project/dashboard');
 	}
 }

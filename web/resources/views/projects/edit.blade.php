@@ -4,11 +4,13 @@
     <div class="container">
         <div class="col-md-12">
             <h1>Projectnaam bewerken</h1>
-            <form name="create" action="POST">
+            <form method="POST" action="/project/bewerk/{{ $project->id }}" enctype='multipart/form-data'>
+                {{ csrf_field() }}
+                {{ method_field('PATCH') }}
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="name">Project titel</label>
-                        <input type="text" id="name" name="name" class="form-control input-lg" placeholder="{{ $project->name }}">
+                        <input type="text" id="name" name="name" class="form-control input-lg" value="{{ $project->name }}">
                     </div>
                     <div class="form-group">
                         <label for="description">Beschrijving</label>
@@ -19,11 +21,14 @@
                     <div class="upload">
                         <label class="label-control" for="image">Upload foto</label>
                         <div id="imagePlaceholder">
-                            <img src="#" alt="Project afbeelding">
+                            <img src="{{ old("hashImage") != "" ? url('/images/tempProject', old("hashImage")) : "" }}"
+                                 alt="Project afbeelding">
                             <label for="image">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </label>
                             <input type="file" name="image" id="image">
+                            <input type="hidden" name="hashImage" id="hashImage" value="{{ old("hashImage") }}">
+                            <input type="hidden" name="photoOffset" id="photoOffset" value="{{ old("photoOffset") }}">
                         </div>
                     </div>
                 </div>
@@ -36,12 +41,14 @@
                     <hr>
                     <div class="phase">
                                 <ul>
+                                    @foreach($phases as $phase)
                                     <li>
-                                        <input type="checkbox" id="cb2"/>
-                                        <label for="cb2" class="label-header">Fase 1</label>
-                                        @include('projects/phase-edit')
+                                        <input type="checkbox" id="cb{{ $phase->id }}"/>
+                                        <label for="cb{{ $phase->id }}" class="label-header">{{ $phase->name }}</label>
+                                        @include('projects/phase-edit', ['phase' => $phase])
                                     </li>
-                                    <li>
+                                    @endforeach
+                                    {{--<li>
                                         <input type="checkbox" id="cb3"/>
                                         <label for="cb3" class="label-header">Fase 2</label>
                                         @include('projects/phase-edit')
@@ -50,12 +57,12 @@
                                         <input type="checkbox" id="cb4"/>
                                         <label for="cb4" class="label-header">Fase 3</label>
                                         @include('projects/phase-edit')
-                                    </li>
+                                    </li>--}}
                                 </ul>
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <button class="btn btn-primary pull-right">Project Bewerken</button>
+                    <button type="submit" class="btn btn-primary pull-right">Project Bewerken</button>
                 </div>
             </form>
         </div>
