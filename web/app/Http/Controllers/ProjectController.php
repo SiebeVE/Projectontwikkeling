@@ -96,10 +96,10 @@ class ProjectController extends Controller
 		for ($curPhase = 1; $curPhase <= $request->numberOfPhases; $curPhase++)
 		{
 			// Make validation array
-			$toValidate['phaseName' . $curPhase] = 'required';
-			$toValidate['startDate' . $curPhase] = 'required|date';
-			$toValidate['phaseDescription' . $curPhase] = 'string|max:600';
-			$toValidate['endDate' . $curPhase] = 'required|date|after:' . $request->input('startDate' . $curPhase);
+			$toValidate['phaseName-' . $curPhase] = 'required';
+			$toValidate['startDate-' . $curPhase] = 'required|date';
+			$toValidate['phaseDescription-' . $curPhase] = 'string|max:600';
+			$toValidate['endDate-' . $curPhase] = 'required|date|after:' . $request->input('startDate-' . $curPhase);
 		}
 		//dd($toValidate);
 		$this->validate($request, $toValidate);
@@ -133,10 +133,10 @@ class ProjectController extends Controller
 		for ($curPhase = 1; $curPhase <= $request->numberOfPhases; $curPhase++)
 		{
 			$project->phases()->create([
-				"name"        => $request->input('phaseName' . $curPhase),
-				"description" => $request->input('phaseDescription' . $curPhase),
-				"start"       => $request->input('startDate' . $curPhase),
-				"end"         => $request->input('endDate' . $curPhase),
+				"name"        => $request->input('phaseName-' . $curPhase),
+				"description" => $request->input('phaseDescription-' . $curPhase),
+				"start"       => $request->input('startDate-' . $curPhase),
+				"end"         => $request->input('endDate-' . $curPhase),
 			]);
 		}
 

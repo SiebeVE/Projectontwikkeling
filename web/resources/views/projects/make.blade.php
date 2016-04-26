@@ -45,41 +45,43 @@
                 <div class="col-md-12" id="phases">
                     <hr>
                     <h2>Fases toevoegen</h2>
-                    {{--*/ old('numberOfPhases') != "" ? $numberOfPhases =  old('numberOfPhases') : $numberOfPhases = 1 /*--}}
+                    {{--*/ old('numberOfPhases') != "" ? $numberOfPhases =  old('numberOfPhases') : $numberOfPhases = 0 /*--}}
                     <input type="hidden" name="numberOfPhases" id="numberOfPhases"
                            value="{{$numberOfPhases}}">
-                    @for($phase = 1; $phase <= $numberOfPhases; $phase++)
+                    @for($phase = 0; $phase <= $numberOfPhases; $phase++)
                         <div class="phase">
                             <div class="row">
                                 <div class="col-md-9">
-                                    <label class="control-label" for="phaseName{{ $phase }}">Fase naam</label>
-                                    <input type="text" class="form-control" id="phaseName{{ $phase }}"
-                                           name="phaseName{{ $phase }}"
-                                           value="{{ old('phaseName'.$phase) }}">
+                                    <label class="control-label" for="phaseName-{{ $phase }}">Fase naam</label>
+                                    <input type="text" class="form-control phaseTrigger" id="phaseName-{{ $phase }}"
+                                           name="phaseName-{{ $phase }}"
+                                           value="{{ old('phaseName-'.$phase) }}">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label" for="startDate{{ $phase }}">Start datum</label>
-                                    <input type="date" class="form-control" id="startDate{{ $phase }}"
-                                           name="startDate{{ $phase }}" value="{{ old('startDate'.$phase) }}">
+                                    <label class="control-label" for="startDate-{{ $phase }}">Start datum</label>
+                                    <input type="date" class="form-control phaseTrigger" id="startDate-{{ $phase }}"
+                                           name="startDate-{{ $phase }}" value="{{ old('startDate-'.$phase) }}">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-9">
-                                    <label class="control-label" for="phaseDescription{{ $phase }}">Beschrijving</label>
-                                    <textarea class="form-control" id="phaseDescription{{ $phase }}"
-                                              name="phaseDescription{{ $phase }}">{{old('phaseDescription'.$phase)}}</textarea>
+                                    <label class="control-label"
+                                           for="phaseDescription-{{ $phase }}">Beschrijving</label>
+                                    <textarea class="form-control phaseTrigger" id="phaseDescription-{{ $phase }}"
+                                              name="phaseDescription-{{ $phase }}">{{old('phaseDescription-'.$phase)}}</textarea>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label" for="endDate{{ $phase }}">Eind datum</label>
-                                    <input type="date" class="form-control" id="endDate{{ $phase }}"
-                                           name="endDate{{ $phase }}" value="{{ old('endDate'.$phase) }}">
+                                    <label class="control-label" for="endDate-{{ $phase }}">Eind datum</label>
+                                    <input type="date" class="form-control phaseTrigger" id="endDate-{{ $phase }}"
+                                           name="endDate-{{ $phase }}" value="{{ old('endDate-'.$phase) }}">
                                 </div>
                             </div>
                         </div>
                     @endfor
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-success">Project aanmaken</button>
-                    </div>
+                </div>
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-success">Project aanmaken</button>
+                </div>
             </form>
         </div>
     </div>

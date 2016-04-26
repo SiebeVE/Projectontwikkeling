@@ -49,4 +49,9 @@ Route::get('project/dashboard', 'ProjectController@dashboard');
 Route::get('project/bewerk/{project}', 'ProjectController@edit');
 Route::patch('project/bewerk/{project}', 'ProjectController@update');
 
+
+Route::group(['middleware' => 'web'], function () {
+	Route::get('api/get', 'ApiController@get');
+	Route::post('api/get', 'ApiController@post');
+});
 //});
