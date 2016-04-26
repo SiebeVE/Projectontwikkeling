@@ -17,8 +17,20 @@
                 @foreach($projects as $project)
                     <tr>
                         <td>{{ $project->name }}</td>
-                        <td>01/01/2016</td>
-                        <td>01/02/2016</td>
+                        <td>
+                            @foreach($project->phases as $i => $phase)
+                                @if ($i == count($project->phases) - 1)
+                                    {{ $phase->start }}
+                                @endif
+                            @endforeach
+                        </td>
+                        <td>
+                            @foreach($project->phases as $i => $phase)
+                                @if ($i == count($project->phases) - 1)
+                                    {{ $phase->end }}
+                                @endif
+                            @endforeach
+                        </td>
                         <td>{{ $project->created_by }}</td>
                         <td>
                             <a href="{{ url('/project/bewerk', $project->id) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>

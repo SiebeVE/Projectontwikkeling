@@ -97,17 +97,7 @@
 <script src="{{ url('/') }}/scripts/jquery-ui.min.js"></script>
 <script src="{{ url('/') }}/scripts/site.js"></script>
 <script src="{{ url('/') }}/js/projectbeheer.js"></script>
-<script>
-//    function initMap() {
-//        var mapDiv = document.getElementById('map');
-//        var map = new google.maps.Map(mapDiv, {
-//            center: {lat: 51.21945, lng: 4.40246},
-//            zoom: 12
-//        });
-//    }
-</script>
-{{--<script src="https://maps.googleapis.com/maps/api/js?callback=initMap&region=BE"--}}
-        {{--async defer></script>--}}
+@yield('pageJs')
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>
 </html>

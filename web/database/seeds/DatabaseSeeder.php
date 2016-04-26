@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,7 +14,7 @@ class DatabaseSeeder extends Seeder
 
         public function run()
     {
-        DB::table('users')->insert([
+        /*DB::table('users')->insert([
             'name' => str_random(10),
             'email' => str_random(10).'@gmail.com',
             'password' => bcrypt('secret'),
@@ -42,6 +43,14 @@ class DatabaseSeeder extends Seeder
             'description' => 'test',
             'created_by' => str_random(10),
 
+        ]);*/
+
+        DB::table('phases')->insert([
+           'project_id' => 1,
+            'name' => 'fase 1.4',
+            'start' => date("2016-06-15 H:i:s"),
+            'end' => date("2016-06-18 H:i:s"),
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
     }
 }

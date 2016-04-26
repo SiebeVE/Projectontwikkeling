@@ -86,3 +86,7 @@
         </div>
     </div>
 @endsection
+
+@section('pageJs')
+    <script src="{{ url('/') }}/scripts/create.js"></script>
+@endsection
