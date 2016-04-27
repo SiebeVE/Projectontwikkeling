@@ -37,7 +37,8 @@
                         <button type="button" id="labels">verberg/toon labels</button>
                         <button type="button" id="addMarker">marker toevoegen</button>
                         <button type="button" id="removeMarker">marker verwijderen</button>
-                        <input id="nptsearch" type="text" placeholder="Antwerpen" />
+                        <button type="button" id="placeMarker">Position marker</button>
+                        <input id="place-input" type="text" placeholder="Antwerpen" />
                     </div>
                     <div class="locatieplaceholder" id="map">
 

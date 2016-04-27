@@ -35,6 +35,8 @@ function initMap() {
 
     var Antwerpen = new google.maps.LatLng(51.219448, 4.402464);
     IT = new google.maps.LatLng(42.745334, 12.738430);
+    var place;
+    var placecoords = new google.maps.LatLng(51.219448, 4.402464);;
 
     var noStreetNames = [{
         featureType: "road",
@@ -43,8 +45,6 @@ function initMap() {
             visibility: "off"
         }]
     }];
-
-
 
     hideLabels = new google.maps.StyledMapType(noStreetNames, {
         name: "hideLabels"
@@ -62,23 +62,31 @@ function initMap() {
 
     map.mapTypes.set('hide_street_names', hideLabels);
 
+    var input = document.getElementById('place-input');
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    var btnPlace = document.getElementById('placeMarker');
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(btnPlace);
+
     var showPosition = function (position) {
         var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
-        marker = new google.maps.Marker({
-            position: userLatLng,
-            title: 'Your Location',
-            draggable: true,
-            map: map
-        });
+        //window.setTimeout(function() {
+            marker = new google.maps.Marker({
+                position: userLatLng,
+                title: 'Your Location',
+                animation: google.maps.Animation.DROP,
+                draggable: true,
+                map: map
+            });
+        //}, 2000)
 
         infowindow = new google.maps.InfoWindow({
             content: '<div id="infodiv" style="width: 300px" contenteditable="true">300px wide infowindow!  if the mouse is not here, will close after 3 seconds</div>'
         });
 
         google.maps.event.addListener(marker, 'dragend', function () {
-            infowindow.open(map, marker)
-            map.setCenter(marker.getPosition())
+            infowindow.close;
+            map.panTo(marker.getPosition());
             //map.setZoom(15);
         });
 
@@ -86,30 +94,34 @@ function initMap() {
             infowindow.open(map, marker);
         });
 
-
-        var input = document.getElementById('nptsearch');
-        /*var autocomplete = new google.maps.places.Autocomplete(input);
-
+        var autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
 
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
             infowindow.close();
             place = autocomplete.getPlace();
+            placecoords = place.geometry.location;
             if (place.geometry.viewport) {
                 map.fitBounds(place.geometry.viewport);
             } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(13);
+                map.setCenter(placecords);
+                map.setZoom(17);
             }
 
-            var image = new google.maps.MarkerImage(
+            /*var image = new google.maps.MarkerImage(
                 place.icon, new google.maps.Size(71, 71), new google.maps.Point(0, 0), new google.maps.Point(17, 34), new google.maps.Size(35, 35));
             marker.setIcon(image);
             marker.setPosition(place.geometry.location);
 
             infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-            infowindow.open(map, marker);
-        });*/
+            infowindow.open(map, marker);*/
+        });
+
+        btnPlace.addEventListener("click", function() {
+                marker.setMap(null);
+                marker = null;
+                addmarker(placecoords);
+        });
 
         map.setCenter(marker.getPosition());
     }
@@ -121,12 +133,15 @@ function initMap() {
     function addmarker(latilongi) {
         if (marker == null) {
             // your code here.
+            //window.setTimeout(function() {
             marker = new google.maps.Marker({
                 position: latilongi,
                 title: 'new marker',
                 draggable: true,
+                animation: google.maps.Animation.DROP,
                 map: map
             });
+            //}, 1500);
         }
         else {
             alert('verwijder je vorige marker als je er een nieuwe wilt aanmaken');
@@ -136,9 +151,15 @@ function initMap() {
             content: '<div id="infodiv2">infowindow!</div>'
         });
         //map.setZoom(15);
-        map.setCenter(marker.getPosition());
+        map.panTo(marker.getPosition());
         infowindow = new google.maps.InfoWindow({
             content: '<div id="infodiv" style="width: 300px" contenteditable="true">300px wide infowindow!  if the mouse is not here, will close after 3 seconds</div>'
+        });
+
+        google.maps.event.addListener(marker, 'dragend', function () {
+            infowindow.close;
+            map.panTo(marker.getPosition());
+            //map.setZoom(15);
         });
 
         google.maps.event.addListener(marker, 'mouseover', function () {
@@ -157,14 +178,14 @@ function initMap() {
     });
 
     document.getElementById('labels').addEventListener("click", function() {
-        if(toggle) {
+        if(!toggle) {
             map.setZoom(13);
             map.setMapTypeId('hide_street_names');
-            toggle = false;
+            toggle = true;
         }
         else {
             map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
-            toggle = true;
+            toggle = false;
         }
     });
 
