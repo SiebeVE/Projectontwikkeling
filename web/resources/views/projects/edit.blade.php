@@ -10,11 +10,13 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="name">Project titel</label>
-                        <input type="text" id="name" name="name" class="form-control input-lg" value="{{ $project->name }}">
+                        <input type="text" id="name" name="name" class="form-control input-lg"
+                               value="{{ $project->name }}">
                     </div>
                     <div class="form-group">
                         <label for="description">Beschrijving</label>
-                        <textarea name="description" id="description" class="form-control" maxlength="600">{{ $project->description }}</textarea>
+                        <textarea name="description" id="description" class="form-control"
+                                  maxlength="600">{{ $project->description }}</textarea>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -47,25 +49,25 @@
                 <div class="col-md-12" id="phases">
                     <hr>
                     <div class="phase">
-                                <ul>
-                                    @foreach($phases as $phase)
-                                    <li>
-                                        <input type="checkbox" id="cb{{ $phase->id }}"/>
-                                        <label for="cb{{ $phase->id }}" class="label-header">{{ $phase->name }}</label>
-                                        @include('projects/phase-edit', ['phase' => $phase])
-                                    </li>
-                                    @endforeach
-                                    {{--<li>
-                                        <input type="checkbox" id="cb3"/>
-                                        <label for="cb3" class="label-header">Fase 2</label>
-                                        @include('projects/phase-edit')
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" id="cb4"/>
-                                        <label for="cb4" class="label-header">Fase 3</label>
-                                        @include('projects/phase-edit')
-                                    </li>--}}
-                                </ul>
+                        <ul>
+                            @foreach($phases as $phase)
+                                <li>
+                                    <input type="checkbox" id="cb{{ $phase->id }}"/>
+                                    <label for="cb{{ $phase->id }}" class="label-header">{{ $phase->name }}</label>
+                                    @include('projects/phase-edit', ['phase' => $phase])
+                                </li>
+                            @endforeach
+                            {{--<li>
+                                <input type="checkbox" id="cb3"/>
+                                <label for="cb3" class="label-header">Fase 2</label>
+                                @include('projects/phase-edit')
+                            </li>
+                            <li>
+                                <input type="checkbox" id="cb4"/>
+                                <label for="cb4" class="label-header">Fase 3</label>
+                                @include('projects/phase-edit')
+                            </li>--}}
+                        </ul>
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -74,4 +76,10 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('pageJs')
+
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&region=BE"
+            async defer></script>
 @endsection

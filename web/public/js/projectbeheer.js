@@ -4,6 +4,7 @@
 jQuery.noConflict();
 (function ($) {
 
+
     //Press Enter in INPUT moves cursor to next INPUT
     $('#form').find('input').keypress(function (e) {
         if (e.which == 13) // Enter key = keycode 13
@@ -190,3 +191,4 @@ function initMap() {
     });
 
 }
+

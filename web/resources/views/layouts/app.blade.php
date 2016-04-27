@@ -100,8 +100,8 @@
 <script>
 
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&region=BE"
-        async defer></script>
+
+@yield('pageJs')
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>
 </html>
