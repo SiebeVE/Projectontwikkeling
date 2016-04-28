@@ -104,6 +104,7 @@ function initMap() {
             placecoords = place.geometry.location;
             if (place.geometry.viewport) {
                 map.fitBounds(place.geometry.viewport);
+
             } else {
                 map.setCenter(placecords);
                 map.setZoom(17);
