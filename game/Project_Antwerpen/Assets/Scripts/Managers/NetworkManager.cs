@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Net;
 
 /// <summary>
 /// Contains all logic which has to do with internet access.
@@ -8,43 +9,27 @@ public class NetworkManager {
 
     private static bool isConnected = false;
 
-    /// <summary>
-    /// Check for internet access capability.
-    /// </summary>
-    /// <param name="ipAdress">IP-address to ping to.</param>
-    /// <returns></returns>
-	public static IEnumerator CheckInternetConnection(string ipAddress)
-    { 
-        // Variables for checking whether the ping test should continue or not
-        float passedTime = 0.0f;
-        float maxTime = 2.0f;
-
-        while (true)
+    public static IEnumerator CheckInternetConnection(string IPaddress)
+    {
+        if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork || Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
         {
-            Ping ping = new Ping(ipAddress);
+            Ping ping = new Ping(IPaddress);
+            float startTime = Time.time;
 
-            while (!ping.isDone)
+            while (Time.time < startTime + 5.0f)
             {
-                passedTime += Time.deltaTime;
-
-                if(passedTime > maxTime)    // time has exceeded maxtime
-                {
-                    // there is no internet connection
-                    isConnected = false;
-                    break;
-                }
-
-                yield return null;
+                yield return new WaitForSeconds(0.1f);
             }
 
-            // testing ping is done
-            if(passedTime < maxTime)    // the time which has ellapsed is below the maxtime
+            if (ping.isDone)
             {
-                // user is connected
                 isConnected = true;
-                yield return null;
             }
-        }
+            else
+            {
+                isConnected = false;
+            }
+        } 
     }
 
     /// <summary>
