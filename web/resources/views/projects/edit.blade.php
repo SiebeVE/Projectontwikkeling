@@ -4,7 +4,7 @@
     <div class="container">
         <div class="col-md-12">
             <h1>Projectnaam bewerken</h1>
-            <form method="POST" action="/project/bewerk/{{ $project->id }}" enctype='multipart/form-data'>
+            <form id="form" name="create" method="POST" action="/project/bewerk/{{ $project->id }}" enctype='multipart/form-data'>
                 {{ csrf_field() }}
                 {{ method_field('PATCH') }}
                 <div class="col-md-8">
@@ -35,8 +35,15 @@
                     </div>
                 </div>
                 <div class="col-md-12">
+                    <div id="buttonbar" class="mine pull-right">
+                        <button type="button" id="labels">verberg/toon labels</button>
+                        <button type="button" id="addMarker">marker toevoegen</button>
+                        <button type="button" id="removeMarker">marker verwijderen</button>
+                        <button type="button" id="placeMarker">Position marker</button>
+                        <input id="place-input" type="text" placeholder="Antwerpen" />
+                    </div>
                     <div class="locatieplaceholder" id="map">
-                        <p>Locatieplaceholder</p>
+
                     </div>
                 </div>
                 <div class="col-md-12" id="phases">
@@ -72,31 +79,7 @@
 @endsection
 
 @section('pageJs')
-    <script>
-        var map;
-        var mapDiv = document.getElementById('map');
 
-        function initMap() {
-            map = new google.maps.Map(mapDiv, {
-                center: {lat: 51.21945, lng: 4.40246},
-                zoom: 12
-            });
-            google.maps.event.addListener(map, 'click', function (event) {
-                placeMarker(event.latLng);
-            });
-
-            function placeMarker(location) {
-                var marker = new google.maps.Marker({
-                    position: location,
-                    map: map,
-                });
-                var infowindow = new google.maps.InfoWindow({
-                    content: 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng()
-                });
-                infowindow.open(map, marker);
-            }
-        }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&region=BE"
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&region=BE"
             async defer></script>
 @endsection

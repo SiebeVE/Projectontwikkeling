@@ -97,6 +97,10 @@
 <script src="{{ url('/') }}/scripts/jquery-ui.min.js"></script>
 <script src="{{ url('/') }}/scripts/site.js"></script>
 <script src="{{ url('/') }}/js/projectbeheer.js"></script>
+<script>
+
+</script>
+
 @yield('pageJs')
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>
