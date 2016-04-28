@@ -25,7 +25,7 @@ class AddFieldsToPhases extends Migration
     public function down()
     {
         Schema::table('phases', function (Blueprint $table) {
-            $table->string('created_by');
+            $table->dropColumn('created_by');
         });
     }
 }

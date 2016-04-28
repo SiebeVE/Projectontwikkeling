@@ -13,7 +13,7 @@ class AddFieldsToPhases2 extends Migration
     public function up()
     {
         Schema::table('phases', function (Blueprint $table) {
-            $table->text('description');
+            $table->text('description')->after('name');
         });
     }
 
@@ -25,7 +25,7 @@ class AddFieldsToPhases2 extends Migration
     public function down()
     {
         Schema::table('phases', function (Blueprint $table) {
-            $table->text('description');
+            $table->removeColumn('description');
         });
     }
 }

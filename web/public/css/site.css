@@ -79,11 +79,6 @@ form[name=create] .upload #imagePlaceholder label
 	text-align: center;
 }
 
-form[name=create] .upload #imagePlaceholder input
-{
-
-}
-
 form[name=create] .upload #imagePlaceholder img
 {
 	display: none;
@@ -99,6 +94,14 @@ form[name=create] textarea#description
 form[name=create] #phases .phase:last-child
 {
 	margin-bottom: 15px;
+}
+
+form[name=create] #phases .phase:not(:first-of-type):last-child
+{
+	opacity: .5;
+	transition: opacity .25s ease-in-out;
+	-moz-transition: opacity .25s ease-in-out;
+	-webkit-transition: opacity .25s ease-in-out;
 }
 
 form[name=create] #phases .phase:not(:last-child)
@@ -163,13 +166,14 @@ nav .container .navbar-brand
 
 }
 
-#app-navbar-collapse ul li a, p.text-muted
+#app-navbar-collapse ul li a
 {
 	color: white;
 }
 
-p.text-muted
+footer p.text-muted
 {
+	color: white;
 	margin-top: 15px;
 }
 
@@ -275,6 +279,16 @@ p.text-muted
 	position: relative;
 	cursor: move;
 	text-align: center;
+}
+
+.control-field
+{
+	border:1px solid black;
+	padding: 5px 2px;
+
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	border-radius:5px;
 }
 
 /*********************************************************	FOOTER 	*********************/

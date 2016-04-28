@@ -25,7 +25,7 @@ class AddFieldsToProjects2 extends Migration
     public function down()
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->string('created_by');
+            $table->dropColumn('created_by');
         });
     }
 }
