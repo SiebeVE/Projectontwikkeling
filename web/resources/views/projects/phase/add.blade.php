@@ -21,15 +21,15 @@
                 <div id="example-field" class="grid">
                     <div class="gutter-sizer"></div>
                     <div class="grid-size"></div>
-                    {{--<div class="grid-item"></div>--}}
-                    {{--<div class="grid-item grid-item--width2"></div>--}}
-                    {{--<div class="grid-item"></div>--}}
-                    {{--<div class="grid-item grid-item--width4"></div>--}}
-                    {{--<div class="grid-item grid-item--width2"></div>--}}
-                    {{--<div class="grid-item grid-item--width3"></div>--}}
-                    {{--<div class="grid-item"></div>--}}
-                    {{--<div class="grid-item grid-item--width2"></div>--}}
-                    {{--<div class="grid-item"></div>--}}
+                    {{--<div class="grid-item">..</div>--}}
+                    {{--<div class="grid-item grid-item--width2">..</div>--}}
+                    {{--<div class="grid-item">..</div>--}}
+                    {{--<div class="grid-item grid-item--width4">..</div>--}}
+                    {{--<div class="grid-item grid-item--width2">..</div>--}}
+                    {{--<div class="grid-item grid-item--width3">..</div>--}}
+                    {{--<div class="grid-item">..</div>--}}
+                    {{--<div class="grid-item grid-item--width2">..</div>--}}
+                    {{--<div class="grid-item">..</div>--}}
                 </div>
                 <div class="col-md-12 control-field">
                     <div class="form-group">
@@ -106,15 +106,27 @@
                 var className = "grid-item--width" + widthOfBlock;
 
                 // Maken van blok
-                var $newBlock = $("<div>").addClass(className)/*.addClass("form-group")*/.addClass("grid-item").css('height', Math.floor((Math.random() * 300) + 100));
+                var $newBlock = $("<div>").addClass(className)/*.addClass("form-group")*/.addClass("grid-item");
 
                 switch (typeOfField) {
                     case "text":
-                        console.log("ok");
+                        console.log("ok-texr");
                         // Toevoegen van inputs
                         var inputName = "question-" + blockNumber;
                         var $label = $("<label>").addClass("form-label").text(question).attr("for", inputName);
                         var $input = $("<input>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
+                        console.log($label);
+                        console.log($input);
+
+                        // Append label en input in nieuwe blok
+                        $newBlock.append($label).append($input);
+                        break;
+                    case "textarea":
+                        console.log("ok-area");
+                        // Toevoegen van inputs
+                        var inputName = "question-" + blockNumber;
+                        var $label = $("<label>").addClass("form-label").text(question).attr("for", inputName);
+                        var $input = $("<textarea>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
                         console.log($label);
                         console.log($input);
 
@@ -128,12 +140,27 @@
                 $grid.append($newBlock).packery('addItems', $newBlock);
                 console.log($exampleField);
 
-                var draggie = new Draggabilly( $newBlock[0] );
+                // Make element draggable
+                var draggie = new Draggabilly($newBlock[0]);
                 // bind drag events to Packery
-                $grid.packery( 'bindDraggabillyEvents', draggie );
+                $grid.packery('bindDraggabillyEvents', draggie);
 
                 $grid.packery('shiftLayout');
             });
+
+            // show item order after layout
+            function orderItems() {
+                console.log("okOrder");
+                var itemElems = $grid.packery('getItemElements');
+                $(itemElems).each(function (i, itemElem) {
+//                    $( itemElem ).text( i + 1 );
+                    console.log(itemElem);
+                    console.log(i + 1);
+                });
+            }
+
+            $grid.on('layoutComplete', orderItems);
+            $grid.on('dragItemPositioned', orderItems);
         })(jQuery);
     </script>
 @endsection
