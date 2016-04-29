@@ -1,0 +1,51 @@
+.grid-item
+{
+	width: 23.5%;
+	border: 1px solid black;
+	/*height: 75px;*/
+}
+
+.grid-size
+{
+	width: 23.5%
+}
+
+.gutter-sizer
+{
+	width: 2%;
+}
+
+.grid-item--width2
+{
+	width: 49%;
+}
+
+.grid-item--width3
+{
+	width: 74%;
+}
+
+.grid-item--width4
+{
+	width: 99%;
+}
+
+/* highlight drag & drop */
+
+/* Draggabilly adds is-dragging */
+.grid-item.is-dragging,
+	/* Packery adds class while transitioning to drop position */
+.grid-item.is-positioning-post-drag
+{
+	background: #C90;
+	z-index: 2; /* keep dragged item on top */
+}
+
+.packery-drop-placeholder
+{
+	outline: 3px dashed #444;
+	outline-offset: -6px;
+	/* transition position changing */
+	-webkit-transition: -webkit-transform 0.2s;
+	transition: transform 0.2s;
+}

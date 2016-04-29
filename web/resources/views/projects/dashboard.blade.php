@@ -20,14 +20,14 @@
                         <td>
                             @foreach($project->phases as $i => $phase)
                                 @if ($i == count($project->phases) - 1)
-                                    {{ $phase->start }}
+                                    {{ date("d/m/Y", strtotime($phase->start)) }}
                                 @endif
                             @endforeach
                         </td>
                         <td>
                             @foreach($project->phases as $i => $phase)
                                 @if ($i == count($project->phases) - 1)
-                                    {{ $phase->end }}
+                                    {{ date("d/m/Y", strtotime($phase->end)) }}
                                 @endif
                             @endforeach
                         </td>

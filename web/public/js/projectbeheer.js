@@ -26,9 +26,15 @@ var map;
 var IT;
 var btnAddMarker = document.getElementById('addMarker');
 var btnRemoveMarker = document.getElementById('removeMarker');
+var inputLat = document.getElementById('latitude');
+var inputLng = document.getElementById('longitude');
 var marker;
 var infowindow;
 var toggle = false;
+if(inputLat && inputLng) {
+    var initMarkerLat = inputLat.value;
+    var initMarkerLng = inputLat.value;
+}
 
 function initMap() {
     directionsService = new google.maps.DirectionsService();
@@ -38,6 +44,7 @@ function initMap() {
     IT = new google.maps.LatLng(42.745334, 12.738430);
     var place;
     var placecoords = new google.maps.LatLng(51.219448, 4.402464);;
+
 
     var noStreetNames = [{
         featureType: "road",
@@ -54,7 +61,7 @@ function initMap() {
 
     var myOptions = {
         zoom: 12,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeId: google.maps.MapTypeId.SATELITE,
         center: Antwerpen
     }
 
@@ -70,10 +77,19 @@ function initMap() {
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(btnPlace);
 
     var showPosition = function (position) {
-        var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        //var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        var initPosition;
+
+        if( initMarkerLat != 0 && initMarkerLng != 0) {
+            initPosition = new google.maps.LatLng(inputLat.value, inputLng.value);
+        }
+        else
+        {
+            initPosition = position;
+        }
         //window.setTimeout(function() {
             marker = new google.maps.Marker({
-                position: userLatLng,
+                position: initPosition,
                 title: 'Your Location',
                 animation: google.maps.Animation.DROP,
                 draggable: true,
@@ -82,13 +98,15 @@ function initMap() {
         //}, 2000)
 
         infowindow = new google.maps.InfoWindow({
-            content: '<div id="infodiv" style="width: 300px" contenteditable="true">300px wide infowindow!  if the mouse is not here, will close after 3 seconds</div>'
+            content: '<div id="infodiv" style="width: 300px" contenteditable="true">Move me!</div>'
         });
 
         google.maps.event.addListener(marker, 'dragend', function () {
             infowindow.close;
             map.panTo(marker.getPosition());
             //map.setZoom(15);
+            inputLat.value = this.getPosition().lat();
+            inputLng.value = this.getPosition().lng();
         });
 
         google.maps.event.addListener(marker, 'mouseover', function () {
@@ -155,7 +173,7 @@ function initMap() {
         //map.setZoom(15);
         map.panTo(marker.getPosition());
         infowindow = new google.maps.InfoWindow({
-            content: '<div id="infodiv" style="width: 300px" contenteditable="true">300px wide infowindow!  if the mouse is not here, will close after 3 seconds</div>'
+            content: '<div id="infodiv" style="width: 300px" contenteditable="true">Adress</div>'
         });
 
         google.maps.event.addListener(marker, 'dragend', function () {
