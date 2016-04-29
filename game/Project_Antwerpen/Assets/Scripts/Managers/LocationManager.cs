@@ -27,12 +27,12 @@ public class LocationManager {
     /// </summary>
     public static void DetermineLocation()
     {
-        if (NetworkManager.IsConnected)             // there is a connection 
-        {
+        //if (NetworkManager.IsConnected)             // there is a connection 
+        //{
             // check if GPS is enabled
             if (IsLocationServiceEnabled())        // it's enabled
             {
-                Input.location.Start();
+                Input.location.Start(10f, 10f);
 
                 if(Input.location.status == LocationServiceStatus.Failed)
                 {
@@ -44,6 +44,8 @@ public class LocationManager {
                     // Pass current location to location variables.
                     lat = Input.location.lastData.latitude;
                     lon = Input.location.lastData.longitude;
+
+                    MapManager.SetAddress();
                 }
             }
             else  // Location service is not enabled
@@ -53,7 +55,7 @@ public class LocationManager {
             }
 
             Input.location.Stop();
-        }
+        //}
     }
 
     /// <summary>

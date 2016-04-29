@@ -42,6 +42,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-12">
+                    <div id="buttonbar" class="mine pull-right">
+                        <button type="button" id="labels">verberg/toon labels</button>
+                        <button type="button" id="addMarker">marker toevoegen</button>
+                        <button type="button" id="removeMarker">marker verwijderen</button>
+                        <button type="button" id="placeMarker">Position marker</button>
+                        <input id="place-input" type="text" placeholder="Antwerpen" />
+                    </div>
+                    <div class="locatieplaceholder" id="map">
+
+                    </div>
+                </div>
                 <div class="col-md-12" id="phases">
                     <hr>
                     <h2>Fases toevoegen</h2>
@@ -89,4 +101,6 @@
 
 @section('pageJs')
     <script src="{{ url('/') }}/scripts/create.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&region=BE"
+            async defer></script>
 @endsection

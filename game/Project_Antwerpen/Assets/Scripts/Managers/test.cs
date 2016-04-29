@@ -4,25 +4,33 @@ using System.Collections;
 
 public class test : MonoBehaviour {
 
-    public static Text connection;
+    public static Text connection, loc;
+    public Button b;
+    public static GameObject i;
     public string IPaddress = "72.14.192.0";
 
 	// Use this for initialization
 	void Start () {
-        connection = GameObject.Find("con").GetComponent<Text>();
+        //b = GameObject.Find("map").GetComponent<Button>();
+        //loc = GameObject.Find("loc").GetComponent<Text>();
+        //connection = GameObject.Find("Text").GetComponent<Text>();
+        //i = GameObject.Find("Image");
+        //b.onClick.AddListener(() => Application.OpenURL("https://www.google.be"));
 
-        NetworkManager.CheckInternetConnection(IPaddress);
+        InvokeRepeating("CallDetermineLocation", 0, 900);
+
+        //b.onClick.AddListener(() => StartCoroutine(MapManager.LoadMap(MapManager.URLaddress)));
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (NetworkManager.IsConnected)
-        {
-            connection.text = "Connected!";
-        }
-        else
-        {
-            connection.text = "No internet";
-        }
-	}
+        //loc.text = "LAT: " + LocationManager.Latitude + "; LONG: " + LocationManager.Longitude;
+        //connection.text = MapManager.URLaddress;
+    }
+
+    private void CallDetermineLocation()
+    {
+        Debug.Log("Called");
+        LocationManager.DetermineLocation();
+    }
 }
