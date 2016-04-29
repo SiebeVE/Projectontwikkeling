@@ -49,6 +49,7 @@ public class Project {
         {
             if(DateTime.Compare(DateTime.Today, stages[i].BeginDate) > 0 && DateTime.Compare(DateTime.Today, stages[i].EndDate) < 0)
             {
+                // todays date is later than the begindate AND earlier than the enddate of the current stage
                 mCurrentStage = stages[i];
                 break;
             }
