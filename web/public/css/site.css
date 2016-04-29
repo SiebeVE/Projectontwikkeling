@@ -5,12 +5,14 @@ html, body, #wrapper
 	padding: 0;
 }
 
-@font-face {
+@font-face
+{
 	font-family: AntwerpenTall;
 	src: url(../font/Antwerpen_lettertype/Antwerpen%20webfonts/Antwerpen%20Tall%20webfonts/AntwerpenTall-Tall.woff);
 }
 
-@font-face {
+@font-face
+{
 	font-family: AntwerpenRegular;
 	src: url(../font/Antwerpen_lettertype/Antwerpen%20webfonts/Antwerpen%20Regular%20webfonts/Antwerpen-Regular.woff);
 }
@@ -79,11 +81,6 @@ form[name=create] .upload #imagePlaceholder label
 	text-align: center;
 }
 
-form[name=create] .upload #imagePlaceholder input
-{
-
-}
-
 form[name=create] .upload #imagePlaceholder img
 {
 	display: none;
@@ -99,6 +96,14 @@ form[name=create] textarea#description
 form[name=create] #phases .phase:last-child
 {
 	margin-bottom: 15px;
+}
+
+form[name=create] #phases .phase:not(:first-of-type):last-child
+{
+	opacity: .5;
+	transition: opacity .25s ease-in-out;
+	-moz-transition: opacity .25s ease-in-out;
+	-webkit-transition: opacity .25s ease-in-out;
 }
 
 form[name=create] #phases .phase:not(:last-child)
@@ -163,13 +168,14 @@ nav .container .navbar-brand
 
 }
 
-#app-navbar-collapse ul li a, p.text-muted
+#app-navbar-collapse ul li a
 {
 	color: white;
 }
 
-p.text-muted
+footer p.text-muted
 {
+	color: white;
 	margin-top: 15px;
 }
 
@@ -277,13 +283,24 @@ p.text-muted
 	text-align: center;
 }
 
-#buttonbar {
+.control-field
+{
+	border: 1px solid black;
+	padding: 5px 2px;
+
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+#buttonbar
+{
 	margin-bottom: 0.5em;
 }
 
-
-#place-input {
-	background-color: #fff;
+#place-input
+{
+	background-color: #FFF;
 	font-family: Roboto;
 	font-size: 1em;
 	font-weight: 300;
@@ -299,8 +316,9 @@ p.text-muted
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-#place-input:focus {
-	border-color: #4d90fe;
+#place-input:focus
+{
+	border-color: #4D90FE;
 }
 
 /*********************************************************	FOOTER 	*********************/

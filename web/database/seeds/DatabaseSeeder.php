@@ -14,22 +14,22 @@ class DatabaseSeeder extends Seeder
 
         public function run()
     {
-        /*DB::table('users')->insert([
-            'name' => str_random(10),
-            'email' => str_random(10).'@gmail.com',
-            'password' => bcrypt('secret'),
-            'firstname' => str_random(10),
-            'lastname' => str_random(15),
-            'address' => str_random(20),
+        DB::table('users')->insert([
+            'name' => "Siebe Vanden Eynden",
+            'email' => "siebe@siebeve.be",
+            'password' => '$2y$10$khUBFjN1FeLuAOtScKm3qukzik669cwbp6Otk4AjoSbdyMVWvg4MG',
+            'firstname' => "Siebe",
+            'lastname' => 'Vanden Eynden',
+            'address' => '',
             'house_number' => 20,
-            'city' => 'Antwerpen',
-            'postal_code' => 2000,
-            'telephone' => '0488779930',
+            'city' => '',
+            'postal_code' => 0,
+            'telephone' => '',
             'is_admin' => false,
-
+            'remember_token' => '7qp3kfJ1yQFEMVNqQMF7ZAh634KoQBIBzpQj8jF2vsxSB0y9cHaDlUh1FpXH',
         ]);
 
-        DB::table('projects')->insert([
+        /*DB::table('projects')->insert([
             'user_id' => 1,
             'name' => 'project 1',
             'description' => 'test',
@@ -45,12 +45,12 @@ class DatabaseSeeder extends Seeder
 
         ]);*/
 
-        DB::table('phases')->insert([
-           'project_id' => 1,
-            'name' => 'fase 1.4',
-            'start' => date("2016-06-15 H:i:s"),
-            'end' => date("2016-06-18 H:i:s"),
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-        ]);
+        //DB::table('phases')->insert([
+        //   'project_id' => 1,
+        //    'name' => 'fase 1.4',
+        //    'start' => date("2016-06-15 H:i:s"),
+        //    'end' => date("2016-06-18 H:i:s"),
+        //    'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+        //]);
     }
 }

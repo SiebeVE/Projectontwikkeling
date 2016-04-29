@@ -13,8 +13,8 @@ class AddFieldsToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('house_number');
-            $table->string('city');
+            $table->integer('house_number')->after('telephone');
+            $table->string('city')->after('house_number');
         });
     }
 
@@ -26,8 +26,7 @@ class AddFieldsToUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('house_number');
-            $table->string('city');
+            $table->dropColumn(['house_number','city']);
         });
     }
 }

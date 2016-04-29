@@ -58,6 +58,7 @@
                             </div>
                         </div>
                     </form>
+                    <a class="btn btn-link" href="{{ $OAuthLink }}">Meld aan met A-profiel</a>
                 </div>
             </div>
         </div>

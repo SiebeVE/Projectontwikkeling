@@ -43,14 +43,17 @@ Route::get('/home', 'HomeController@index');
 
 Route::get('project/maken', 'ProjectController@make');
 Route::post('project/maken', 'ProjectController@postMake');
+Route::get('project/{project}/maken/fase/{phase}', 'ProjectController@getPhaseMake');
 
 Route::get('project/dashboard', 'ProjectController@dashboard');
 
 Route::get('project/bewerk/{project}', 'ProjectController@edit');
 Route::patch('project/bewerk/{project}', 'ProjectController@update');
 
+Route::get('auth/token', 'Auth\AuthController@authAProfile');
 
-Route::group(['middleware' => 'web'], function () {
+
+Route::group(['middleware' => 'api'], function () {
 	Route::get('api/get', 'ApiController@get');
 	Route::post('api/get', 'ApiController@post');
 });
