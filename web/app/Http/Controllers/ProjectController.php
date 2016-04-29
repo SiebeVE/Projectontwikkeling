@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Phase;
 use App\Project;
 use finfo;
 use Storage;
@@ -19,7 +20,7 @@ class ProjectController extends Controller
 	 */
 	public function __construct()
 	{
-		//$this->middleware('auth'); //Temporally off
+		$this->middleware('auth'); //Temporally off
 	}
 
 	/**
@@ -93,7 +94,7 @@ class ProjectController extends Controller
 
 		// Phase validation handler, get all inputs of phase and put in validation array
 		//dd($request->numberOfPhases);
-		for ($curPhase = 1; $curPhase < $request->numberOfPhases; $curPhase++)
+		for ($curPhase = 0; $curPhase < $request->numberOfPhases; $curPhase++)
 		{
 			// Make validation array
 			$toValidate['phaseName-' . $curPhase] = 'required';
@@ -130,9 +131,10 @@ class ProjectController extends Controller
 		$project->save();
 
 		// Phase database handler, save the phase data in the database
-		for ($curPhase = 1; $curPhase <= $request->numberOfPhases; $curPhase++)
+		$phases = [];
+		for ($curPhase = 0; $curPhase < $request->numberOfPhases; $curPhase++)
 		{
-			$project->phases()->create([
+			$phases[$curPhase] = $project->phases()->create([
 				"name"        => $request->input('phaseName-' . $curPhase),
 				"description" => $request->input('phaseDescription-' . $curPhase),
 				"start"       => $request->input('startDate-' . $curPhase),
@@ -140,7 +142,26 @@ class ProjectController extends Controller
 			]);
 		}
 
-		dd("Toegevoegd!");
+		//dd("Toegevoegd!");
+
+		return redirect()->action("ProjectController@getPhaseMake", [$project, 1]);
+	}
+
+	/**
+	 * Get the view to create a new phase
+	 *
+	 * @param Project $project
+	 * @param int $phaseNumber
+	 *
+	 */
+	public function getPhaseMake(Project $project, $phaseNumber)
+	{
+		$projectWithRelations = $project->load('phases');
+		$requestedPhase = $projectWithRelations->phases[$phaseNumber - 1];
+		//dd($requestedPhase);
+		return view('projects.phase.add', [
+			'phase' => $requestedPhase
+		]);
 	}
 
 	/**
@@ -168,14 +189,15 @@ class ProjectController extends Controller
 		return view('projects.edit', compact('project', 'phases'));
 	}
 
-	public function update(Request $request, Project $project) {
+	public function update(Request $request, Project $project)
+	{
 
 
 		$project->update($request->all());
 		$phases = $project->phases;
 
-		foreach($phases as $phase ) {
-
+		foreach ($phases as $phase)
+		{
 			$phase->update(
 				[
 					$phase->name = $request->input('phase_name' . $phase->id),
@@ -184,7 +206,6 @@ class ProjectController extends Controller
 					$phase->end = $request->input('phaseEndDate' . $phase->id)
 				]
 			);
-
 		}
 
 

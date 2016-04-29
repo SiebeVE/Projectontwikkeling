@@ -60,4 +60,14 @@ class User extends Authenticatable
 	{
 		return $this->hasMany('App\Project');
 	}
+
+	/**
+	 * Get the OAuth credentials
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasOne
+	 */
+	public function oauthcredential()
+	{
+		return $this->hasOne('App\OAuthCredential');
+	}
 }
