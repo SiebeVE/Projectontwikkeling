@@ -14,6 +14,7 @@ class AddForeignPhasesOnQuestions extends Migration
     {
         Schema::table('questions', function ($table)
         {
+			$table->integer('phase_id')->unsigned();
             $table->foreign('phase_id')
                 ->references('id')
                 ->on('phases')

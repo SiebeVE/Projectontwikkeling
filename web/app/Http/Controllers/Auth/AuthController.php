@@ -91,16 +91,6 @@ class AuthController extends Controller
 			return view($view);
 		}
 
-		//https://api-oauth2.antwerpen.be/v1/authorize?
-		//response_type=code&
-		//service=AStad-AProfiel-v1&
-		//client_id=0dc07587-57b3-4770-b888-d3d6066e4c48&
-		//client_secret=6ac96f75-c457-4516-b9b7-44f462d0d779&
-		//scope=username%20name%20avatar%20email%20phone&
-		//redirect_uri=https%3A%2F%2Fproject.local%2Fauth%2Ftoken&
-		//lng=nl
-
-
 		$link = env('OAUTH_GATE') . "/authorize?
 		response_type=token&
 		service=AStad-AProfiel-v1&
@@ -109,15 +99,14 @@ class AuthController extends Controller
 		redirect_uri=" . env('OAUTH_REDIRECT') . "&
 		scope=username name avatar email phone" . "&
 		lng=nl";
-		////$link=env('OAUTH_GATE')."?response_type=token&service=AStad-AProfiel-v1&client_id=".env('OAUTH_SECRET')."&client_secret=".env('OAUTH_SECRET')."&redirect_uri=".env('OAUTH_REDIRECT')."&scope=username name avatar email phone"."&lng=nl";
-		//
+
 		return view('auth.login', ["OAuthLink" => $link]);
 		//$content= [];
 		//$request = Request::create($link, 'GET');
-		////return request($request);
+		//return request($request);
 		//return redirect()
-		//	//->header("location", $link)
-		//	//->header("Authorize", "bearer 17a7dcf038014b699f41745bb5c7f9f0");
+		//	->header("location", $link)
+		//	->header("Authorize", "bearer 17a7dcf038014b699f41745bb5c7f9f0");
 		//	->away($link);
 	}
 
