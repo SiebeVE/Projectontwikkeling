@@ -16,6 +16,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/site.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/grid.css" rel="stylesheet">
+    <link href="{{ url('/') }}/css/nouislider.min.css" rel="stylesheet">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
     <style>

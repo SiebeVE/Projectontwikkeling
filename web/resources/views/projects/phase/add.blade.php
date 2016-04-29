@@ -43,12 +43,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="blockWidth">Breedte van blok</label>
-                        <input type="number" min="1" max="4" class="form-control" name="blockWidth" id="blockWidth">
-                    </div>
-                    <div class="form-group">
                         <label for="question" class="control-label">Vraag</label>
                         <input type="text" id="question" name="question" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="blockWidth">Breedte van blok</label>
+                        <div id="slider"></div>
                     </div>
                     <button type="submit" id="addBlock" class="btn btn-success">Blok toevoegen</button>
                 </div>
@@ -60,9 +60,21 @@
 @section('pageJs')
     <script src="https://npmcdn.com/draggabilly@2.1/dist/draggabilly.pkgd.min.js"></script>
     <script src="{{ url('/') }}/js/packery.pkgd.min.js"></script>
+    <script src="{{ url('/') }}/js/nouislider.min.js"></script>
     <script>
         jQuery.noConflict();
         (function ($) {
+            var rangeSlider = document.getElementById('slider');
+
+            noUiSlider.create(rangeSlider, {
+                start: [ 1 ],
+                step: 1,
+                connect: 'lower',
+                range: {
+                    'min': [  0 ],
+                    'max': [ 4 ]
+                }
+            });
             var $grid = $('.grid').packery({
                 // options
                 gutter: '.gutter-sizer',
@@ -100,7 +112,8 @@
                 var $exampleField = $("#example-field");
 
                 var typeOfField = $("#sortQuestion").val();
-                var widthOfBlock = $("#blockWidth").val();
+                var widthOfBlock = Math.floor(rangeSlider.noUiSlider.get());
+//                console.log(rangeSlider.noUiSlider.get());
                 var question = $("#question").val();
 
                 var className = "grid-item--width" + widthOfBlock;
@@ -108,33 +121,37 @@
                 // Maken van blok
                 var $newBlock = $("<div>").addClass(className)/*.addClass("form-group")*/.addClass("grid-item");
 
+                var inputName = "question-" + blockNumber;
+                var $label;
+                var $input;
                 switch (typeOfField) {
                     case "text":
                         console.log("ok-texr");
                         // Toevoegen van inputs
-                        var inputName = "question-" + blockNumber;
-                        var $label = $("<label>").addClass("form-label").text(question).attr("for", inputName);
-                        var $input = $("<input>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
+                        $label = $("<label>").addClass("form-label").text(question).attr("for", inputName);
+                        $input = $("<input>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
                         console.log($label);
                         console.log($input);
-
-                        // Append label en input in nieuwe blok
-                        $newBlock.append($label).append($input);
                         break;
                     case "textarea":
                         console.log("ok-area");
                         // Toevoegen van inputs
-                        var inputName = "question-" + blockNumber;
-                        var $label = $("<label>").addClass("form-label").text(question).attr("for", inputName);
-                        var $input = $("<textarea>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
+                        $label = $("<label>").addClass("form-label").text(question).attr("for", inputName);
+                        $input = $("<textarea>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
                         console.log($label);
                         console.log($input);
+                        break;
+                    case "checkbox":
+                        console.log("ok-check");
+                        $label = $("<label>").addClass("form-label").text(question).attr("for", inputName);
 
-                        // Append label en input in nieuwe blok
-                        $newBlock.append($label).append($input);
+                        break;
+                    case "radio":
+                        console.log("ok-radio");
                         break;
                 }
 
+                $newBlock.append($label).append($input);
                 console.log($newBlock);
                 // Append new blok in examples
                 $grid.append($newBlock).packery('addItems', $newBlock);
