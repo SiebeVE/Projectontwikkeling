@@ -48,7 +48,9 @@
                         <button type="button" id="addMarker">marker toevoegen</button>
                         <button type="button" id="removeMarker">marker verwijderen</button>
                         <button type="button" id="placeMarker">Position marker</button>
-                        <input id="place-input" type="text" placeholder="Antwerpen" />
+                        <input id="place-input" type="text" placeholder="Antwerpen"/>
+                        <input type="hidden" name="latitude" id="latitude" value="{{ old("latitude") }}">
+                        <input type="hidden" name="longitude" id="longitude" value="{{ old("longitude") }}">
                     </div>
                     <div class="locatieplaceholder" id="map">
 

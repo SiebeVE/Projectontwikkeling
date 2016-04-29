@@ -18,7 +18,19 @@
             <form name="create" method="POST" enctype='multipart/form-data'>
                 {!! csrf_field() !!}
                 <input type="hidden" name="numberOfFields" id="numberOfFields" value="0">
-                <div id="example-field"></div>
+                <div id="example-field" class="grid">
+                    <div class="gutter-sizer"></div>
+                    <div class="grid-size"></div>
+                    {{--<div class="grid-item"></div>--}}
+                    {{--<div class="grid-item grid-item--width2"></div>--}}
+                    {{--<div class="grid-item"></div>--}}
+                    {{--<div class="grid-item grid-item--width4"></div>--}}
+                    {{--<div class="grid-item grid-item--width2"></div>--}}
+                    {{--<div class="grid-item grid-item--width3"></div>--}}
+                    {{--<div class="grid-item"></div>--}}
+                    {{--<div class="grid-item grid-item--width2"></div>--}}
+                    {{--<div class="grid-item"></div>--}}
+                </div>
                 <div class="col-md-12 control-field">
                     <div class="form-group">
                         <label for="sortQuestion">Kies je soort vraag</label>
@@ -46,9 +58,26 @@
 @endsection
 
 @section('pageJs')
+    <script src="https://npmcdn.com/draggabilly@2.1/dist/draggabilly.pkgd.min.js"></script>
+    <script src="{{ url('/') }}/js/packery.pkgd.min.js"></script>
     <script>
         jQuery.noConflict();
         (function ($) {
+            var $grid = $('.grid').packery({
+                // options
+                gutter: '.gutter-sizer',
+                itemSelector: '.grid-item',
+                columnWidth: '.grid-size',
+                percentPosition: true
+            });
+
+            // make all grid-items draggable
+            $grid.find('.grid-item').each(function (i, gridItem) {
+                var draggie = new Draggabilly(gridItem);
+                // bind drag events to Packery
+                $grid.packery('bindDraggabillyEvents', draggie);
+            });
+
             $("#sortQuestion").change(function () {
                 switch ($(this).val()) {
                     case "text":
@@ -57,6 +86,7 @@
                 }
                 console.log($(this).val());
             });
+
             $("form[name=create]").submit(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -73,20 +103,20 @@
                 var widthOfBlock = $("#blockWidth").val();
                 var question = $("#question").val();
 
-                var className = "col-md-"+ (widthOfBlock * 3);
+                var className = "grid-item--width" + widthOfBlock;
 
                 // Maken van blok
-                var $newBlock = $("<div>").addClass(className).addClass("form-group");
+                var $newBlock = $("<div>").addClass(className)/*.addClass("form-group")*/.addClass("grid-item").css('height', Math.floor((Math.random() * 300) + 100));
 
                 switch (typeOfField) {
                     case "text":
-                            console.log("ok");
+                        console.log("ok");
                         // Toevoegen van inputs
                         var inputName = "question-" + blockNumber;
                         var $label = $("<label>").addClass("form-label").text(question).attr("for", inputName);
                         var $input = $("<input>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
-                            console.log($label);
-                            console.log($input);
+                        console.log($label);
+                        console.log($input);
 
                         // Append label en input in nieuwe blok
                         $newBlock.append($label).append($input);
@@ -95,9 +125,14 @@
 
                 console.log($newBlock);
                 // Append new blok in examples
-                $exampleField.append($newBlock);
+                $grid.append($newBlock).packery('addItems', $newBlock);
                 console.log($exampleField);
 
+                var draggie = new Draggabilly( $newBlock[0] );
+                // bind drag events to Packery
+                $grid.packery( 'bindDraggabillyEvents', draggie );
+
+                $grid.packery('shiftLayout');
             });
         })(jQuery);
     </script>

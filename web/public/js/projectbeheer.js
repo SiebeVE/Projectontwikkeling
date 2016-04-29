@@ -31,8 +31,10 @@ var inputLng = document.getElementById('longitude');
 var marker;
 var infowindow;
 var toggle = false;
-var initMarkerLat =  inputLat.value;
-var initMarkerLng = inputLat.value;
+if(inputLat && inputLng) {
+    var initMarkerLat = inputLat.value;
+    var initMarkerLng = inputLat.value;
+}
 
 function initMap() {
     directionsService = new google.maps.DirectionsService();
