@@ -4,7 +4,6 @@
 jQuery.noConflict();
 (function ($) {
 
-
     //Press Enter in INPUT moves cursor to next INPUT
     $('#form').find('input').keypress(function (e) {
         if (e.which == 13) // Enter key = keycode 13
@@ -13,17 +12,9 @@ jQuery.noConflict();
         }
     });
 
-
-
-    /*$('#addMarker').on('click', function () {
-        addmarker(IT)
-    })*/
-
-
 }) (jQuery);
 
 var map;
-var IT;
 var btnAddMarker = document.getElementById('addMarker');
 var btnRemoveMarker = document.getElementById('removeMarker');
 var inputLat = document.getElementById('latitude');
@@ -41,7 +32,6 @@ function initMap() {
     directionsDisplay = new google.maps.DirectionsRenderer();
 
     var Antwerpen = new google.maps.LatLng(51.219448, 4.402464);
-    IT = new google.maps.LatLng(42.745334, 12.738430);
     var place;
     var placecoords = new google.maps.LatLng(51.219448, 4.402464);;
 
@@ -76,7 +66,6 @@ function initMap() {
     var btnPlace = document.getElementById('placeMarker');
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(btnPlace);
 
-    var showPosition = function (position) {
         //var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         var initPosition;
 
@@ -85,7 +74,7 @@ function initMap() {
         }
         else
         {
-            initPosition = position;
+            initPosition = navigator.geolocation.getCurrentPosition;
         }
         //window.setTimeout(function() {
             marker = new google.maps.Marker({
@@ -101,18 +90,6 @@ function initMap() {
             content: '<div id="infodiv" style="width: 300px" contenteditable="true">Move me!</div>'
         });
 
-        google.maps.event.addListener(marker, 'dragend', function () {
-            infowindow.close;
-            map.panTo(marker.getPosition());
-            //map.setZoom(15);
-            inputLat.value = this.getPosition().lat();
-            inputLng.value = this.getPosition().lng();
-        });
-
-        google.maps.event.addListener(marker, 'mouseover', function () {
-            infowindow.open(map, marker);
-        });
-
         var autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
 
@@ -124,7 +101,7 @@ function initMap() {
                 map.fitBounds(place.geometry.viewport);
 
             } else {
-                map.setCenter(placecords);
+                map.setCenter(placecoords);
                 map.setZoom(17);
             }
 
@@ -138,16 +115,14 @@ function initMap() {
         });
 
         btnPlace.addEventListener("click", function() {
+            if(marker) {
                 marker.setMap(null);
                 marker = null;
-                addmarker(placecoords);
+            }
+            addmarker(placecoords);
         });
 
         map.setCenter(marker.getPosition());
-    }
-
-    navigator.geolocation.getCurrentPosition(showPosition);
-
 
 
     function addmarker(latilongi) {
@@ -178,6 +153,8 @@ function initMap() {
 
         google.maps.event.addListener(marker, 'dragend', function () {
             infowindow.close;
+            inputLat.value = this.getPosition().lat();
+            inputLng.value = this.getPosition().lng();
             map.panTo(marker.getPosition());
             //map.setZoom(15);
         });
