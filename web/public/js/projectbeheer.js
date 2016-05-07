@@ -74,7 +74,7 @@ function initMap() {
         }
         else
         {
-            initPosition = navigator.geolocation.getCurrentPosition;
+            initPosition = Antwerpen;
         }
         //window.setTimeout(function() {
             marker = new google.maps.Marker({
@@ -85,6 +85,14 @@ function initMap() {
                 map: map
             });
         //}, 2000)
+
+        google.maps.event.addListener(marker, 'dragend', function () {
+            infowindow.close;
+            inputLat.value = this.getPosition().lat();
+            inputLng.value = this.getPosition().lng();
+            map.panTo(marker.getPosition());
+            //map.setZoom(15);
+        });
 
         infowindow = new google.maps.InfoWindow({
             content: '<div id="infodiv" style="width: 300px" contenteditable="true">Move me!</div>'
@@ -122,7 +130,7 @@ function initMap() {
             addmarker(placecoords);
         });
 
-        map.setCenter(marker.getPosition());
+
 
 
     function addmarker(latilongi) {

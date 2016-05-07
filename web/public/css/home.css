@@ -1,0 +1,56 @@
+#wrapper {
+    width: 100%;
+    background: url(../images/mas3.jpg) no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+nav.navbar, footer.footer {
+    background-color: transparent;
+}
+
+#map {
+    height: 25em;
+    margin-top: 1em;
+}
+
+#banner {
+    margin: auto;
+    color: white;
+    border-radius: 5px;
+    padding: 3em 0 3em 0;
+    background: rgba(0, 0, 0, 0.2);
+    font-family: AntwerpenTall;
+
+}
+
+#banner p {
+    padding: 0;
+    margin: 0;
+}
+
+.banner-slogan {
+    font-size: 5.5em;
+    width: 58%;
+    float: left;
+    text-align: right;
+    margin-right: 1.5%;
+    line-height: 1.3em;
+}
+
+.banner-text {
+    border-left: 5px white solid;
+    font-size: 1.5em;
+    width: 18.5%;
+    float: left;
+    padding-left: 1%;
+    line-height: 1.2em;
+    padding-top: 0.4em;
+    margin-top: 4.4em;
+}
+
+.banner-text p {
+    vertical-align: bottom;
+}
