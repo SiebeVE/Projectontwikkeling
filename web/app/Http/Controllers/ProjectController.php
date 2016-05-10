@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Phase;
 use App\Project;
 use finfo;
-use Storage;
 use Illuminate\Http\Request;
 use App\User;
 
@@ -165,13 +164,82 @@ class ProjectController extends Controller
 	}
 
 	/**
+	 * Handle the post request from making a new phase
+	 *
+	 * @param Request $request
+	 * @param Project $project
+	 * @param int $phase
+	 */
+	public function postPhaseMake(Request $request, Project $project, $phase)
+	{
+		$phaseRelativeId = $phase;
+		// Check if request has data
+		$toValidate = ["data" => "required"];
+		$this->validate($request, $toValidate);
+
+		$data = json_decode($request->data, true);
+
+		$projectPhases = $project->phases;
+		//dd($projectPhases[$phase+1]);
+		$phase = $projectPhases[$phase-1];
+
+		if(array_has($data, "elements") && count($data["elements"]) > 0)
+		{
+			// Set parent height in phase
+			$phase->parentHeight = $data["parentHeight"];
+			$phase->save();
+			
+			foreach ($data["elements"] as $question)
+			{
+				// Save the new question
+				$questionDatabase = $phase->questions()->create([
+					"sort" => $question["sort"],
+					"question" => $question["question"],
+					"leftOffset" => $question["options"]["left"],
+					"topOffset" => $question["options"]["top"],
+					"width" => $question["options"]["width"],
+				]);
+
+				if(array_has($question, "answers") && count($question["answers"]) > 0)
+				{
+					// Has multiple possible answers
+					foreach($question["answers"] as $answer)
+					{
+						$possibleAnswer = $questionDatabase->possibleAnswers()->create([
+							"answer" => $answer
+						]);
+					}
+				}
+			}
+		}
+		else
+		{
+			abort(412, "Er is geen data beschikbaar.");
+		}
+
+		// Move to next phase
+		// Check if last phase of project
+		$numberOfPhases = count($projectPhases);
+		//dd($phase);
+		if($numberOfPhases == $phaseRelativeId)
+		{
+			return redirect('project/dashboard');
+		}
+		else
+		{
+			// Redirect to new phase page
+			$newPhase = $phaseRelativeId+1;
+			return redirect('project/'.$project->id.'/maken/fase/'.$newPhase);
+		}
+	}
+
+	/**
 	 * Show the application dashboard
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public function dashboard()
 	{
-
 		$projects = Project::all();
 		return view('projects.dashboard', compact('projects'));
 	}

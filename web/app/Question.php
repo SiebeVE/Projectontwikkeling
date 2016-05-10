@@ -12,9 +12,11 @@ class Question extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'phase_id',
 		'sort',
 		'question',
+		'leftOffset',
+		'topOffset',
+		'width'
 	];
 
 	/**
@@ -34,6 +36,16 @@ class Question extends Model
 	public function answers()
 	{
 		return $this->hasMany('App\Answer');
+	}
+
+	/**
+	 * Give all possible answers of question (multiplechoice)
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function possibleAnswers()
+	{
+		return $this->hasMany('App\PossibleAnswer');
 	}
 
 	/**
