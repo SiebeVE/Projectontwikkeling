@@ -17,6 +17,10 @@
     <link href="{{ url('/') }}/css/nouislider.min.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/site.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/grid.css" rel="stylesheet">
+    <link href="{{ url('/') }}/css/nouislider.min.css" rel="stylesheet">
+
+    @yield('pageCss')
+
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
     <style>
@@ -33,60 +37,63 @@
 </head>
 <body id="app-layout">
 <div id="wrapper">
-<div id="content">
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-        <div class="navbar-header">
+    @yield('banner')
+    <div id="content">
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
 
-            <!-- Collapsed Hamburger -->
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#app-navbar-collapse">
-                <span class="sr-only">Toggle Navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+                <!-- Collapsed Hamburger -->
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#app-navbar-collapse">
+                    <span class="sr-only">Toggle Navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
 
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="{{ url('/')}}/images/Tweekleurig_A-LOGO/sRGB/SVG/A_logo_RGB.svg"/>
-                </a>
-            </div>
+                    <!-- Branding Image -->
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                        <img src="{{ url('/')}}/images/Tweekleurig_A-LOGO/sRGB/SVG/A_logo_RGB.svg"/>
+                    </a>
+                </div>
 
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/home') }}">Home</a>
-                    <li><a href="{{ url('/project/dashboard') }}">Projectbeheer</a></li>
-                    <li><a href="{{ url('/info') }}">Info</a></li>
-                    <li><a href="{{ url('/contact') }}">Contact</a></li>
+                <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                    <!-- Left Side Of Navbar -->
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ url('/home') }}">Home</a>
+                        <li><a href="{{ url('/project/dashboard') }}">Projectbeheer</a></li>
+                        <li><a href="{{ url('/info') }}">Info</a></li>
+                        <li><a href="{{ url('/contact') }}">Contact</a></li>
+                    </ul>
+
+                <!-- Right Side Of Navbar -->
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Authentication Links -->
+                    @if (Auth::guest())
+                        <li><a href="{{ url('/login') }}">Login</a></li>
+                        <li><a href="{{ url('/register') }}">Register</a></li>
+                    @else
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                {{ Auth::user()->name }} <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                            </ul>
+                        </li>
+                    @endif
                 </ul>
-
-            <!-- Right Side Of Navbar -->
-            <ul class="nav navbar-nav navbar-right">
-                <!-- Authentication Links -->
-                @if (Auth::guest())
-                    <li><a href="{{ url('/login') }}">Login</a></li>
-                    <li><a href="{{ url('/register') }}">Register</a></li>
-                @else
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ Auth::user()->name }} <span class="caret"></span>
-                        </a>
-
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
-                        </ul>
-                    </li>
-                @endif
-            </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-@yield('content')
+    @yield('content')
+    </div>
 </div>
-</div>
+
+
 
 <footer class="footer">
     <div class="container text-center">
@@ -98,7 +105,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="{{ url('/') }}/scripts/jquery-ui.min.js"></script>
 <script src="{{ url('/') }}/scripts/site.js"></script>
-<script src="{{ url('/') }}/js/projectbeheer.js"></script>
 <script>
 
 </script>

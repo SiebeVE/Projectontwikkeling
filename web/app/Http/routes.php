@@ -32,10 +32,7 @@
 
 //Route::group(['middleware' => 'web'], function () {
 //Don't put it in the middleware web, is automatically loaded aand when twice, it breaks the roors
-Route::get('/', function ()
-{
-	return view('welcome');
-});
+Route::get('/', 'HomeController@index');
 
 Route::auth();
 
