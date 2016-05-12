@@ -14,6 +14,8 @@ function initMap() {
     var placecoords = new google.maps.LatLng(51.219448, 4.402464);
     var infoWindow = new google.maps.InfoWindow({map: map});
 
+    google.maps.InfoWindow.prototype.opened = false;
+
 
     var noStreetNames = [{
         featureType: "road",
@@ -84,36 +86,79 @@ function initMap() {
         }
     });
 
-    var hiddenInputs = document.getElementsByTagName("input");
+    var hidden = document.getElementById("hiddeninput");
+    var hiddenInputs = hidden.getElementsByTagName('input');
     var currMarkerPos;
+    //alert(hiddenInputs.length)
 
     for(var i = 0; i < hiddenInputs.length; i += 2) {
         if(hiddenInputs[i].type.toLowerCase() == 'hidden') {
             currMarkerPos = new google.maps.LatLng(hiddenInputs[i].value, hiddenInputs[i+1].value);
-            addmarker(currMarkerPos, i);
+            addmarker(currMarkerPos, i/2);
         }
     }
 
-    function addmarker(latilongi, adress) {
+    function addmarker(latilongi, count) {
             // your code here.
             //window.setTimeout(function() {
             marker = new google.maps.Marker({
                 position: latilongi,
                 title: 'new marker',
+                icon: '../images/googleMarker/googleMarker.png',
                 clickable: true,
                 animation: google.maps.Animation.DROP,
                 map: map
             });
             //}, 1500);
 
+        var jsonInput = document.getElementById('jsonTest');
+        var projects = JSON.parse(jsonInput.value);
+
+
         var infowindow;
+
         //map.setZoom(15);
-        infowindow = new google.maps.InfoWindow({
-            content: '<div class="infodiv" style="width: 300px" contenteditable="true"><?php echo $lat_array[1]; ?></div>'
+        //infowindow = new google.maps.InfoWindow({
+        //    content: '<div class="infoProject" style="width: 300px" contenteditable="false">'
+        //    + projects[count]['name'] + '</div>'
+        //});
+
+        var infoBubble = new InfoBubble({
+            map: map,
+            content: '<div class="infoProject" contenteditable="false"><h3>'
+            + projects[count]['name'] + '</h3>' + '<h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p></div>',
+            shadowStyle: 1,
+            padding: 0,
+            backgroundColor: 'rgba(0, 0 , 0, 0.7)',
+            borderRadius: 4,
+            arrowSize: 20,
+            borderWidth: 1,
+            borderColor: '#2c2c2c',
+            disableAutoPan: true,
+            hideCloseButton: true,
+            arrowPosition: 30,
+            backgroundClassName: 'infoBubble',
+            arrowStyle: 2
         });
 
+        //infoBubble.open(map, marker);
+
         google.maps.event.addListener(marker, 'click', function () {
-            infowindow.open(map, this);
+            /*if(!infowindow.opened) {
+                infowindow.open(map, this);
+                infowindow.opened = true;
+            }
+            else {
+                infowindow.close(map, this);
+                infowindow.opened = false;
+            }*/
+
+            if (!infoBubble.isOpen()) {
+                infoBubble.open(map, this);
+            }
+            else {
+                infoBubble.close(map, this);
+            }
         });
     }
 

@@ -27,12 +27,15 @@ class HomeController extends Controller
     {
         $lat_array = array();
         $lng_array = array();
+
         $projects = Project::all();
+        $json = json_encode($projects);
 
         foreach( $projects as $project ) {
             array_push($lat_array, $project->latitude);
             array_push($lng_array, $project->longitude);
         }
-        return view('welcome', compact('lat_array', 'lng_array'));
+
+        return view('welcome', compact('lat_array', 'lng_array', 'json'));
     }
 }
