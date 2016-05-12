@@ -11,7 +11,6 @@ class Phase extends Model
         'description',
         'start',
         'end',
-
     ];
 
     protected $dates = ['deleted_at'];

@@ -98,9 +98,19 @@ form[name=create] #phases .phase:last-child
 	margin-bottom: 15px;
 }
 
-form[name=create] #phases .phase:not(:first-of-type):last-child
+form[name=create] #phases .phase:not(:first-of-type):last-child,
+form[name=createPhase] .choices .choice:not(:first-of-type):last-child
 {
 	opacity: .5;
+	transition: opacity .25s ease-in-out;
+	-moz-transition: opacity .25s ease-in-out;
+	-webkit-transition: opacity .25s ease-in-out;
+}
+
+form[name=create] #phases .phase:not(:last-child),
+form[name=createPhase] .choices .choice:not(:last-child)
+{
+	opacity: 1;
 	transition: opacity .25s ease-in-out;
 	-moz-transition: opacity .25s ease-in-out;
 	-webkit-transition: opacity .25s ease-in-out;
@@ -323,8 +333,29 @@ footer p.text-muted
 	border-color: #4D90FE;
 }
 
-/********************************************************* HOMEPAGE *********************/
 
+/******************************************************* Slider *******************************************************/
+#slider
+{
+	margin: 0 25px 45px;
+}
+
+.noUi-pips-horizontal
+{
+	height: 45px;
+	padding-bottom:0;
+}
+
+.noUi-marker.noUi-marker-horizontal.noUi-marker-normal:first-child
+{
+	display: none;
+}
+
+.noUi-marker-horizontal.noUi-marker-large
+{
+	height: 10px;
+}
+/********************************************************* HOMEPAGE *********************/
 
 /*********************************************************	FOOTER 	*********************/
 

@@ -41,6 +41,7 @@ Route::get('/home', 'HomeController@index');
 Route::get('project/maken', 'ProjectController@make');
 Route::post('project/maken', 'ProjectController@postMake');
 Route::get('project/{project}/maken/fase/{phase}', 'ProjectController@getPhaseMake');
+Route::post('project/{project}/maken/fase/{phase}', 'ProjectController@postPhaseMake');
 
 Route::get('project/dashboard', 'ProjectController@dashboard');
 
