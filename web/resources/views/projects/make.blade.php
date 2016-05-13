@@ -105,4 +105,5 @@
     <script src="{{ url('/') }}/scripts/create.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&region=BE"
             async defer></script>
+    <script src="{{ url('/') }}/js/projectbeheer.js"></script>
 @endsection

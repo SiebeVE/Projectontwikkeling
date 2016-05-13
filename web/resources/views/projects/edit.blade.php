@@ -4,6 +4,15 @@
     <div class="container">
         <div class="col-md-12">
             <h1>Projectnaam bewerken</h1>
+            @if(count($errors) > 0)
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form id="form" name="create" method="POST" action="/project/bewerk/{{ $project->id }}" enctype='multipart/form-data'>
                 {{ csrf_field() }}
                 {{ method_field('PATCH') }}
@@ -41,7 +50,7 @@
                         <button type="button" id="removeMarker">marker verwijderen</button>
                         <button type="button" id="placeMarker">Position marker</button>
                         <input id="place-input" type="text" placeholder="Antwerpen" />
-                        <input type="hidden" name="latitude" id="latitude" value="{{ (count($errors) > 0) ? old("latitude") : $project->latitude }}">
+                        <input type="" name="latitude" id="latitude" value="{{ (count($errors) > 0) ? old("latitude") : $project->latitude }}">
                         <input type="hidden" name="longitude" id="longitude" value="{{ (count($errors) > 0) ? old("longitude") : $project->longitude }}">
                     </div>
                     <div class="locatieplaceholder" id="map">
@@ -82,6 +91,8 @@
 
 @section('pageJs')
 
+
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&region=BE"
             async defer></script>
+    <script src="{{ url('/') }}/js/projectbeheer.js"></script>
 @endsection

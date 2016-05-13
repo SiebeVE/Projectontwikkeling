@@ -45,8 +45,8 @@ label, nav li {
 	background-color: #F5F5F5;
 	clear: both;
 	z-index: 10;
-	height: 6em;
-	margin-top: -6em;
+	height: 4em;
+	margin-top: -4em;
 }
 
 form[name=create] label,
@@ -98,9 +98,19 @@ form[name=create] #phases .phase:last-child
 	margin-bottom: 15px;
 }
 
-form[name=create] #phases .phase:not(:first-of-type):last-child
+form[name=create] #phases .phase:not(:first-of-type):last-child,
+form[name=createPhase] .choices .choice:not(:first-of-type):last-child
 {
 	opacity: .5;
+	transition: opacity .25s ease-in-out;
+	-moz-transition: opacity .25s ease-in-out;
+	-webkit-transition: opacity .25s ease-in-out;
+}
+
+form[name=create] #phases .phase:not(:last-child),
+form[name=createPhase] .choices .choice:not(:last-child)
+{
+	opacity: 1;
 	transition: opacity .25s ease-in-out;
 	-moz-transition: opacity .25s ease-in-out;
 	-webkit-transition: opacity .25s ease-in-out;
@@ -140,20 +150,22 @@ form[name=create] #phases .row:not(:last-child)
 
 /********************************************#94450B	NAV	*****************************/
 
-nav.navbar, footer.footer
+footer.footer, nav.navbar
 {
 	background-color: #CF0039;
 }
 
-nav .container .navbar-header
-{
-	height: 90px;
+.navbar-default {
+	background-color: rgba(248, 248, 248, 0);
+	border-color: transparent;
 }
 
 nav .container .navbar-header .navbar-brand img
 {
 	height: 90px;
+
 }
+
 
 nav .container .navbar-brand
 {
@@ -321,6 +333,44 @@ footer p.text-muted
 	border-color: #4D90FE;
 }
 
+
+/******************************************************* Slider *******************************************************/
+#slider
+{
+	margin: 0 25px 45px;
+}
+
+.noUi-pips-horizontal
+{
+	height: 45px;
+	padding-bottom:0;
+}
+
+.noUi-marker.noUi-marker-horizontal.noUi-marker-normal:first-child
+{
+	display: none;
+}
+
+.noUi-marker-horizontal.noUi-marker-large
+{
+	height: 10px;
+}
+/********************************************************* HOMEPAGE *********************/
+
 /*********************************************************	FOOTER 	*********************/
 
+/*********************************************************	CLEARFIX 	*********************/
 
+.clearfix:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
