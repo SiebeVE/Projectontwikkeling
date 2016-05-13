@@ -12,9 +12,9 @@ class Answer extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'phase_id',
-		'sort',
-		'question',
+		'question_id',
+		'answer',
+		"multipleAnswers",
 	];
 
 	/**
@@ -44,5 +44,10 @@ class Answer extends Model
 	public function users()
 	{
 		return $this->belongsTo('App\User');
+	}
+
+	public function possibleAnswers()
+	{
+		return $this->hasMany('App\MultipleAnswerd');
 	}
 }

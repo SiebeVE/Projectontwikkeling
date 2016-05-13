@@ -24,6 +24,13 @@ body > #wrapper
 	font-family: Arial, serif;
 }
 
+a[target="_blank"]:after
+{
+	content: "\f08e";
+	font: normal normal normal 14px/1 FontAwesome;
+	padding-left: 5px;
+}
+
 /*h1, h2, h3, h4, h5, h6 {
 	font-family: AntwerpenTall;
 	margin-bottom: 40px;
@@ -155,7 +162,8 @@ footer.footer, nav.navbar
 	background-color: #CF0039;
 }
 
-.navbar-default {
+.navbar-default
+{
 	background-color: rgba(248, 248, 248, 0);
 	border-color: transparent;
 }
@@ -165,7 +173,6 @@ nav .container .navbar-header .navbar-brand img
 	height: 90px;
 
 }
-
 
 nav .container .navbar-brand
 {
@@ -333,7 +340,6 @@ footer p.text-muted
 	border-color: #4D90FE;
 }
 
-
 /******************************************************* Slider *******************************************************/
 #slider
 {
@@ -343,7 +349,7 @@ footer p.text-muted
 .noUi-pips-horizontal
 {
 	height: 45px;
-	padding-bottom:0;
+	padding-bottom: 0;
 }
 
 .noUi-marker.noUi-marker-horizontal.noUi-marker-normal:first-child
@@ -355,13 +361,26 @@ footer p.text-muted
 {
 	height: 10px;
 }
+
+/************************************************ Grid System Opinion *************************************************/
+#opinion.grid
+{
+	position: relative;
+}
+
+#opinion .grid-item
+{
+	position: absolute;
+}
+
 /********************************************************* HOMEPAGE *********************/
 
 /*********************************************************	FOOTER 	*********************/
 
 /*********************************************************	CLEARFIX 	*********************/
 
-.clearfix:after {
+.clearfix:after
+{
 	visibility: hidden;
 	display: block;
 	font-size: 0;
@@ -369,8 +388,21 @@ footer p.text-muted
 	clear: both;
 	height: 0;
 }
-.clearfix { display: inline-block; }
+
+.clearfix
+{
+	display: inline-block;
+}
+
 /* start commented backslash hack \*/
-* html .clearfix { height: 1%; }
-.clearfix { display: block; }
+* html .clearfix
+{
+	height: 1%;
+}
+
+.clearfix
+{
+	display: block;
+}
+
 /* close commented backslash hack */

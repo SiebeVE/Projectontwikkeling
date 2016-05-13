@@ -12,14 +12,13 @@ class User extends Authenticatable
 	 * @var array
 	 */
 	protected $fillable = [
-		'name',
 		'email',
 		'password',
 		'firstname',
 		'lastname',
 		'address',
 		'postal_code',
-		'telephone',
+		'city',
 		'is_admin'
 	];
 
@@ -69,5 +68,15 @@ class User extends Authenticatable
 	public function oauthcredential()
 	{
 		return $this->hasOne('App\OAuthCredential');
+	}
+
+	/**
+	 * Give the full name of the user
+	 *
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->firstname." ".$this->lastname;
 	}
 }

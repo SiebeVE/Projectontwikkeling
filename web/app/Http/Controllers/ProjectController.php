@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Phase;
 use App\Project;
+use Carbon\Carbon;
 use finfo;
 use Illuminate\Http\Request;
 use App\User;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -154,6 +156,7 @@ class ProjectController extends Controller
 	 * @param Project $project
 	 * @param int $phaseNumber
 	 *
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
 	 */
 	public function getPhaseMake(Project $project, $phaseNumber)
 	{
@@ -171,6 +174,8 @@ class ProjectController extends Controller
 	 * @param Request $request
 	 * @param Project $project
 	 * @param int $phase
+	 *
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
 	 */
 	public function postPhaseMake(Request $request, Project $project, $phase)
 	{
@@ -180,32 +185,33 @@ class ProjectController extends Controller
 		$this->validate($request, $toValidate);
 
 		$data = json_decode($request->data, true);
+		//dd($data);
 
 		$projectPhases = $project->phases;
 		//dd($projectPhases[$phase+1]);
-		$phase = $projectPhases[$phase-1];
+		$phase = $projectPhases[$phase - 1];
 
-		if(array_has($data, "elements") && count($data["elements"]) > 0)
+		if (array_has($data, "elements") && count($data["elements"]) > 0)
 		{
 			// Set parent height in phase
 			$phase->parentHeight = $data["parentHeight"];
 			$phase->save();
-			
+
 			foreach ($data["elements"] as $question)
 			{
 				// Save the new question
 				$questionDatabase = $phase->questions()->create([
-					"sort" => $question["sort"],
-					"question" => $question["question"],
+					"sort"       => $question["sort"],
+					"question"   => $question["question"],
 					"leftOffset" => $question["options"]["left"],
-					"topOffset" => $question["options"]["top"],
-					"width" => $question["options"]["width"],
+					"topOffset"  => $question["options"]["top"],
+					"width"      => $question["options"]["width"],
 				]);
 
-				if(array_has($question, "answers") && count($question["answers"]) > 0)
+				if (array_has($question, "answers") && count($question["answers"]) > 0)
 				{
 					// Has multiple possible answers
-					foreach($question["answers"] as $answer)
+					foreach ($question["answers"] as $answer)
 					{
 						$possibleAnswer = $questionDatabase->possibleAnswers()->create([
 							"answer" => $answer
@@ -223,15 +229,16 @@ class ProjectController extends Controller
 		// Check if last phase of project
 		$numberOfPhases = count($projectPhases);
 		//dd($phase);
-		if($numberOfPhases == $phaseRelativeId)
+		if ($numberOfPhases == $phaseRelativeId)
 		{
+			// Finished new phases
 			return redirect('project/dashboard');
 		}
 		else
 		{
 			// Redirect to new phase page
-			$newPhase = $phaseRelativeId+1;
-			return redirect('project/'.$project->id.'/maken/fase/'.$newPhase);
+			$newPhase = $phaseRelativeId + 1;
+			return redirect('project/' . $project->id . '/maken/fase/' . $newPhase);
 		}
 	}
 
@@ -261,8 +268,6 @@ class ProjectController extends Controller
 
 	public function update(Request $request, Project $project)
 	{
-
-
 		$project->update($request->all());
 		$phases = $project->phases;
 
@@ -291,5 +296,109 @@ class ProjectController extends Controller
 		//dd($request->all());
 
 		return redirect('project/dashboard');
+	}
+
+	/**
+	 * Retrieve the page where users can give their opinion on a project
+	 * An array is build that contains all the questions details
+	 *
+	 * @param Project $project
+	 *
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 */
+	public function getOpinion(Project $project)
+	{
+		$project = $project->load('phases.questions.possibleAnswers');
+		//dd($project);
+
+		//$C_now = Carbon::now();
+
+		$currentPhase = $project->getCurrentPhase();
+
+		if ($currentPhase != NULL)
+		{
+			// Build the array for the questions
+			$questionsArr = [
+				"projectName"  => $project->name,
+				"phaseName"    => $currentPhase->name,
+				"parentHeight" => $currentPhase->parentHeight
+			];
+			foreach ($currentPhase->questions as $questionNumber => $question)
+			{
+				$questionsArr["elements"][$questionNumber]["sort"] = $question->sort;
+				$questionsArr["elements"][$questionNumber]["question"] = $question->question;
+				//$questionsArr["elements"][$questionNumber]["id"] = $question->id;
+				$questionsArr["elements"][$questionNumber]["options"]["left"] = $question->leftOffset;
+				$questionsArr["elements"][$questionNumber]["options"]["top"] = $question->topOffset;
+				$questionsArr["elements"][$questionNumber]["options"]["width"] = $question->width;
+				if (count($question->possibleAnswers) > 0)
+				{
+					// Has possible answers
+					foreach ($question->possibleAnswers as $answerNumber => $possibleAnswer)
+					{
+						$questionsArr["elements"][$questionNumber]["answers"][$answerNumber]["answer"] = $possibleAnswer->answer;
+						$questionsArr["elements"][$questionNumber]["answers"][$answerNumber]["id"] = $possibleAnswer->id;
+					}
+				}
+			}
+			//dd($questionsArr);
+			return view('projects.giveOpinion', ["data" => $questionsArr]);
+		}
+		abort(404, "Geen huidige phase gevonden");
+	}
+
+	/**
+	 * Handle the incoming post request for giving an opinion
+	 *
+	 * @param Project $project
+	 * @param Request $request
+	 */
+	public function postOpinion(Project $project, Request $request)
+	{
+		$user = Auth::user();
+		$phase = $project->getCurrentPhase();
+
+		$questions = $phase->questions;
+
+		foreach ($questions as $questionId => $question)
+		{
+			if (isset($request["question-" . $questionId]))
+			{
+				// Save the opinion to the user
+				//dd($question->id);
+				$answer = $request["question-" . $questionId];
+				$multiAnswer = false;
+
+				if (is_array($answer))
+				{
+					$answer = NULL;
+					$multiAnswer = true;
+				}
+
+				$answered = $user->answers()->create([
+					"question_id"     => $question->id,
+					"answer"          => $answer,
+					"multipleAnswers" => $multiAnswer,
+				]);
+
+				if ($multiAnswer)
+				{
+					foreach ($request["question-" . $questionId] as $answer)
+					{
+						$answered->possibleAnswers()->create([
+							"possible_answer_id" => $answer
+						]);
+					}
+				}
+				//dd($request["question-".$questionId]);
+			}
+			else
+			{
+				//dd("bestaat niet");
+			}
+		}
+		//dd($questions);
+
+		dd($request);
 	}
 }
