@@ -89,7 +89,9 @@ class ProjectController extends Controller
 		$toValidate = [
 			// Check for project
 			'name'        => 'required',
-			'description' => 'required|string|max:600',];
+			'description' => 'required|string|max:600',
+			'longitude' => 'required',
+			'latitude' => 'required',];
 
 		// Phase validation handler, get all inputs of phase and put in validation array
 		//dd($request->numberOfPhases);
@@ -117,8 +119,8 @@ class ProjectController extends Controller
 			"name"              => $request->name,
 			"description"       => $request->description,
 			"photo_left_offset" => $request->photoOffset,
-			//"longitude" => $request->longitude,
-			//"latitude" => $request->latitude,
+			"longitude" => $request->longitude,
+			"latitude" => $request->latitude,
 		]);
 
 		// Move picture and rename and save path in database
@@ -275,6 +277,15 @@ class ProjectController extends Controller
 				]
 			);
 		}
+
+		$toValidate = [
+			// Check for project
+			'name'        => 'required',
+			'description' => 'required|string|max:600',
+			'longitude' => 'required',
+			'latitude' => 'required',];
+
+		$this->validate($request, $toValidate);
 
 
 		//dd($request->all());

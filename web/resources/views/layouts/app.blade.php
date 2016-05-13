@@ -17,7 +17,6 @@
     <link href="{{ url('/') }}/css/nouislider.min.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/site.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/grid.css" rel="stylesheet">
-    <link href="{{ url('/') }}/css/nouislider.min.css" rel="stylesheet">
 
     @yield('pageCss')
 
