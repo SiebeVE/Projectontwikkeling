@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 /// <summary>
@@ -8,6 +9,7 @@ public class LocationManager {
 
     // variables for storing latitude and longitude
     private static float lat, lon;
+    public static string error = "";
 
     #region Properties
     public static float Latitude
@@ -27,35 +29,44 @@ public class LocationManager {
     /// </summary>
     public static void DetermineLocation()
     {
-        //if (NetworkManager.IsConnected)             // there is a connection 
-        //{
-            // check if GPS is enabled
-            if (IsLocationServiceEnabled())        // it's enabled
+        // check if GPS is enabled
+        if (IsLocationServiceEnabled())        // it's enabled
+        {
+            Input.location.Start(10f, 10f);
+
+            if(Input.location.status == LocationServiceStatus.Failed)
             {
-                Input.location.Start(10f, 10f);
-
-                if(Input.location.status == LocationServiceStatus.Failed)
-                {
-                    // TODO: display warning --> Service access denied
-                    Debug.Log("Service access denied!");
-                }
-                else
-                {
-                    // Pass current location to location variables.
-                    lat = Input.location.lastData.latitude;
-                    lon = Input.location.lastData.longitude;
-
-                    MapManager.SetAddress();
-                }
+                error = "De locatieservices konden niet worden opgestart.\r\nProbeer het nog eens.";
             }
-            else  // Location service is not enabled
+            else
             {
-                // TODO: display warning location service should be enabled
-                Debug.Log("Location service is not enabled.");
-            }
+                // Pass current location to location variables.
+                lat = Input.location.lastData.latitude;
+                lon = Input.location.lastData.longitude;
 
-            Input.location.Stop();
-        //}
+                MapManager.SetAddress();
+            }
+        }
+        else  // Location service is not enabled
+        {
+            error = "De locatieservice is niet ingeschakeld.\r\nSchakel deze in in je instellingen.";
+        }
+
+        // finally stop the location service
+        Input.location.Stop();
+
+        if (SceneManager.GetActiveScene().name == "Login")
+        {
+            if (error != string.Empty)
+            {
+                UIHandler.errorM.text = error;
+                UIHandler.CheckForError();
+            }
+            else
+            {
+                UIHandler.LoadMainScene("Main");
+            }
+        }
     }
 
     /// <summary>
