@@ -6,22 +6,32 @@ use Illuminate\Database\Eloquent\Model;
 
 class Phase extends Model
 {
-    protected $fillable = [
-        'name',
-        'description',
-        'start',
-        'end',
-    ];
+	protected $fillable = [
+		'name',
+		'description',
+		'start',
+		'end',
+	];
 
-    protected $dates = ['deleted_at'];
+	protected $dates = ['deleted_at', 'start', 'end'];
 
-    public function projects() {
+	/**
+	 * Get the project of this phase
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function projects()
+	{
+		return $this->belongsTo('App\Project');
+	}
 
-        return $this->belongsTo('App\Project');
-    }
-
-    public function questions() {
-
-        return $this->hasMany('App\Question');
-    }
+	/**
+	 * Get all the questions of this phase
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function questions()
+	{
+		return $this->hasMany('App\Question');
+	}
 }

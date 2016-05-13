@@ -206,7 +206,7 @@
                         console.log("ok-area");
                         // Toevoegen van inputs
                         $label = $("<label>").addClass("form-label").text(question).attr("for", inputName).data("sort", typeOfField);
-                        $input = $("<textarea>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
+                        $input = $("<textarea>").addClass("form-control").attr("id", inputName).attr("name", inputName);
                         console.log($label);
                         console.log($input);
                         break;

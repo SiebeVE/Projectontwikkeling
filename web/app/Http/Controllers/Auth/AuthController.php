@@ -70,9 +70,12 @@ class AuthController extends Controller
 	protected function create(array $data)
 	{
 		return User::create([
-			'name'     => $data['name'],
-			'email'    => $data['email'],
-			'password' => bcrypt($data['password']),
+			'email'       => $data['email'],
+			'password'    => bcrypt($data['password']),
+			'firstname'   => $data['firstname'],
+			'lastname'    => $data['lastname'],
+			'postal_code' => $data['postal_code'],
+			'city'        => $data['city'],
 		]);
 	}
 
@@ -97,7 +100,7 @@ class AuthController extends Controller
 		client_id=" . env('OAUTH_ID') . "&
 		client_secret=" . env('OAUTH_SECRET') . "&
 		redirect_uri=" . env('OAUTH_REDIRECT') . "&
-		scope=username name avatar email phone" . "&
+		scope=name email" . "&
 		lng=nl";
 
 		return view('auth.login', ["OAuthLink" => $link]);
@@ -114,8 +117,8 @@ class AuthController extends Controller
 	{
 
 		$client = new Client([
-			'curl'            => [CURLOPT_SSL_VERIFYPEER => false], // Bij self signed certificaten, moet weg wanneer niet self signed
-			'headers'         => ['Authorization' => $request->token_type . " " . $request->access_token],
+			'curl'        => [CURLOPT_SSL_VERIFYPEER => false], // Bij self signed certificaten, moet weg wanneer niet self signed
+			'headers'     => ['Authorization' => $request->token_type . " " . $request->access_token],
 			'http_errors' => false,
 		]);
 		//$client = new Client([
@@ -140,8 +143,8 @@ class AuthController extends Controller
 				$user = new User;
 				$user->firstname = $jsonData->firstName;
 				$user->lastname = $jsonData->lastName;
-				$user->telephone = $jsonData->phonePrimary;
-				$user->name = $jsonData->userName;
+				//$user->telephone = $jsonData->phonePrimary;
+				//$user->name = $jsonData->userName;
 				$user->email = $jsonData->emailPrimary;
 				$user->save();
 
