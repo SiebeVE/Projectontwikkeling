@@ -59,6 +59,11 @@ public class MapManager {
     }
     #endregion 
 
+    /// <summary>
+    /// Loads the map from Google into the application.
+    /// </summary>
+    /// <param name="URL">The URL which has been set in the SetAddress function.</param>
+    /// <returns></returns>
     public static IEnumerator LoadMap(string URL)
     {
         www = new WWW(URL);
@@ -66,6 +71,9 @@ public class MapManager {
         test.i.GetComponent<Renderer>().material.mainTexture = www.texture;
     }
 
+    /// <summary>
+    /// This method creates a URL which depends on the current location. (Runs at startup.)
+    /// </summary>
     public static void SetAddress()
     {
         mURLaddress += LocationManager.Latitude + "," + LocationManager.Longitude + "&zoom=13&maptype=roadmap&markers=color:red%7Clabel:A%7C" + LocationManager.Latitude + "," + LocationManager.Longitude + "&size=1920x1080" + API_KEY;

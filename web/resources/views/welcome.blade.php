@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="container">
-        <div class="hiddeninput">
+        <div id="hiddeninput">
             @for( $i = 0; $i < count($lat_array); $i++)
                 <input type="hidden" name="latitude" id="latitude{{ $i }}" value="{{ $lat_array[$i] }}">
                 <input type="hidden" name="longitude" id="longitude{{ $i }}" value="{{ $lng_array[$i] }}">
@@ -30,11 +30,14 @@
             </div>
         </div>
     </div>
+    <input id="jsonTest" type="hidden" name="json" value="{{ $json }}">
 @endsection
 
 @section('pageJs')
 
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&region=BE"
             async defer></script>
+    <script src="{{ url('/') }}/js/js-info-bubble-gh-pages/src/infobubble.js" type="text/javascript"></script>
+
     <script src="{{ url('/') }}/js/homeMap.js"></script>
 @endsection

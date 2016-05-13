@@ -65,12 +65,13 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Classes\Project.cs" />
     <Compile Include="Assets\Scripts\Classes\Stage.cs" />
+    <Compile Include="Assets\Scripts\Handlers\HardwareHandler.cs" />
     <Compile Include="Assets\Scripts\Handlers\SwipeDetectionHandler.cs" />
+    <Compile Include="Assets\Scripts\Managers\LoadMap.cs" />
     <Compile Include="Assets\Scripts\Managers\LocationManager.cs" />
     <Compile Include="Assets\Scripts\Managers\MapManager.cs" />
     <Compile Include="Assets\Scripts\Managers\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\Managers\test.cs" />
-    <Compile Include="Assets\Scripts\Managers\testMap.cs" />
     <Compile Include="Assets\Scripts\UI\UIHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

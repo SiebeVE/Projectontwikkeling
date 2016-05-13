@@ -11,8 +11,13 @@ nav.navbar, footer.footer {
     background-color: transparent;
 }
 
+nav .container .navbar-brand
+{
+    height: 70px;
+}
+
 #map {
-    height: 25em;
+    height: 35em;
     margin-top: 1em;
 }
 
@@ -23,6 +28,7 @@ nav.navbar, footer.footer {
     padding: 3em 0 3em 0;
     background: rgba(0, 0, 0, 0.2);
     font-family: AntwerpenTall;
+    height: 20em;
 
 }
 
@@ -54,3 +60,30 @@ nav.navbar, footer.footer {
 .banner-text p {
     vertical-align: bottom;
 }
+
+
+.infoBubble {
+    overflow: hidden !important;
+    line-height: 1.35;
+    color: white;
+    font-family: AntwerpenRegular;
+    text-align: left;
+
+}
+
+.infoProject {
+    margin: 0.5em;
+    max-height: 300px;
+    width: 400px;
+}
+
+.infoProject h3 {
+    margin-bottom: 15px;
+    border-bottom: solid 2px white;
+    padding-bottom: 5px;
+}
+
+.infoWindow p {
+    font-size: 1em;
+}
+
