@@ -27,6 +27,7 @@ public class UIHandler : MonoBehaviour {
     /// </summary>
     public static string mNameOfMenu = "";
 
+    public Button[] projectTest_bttns = new Button[] { };
 
     void Awake()
     {
@@ -59,6 +60,11 @@ public class UIHandler : MonoBehaviour {
             project_bttn.onClick.AddListener(() => ActivateMenu(mainProjectsListView, mainHome));
             maps_bttn.onClick.AddListener(() => SceneManager.LoadScene("Maps"));
             website_bttn.onClick.AddListener(() => Application.OpenURL(NetworkManager.URL));
+
+            for(byte i = 0; i < projectTest_bttns.Length; i++)
+            {
+                projectTest_bttns[i].onClick.AddListener(() => ActivateMenu(LoadProjectPage(), mainProjectsListView));
+            }
         }
         else if(SceneManager.GetActiveScene().name == "Maps")
         {
@@ -107,7 +113,7 @@ public class UIHandler : MonoBehaviour {
     }
 
     /// <summary>
-    /// Returns the gameobject which we come from (for finding out which menu should be called)
+    /// Returns the gameobject name which we came from (for finding out which menu should be called)
     /// </summary>
     /// <param name="nameOfMenu">The name of the menu which should be activated.</param>
     public static string ReturnToMenu(string nameOfMenu)
@@ -115,7 +121,19 @@ public class UIHandler : MonoBehaviour {
         return mNameOfMenu = nameOfMenu;
     }
 
-    void Update()
+    /// <summary>
+    /// When a button is pressed in the project_listview, the project page gets instantiated.
+    /// </summary>
+    /// <returns>The project page gameobject.</returns>
+    private GameObject LoadProjectPage()
     {
+        var instance = Instantiate(project_page);
+        instance.name = "project_page";
+        instance.transform.SetParent(main.transform, false);
+
+        return instance;
     }
+
+
+
 }

@@ -55,8 +55,9 @@ public class HardwareHandler : MonoBehaviour {
             {
                 if (Input.GetKey(KeyCode.Escape))
                 {
+                    DestroyImmediate(GameObject.Find("project_page"), true);
                     UIHandler.mainProjectsListView.SetActive(true);
-                    GameObject.Destroy(UIHandler.project_page);
+                    UIHandler.mNameOfMenu = "Home";
                 }
             }
         }
