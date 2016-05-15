@@ -44,7 +44,7 @@
                                 <label class="col-md-4 control-label" for="postal_code">Postcode</label>
 
                                 <div class="col-md-6">
-                                    <input type="number" class="form-control" id="postal_code" name="postal_code">
+                                    <input type="number" class="form-control" id="postal_code" name="postal_code" value="{{ old("postal_code") }}">
 
                                     @if ($errors->has('postal_code'))
                                         <span class="help-block">
@@ -58,7 +58,7 @@
                                 <label class="col-md-4 control-label" for="city">Gemeente</label>
 
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" id="city" name="city">
+                                    <input type="text" class="form-control" id="city" name="city" value="{{ old("city") }}">
 
                                     @if ($errors->has('city'))
                                         <span class="help-block">

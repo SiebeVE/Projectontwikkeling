@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableMultiAnswerd extends Migration
+class ChangeFieldsOfUsers extends Migration
 {
     /**
      * Run the migrations.
@@ -12,25 +12,8 @@ class CreateTableMultiAnswerd extends Migration
      */
     public function up()
     {
-        Schema::create('multiple_answerds', function (Blueprint $table) {
-            $table->increments('id');
-
-			$table->integer('answer_id')->unsigned();
-			$table->foreign('answer_id')
-				->references('id')
-				->on('answers')
-				->onDelete('cascade')
-				->onUpdate('cascade');
-
-			$table->integer('possible_answer_id')->unsigned();
-			$table->foreign('possible_answer_id')
-				->references('id')
-				->on('possible_answers')
-				->onDelete('cascade')
-				->onUpdate('cascade');
-
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            //
         });
     }
 
@@ -41,6 +24,8 @@ class CreateTableMultiAnswerd extends Migration
      */
     public function down()
     {
-        Schema::drop('multiple_answerds');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 }

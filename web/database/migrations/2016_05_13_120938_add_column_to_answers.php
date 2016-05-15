@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnToAnswers extends Migration
+class CreateTableMultiAnswerd extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,9 @@ class AddColumnToAnswers extends Migration
      */
     public function up()
     {
-        Schema::table('answers', function (Blueprint $table) {
-            $table->boolean("multipleAnswers")->after("answer");
+        Schema::create('multiple_answereds', function (Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
         });
     }
 
@@ -24,8 +25,6 @@ class AddColumnToAnswers extends Migration
      */
     public function down()
     {
-        Schema::table('answers', function (Blueprint $table) {
-            $table->dropColumn("multipleAnswers");
-        });
+        Schema::drop('multiple_answereds');
     }
 }

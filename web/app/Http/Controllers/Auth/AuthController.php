@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Mailer\AppMailer;
 use Auth;
 use App\OAuthCredential;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 use Validator;
 use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
@@ -54,9 +56,12 @@ class AuthController extends Controller
 	protected function validator(array $data)
 	{
 		return Validator::make($data, [
-			'name'     => 'required|max:255',
-			'email'    => 'required|email|max:255|unique:users',
-			'password' => 'required|min:6|confirmed',
+			'firstname'   => 'required|max:255',
+			'lastname'    => 'required|max:255',
+			'postal_code' => 'required|max:255',
+			'city'        => 'required|max:255',
+			'email'       => 'required|email|max:255|unique:users',
+			'password'    => 'required|min:6|confirmed',
 		]);
 	}
 
@@ -104,13 +109,6 @@ class AuthController extends Controller
 		lng=nl";
 
 		return view('auth.login', ["OAuthLink" => $link]);
-		//$content= [];
-		//$request = Request::create($link, 'GET');
-		//return request($request);
-		//return redirect()
-		//	->header("location", $link)
-		//	->header("Authorize", "bearer 17a7dcf038014b699f41745bb5c7f9f0");
-		//	->away($link);
 	}
 
 	public function authAProfile(Request $request)
@@ -124,7 +122,7 @@ class AuthController extends Controller
 		//$client = new Client([
 		//	'headers'  => ['Authorization' => $request->token_type . " " . $request->access_token],
 		//]);
-		$responseToken = $client->get('https://api-gw-p.antwerpen.be/astad/aprofiel/v1/v1/me');
+		$responseToken = $client->get(env("OAUTH_APROFILE"));
 		$jsonResponse = json_decode($responseToken->getBody());
 		if (isset($jsonResponse->success) && $jsonResponse->success)
 		{
@@ -146,6 +144,9 @@ class AuthController extends Controller
 				//$user->telephone = $jsonData->phonePrimary;
 				//$user->name = $jsonData->userName;
 				$user->email = $jsonData->emailPrimary;
+				$user->verified = 1;
+				$user->save();
+				$user->token = NULL;
 				$user->save();
 
 				$oAuthUser = new OAuthCredential;
@@ -166,5 +167,159 @@ class AuthController extends Controller
 			dd($jsonResponse);
 		}
 		dd($jsonResponse->data);
+	}
+
+	/**
+	 * Handle a registration request for the application.
+	 *
+	 * @param Request $request
+	 * @param AppMailer $mailer
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 * @throws \Illuminate\Foundation\Validation\ValidationException
+	 */
+	public function register(Request $request, AppMailer $mailer)
+	{
+		$validator = $this->validator($request->all());
+
+		if ($validator->fails())
+		{
+			$this->throwValidationException(
+				$request, $validator
+			);
+		}
+
+		//dd($request->all());
+
+		$user = $this->create($request->all());
+
+		//Auth::login($this->create($request->all()));
+
+		$mailer->sendEmailConfirmationTo($user);
+
+		flash('Please confirm your email address.');
+
+
+		//return redirect()->back();
+		//return redirect($this->redirectPath());
+	}
+
+	/**
+	 * Send confirmation mail registration
+	 *
+	 * @param $token
+	 *
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 */
+	public function confirmEmail($token)
+	{
+		$user = User::whereToken($token)->firstOrFail()->confirmEmail();
+
+		flash("You are now confirmed. Please login.");
+
+		return redirect("inloggen");
+	}
+
+	/**
+	 * Handle the confirmed email post
+	 *
+	 * @param $token
+	 *
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 */
+	public function confirmChangedEmail($token)
+	{
+		$user = User::whereToken($token)->firstOrFail()->confirmChangedEmail();
+
+		//dd($token);
+
+		flash("The email is changed.");
+
+		return redirect("account");
+	}
+
+	/**
+	 * Handle a login request to the application.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function login(Request $request)
+	{
+		$this->validate($request, [
+			$this->loginUsername() => 'required', 'password' => 'required',
+		]);
+
+		// If the class is using the ThrottlesLogins trait, we can automatically throttle
+		// the login attempts for this application. We'll key this by the username and
+		// the IP address of the client making these requests into this application.
+		$throttles = $this->isUsingThrottlesLoginsTrait();
+
+		if ($throttles && $this->hasTooManyLoginAttempts($request))
+		{
+			return $this->sendLockoutResponse($request);
+		}
+
+		$credentials = $this->getCredentials($request);
+
+		if (Auth::attempt($credentials, $request->has('remember')))
+		{
+			return $this->handleUserWasAuthenticated($request, $throttles);
+		}
+
+		// If the login attempt was unsuccessful we will increment the number of attempts
+		// to login and redirect the user back to the login form. Of course, when this
+		// user surpasses their maximum number of attempts they will get locked out.
+		if ($throttles)
+		{
+			$this->incrementLoginAttempts($request);
+		}
+
+		return redirect()->back()
+			->withInput($request->only($this->loginUsername(), 'remember'))
+			->withErrors([
+				$this->loginUsername() => $this->getFailedLoginMessage($request),
+			]);
+	}
+
+	/**
+	 * Get the needed authorization credentials from the request.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 *
+	 * @return array
+	 */
+	protected function getCredentials(Request $request)
+	{
+		$credentials = $request->only($this->loginUsername(), 'password');
+		$credentials = array_add($credentials, 'verified', true);
+		return $credentials;
+	}
+
+	/**
+	 * Get the failed login message.
+	 *
+	 * @param Request $request
+	 *
+	 * @return string
+	 */
+	protected function getFailedLoginMessage(Request $request)
+	{
+		$current_user = User::where($this->loginUsername(), '=', $request->only($this->loginUsername()))->first();
+		if ($current_user === NULL || $current_user->verified)
+		{
+			$message = Lang::has('auth.failed')
+				? Lang::get('auth.failed')
+				: 'These credentials do not match our records.';
+		}
+		else
+		{
+			$message = Lang::has('auth.failedEmail')
+				? Lang::get('auth.failedEmail')
+				: 'The email address is not verified, please check your mailbox.';
+		}
+
+		return $message;
 	}
 }

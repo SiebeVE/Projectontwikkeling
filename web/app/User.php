@@ -32,6 +32,20 @@ class User extends Authenticatable
 	];
 
 	/**
+	 * Function that is standard execute on events
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		//Executed when a new user is made
+		static::creating(function ($user)
+		{
+			$user->token = str_random(30);
+		});
+	}
+
+	/**
 	 * The attributes that are mutated to dates
 	 *
 	 * @var array
@@ -78,5 +92,28 @@ class User extends Authenticatable
 	public function getName()
 	{
 		return $this->firstname." ".$this->lastname;
+	}
+
+	/**
+	 * Handle database when the email is confirmed
+	 */
+	public function confirmEmail()
+	{
+		$this->verified = true;
+		$this->token = NULL;
+
+		$this->save();
+	}
+
+	/**
+	 * Handle database when the changed email is confirmed
+	 */
+	public function confirmChangedEmail()
+	{
+		$this->token = NULL;
+		$this->email = $this->tempMail;
+		$this->tempMail = NULL;
+
+		$this->save();
 	}
 }

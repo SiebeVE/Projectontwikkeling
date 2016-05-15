@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeToNullableAnswers extends Migration
+class ChangeFieldsOfUsers extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class ChangeToNullableAnswers extends Migration
      */
     public function up()
     {
-        Schema::table('answers', function (Blueprint $table) {
-            $table->string('answer')->nullable()->change();
+        Schema::table('users', function (Blueprint $table) {
+            //
         });
     }
 
@@ -24,8 +24,8 @@ class ChangeToNullableAnswers extends Migration
      */
     public function down()
     {
-        Schema::table('answers', function (Blueprint $table) {
-            $table->string('answer')->change();
+        Schema::table('users', function (Blueprint $table) {
+            //
         });
     }
 }
