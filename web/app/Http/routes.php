@@ -45,6 +45,10 @@ Route::group(['middleware' => 'web'], function ()
 	Route::get('registreer', 'Auth\AuthController@showRegistrationForm');
 	Route::post('registreer', 'Auth\AuthController@register');
 
+	// Email verification routes
+	Route::get('registreer/bevestig/{token}', 'Auth\AuthController@confirmEmail');
+	Route::get('verander/bevestig/{token}', 'Auth\AuthController@confirmChangedEmail');
+
 	// Password Reset Routes...
 	Route::get('wachtwoord/reset/{token?}', 'Auth\PasswordController@showResetForm');
 	Route::post('wachtwoord/email', 'Auth\PasswordController@sendResetLinkEmail');

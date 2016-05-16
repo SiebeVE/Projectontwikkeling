@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnToAnswers extends Migration
+class AddEmailConfirmationFieldsToUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class AddColumnToAnswers extends Migration
      */
     public function up()
     {
-        Schema::table('answers', function (Blueprint $table) {
-            $table->boolean("multipleAnswers")->after("answer");
+        Schema::table('users', function (Blueprint $table) {
+            //
         });
     }
 
@@ -24,8 +24,8 @@ class AddColumnToAnswers extends Migration
      */
     public function down()
     {
-        Schema::table('answers', function (Blueprint $table) {
-            $table->dropColumn("multipleAnswers");
+        Schema::table('users', function (Blueprint $table) {
+            //
         });
     }
 }

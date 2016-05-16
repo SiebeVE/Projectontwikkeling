@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeToNullableAnswers extends Migration
+class CreateTableMultiAnswerd extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,9 @@ class ChangeToNullableAnswers extends Migration
      */
     public function up()
     {
-        Schema::table('answers', function (Blueprint $table) {
-            $table->string('answer')->nullable()->change();
+        Schema::create('multiple_answereds', function (Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
         });
     }
 
@@ -24,8 +25,6 @@ class ChangeToNullableAnswers extends Migration
      */
     public function down()
     {
-        Schema::table('answers', function (Blueprint $table) {
-            $table->string('answer')->change();
-        });
+        Schema::drop('multiple_answereds');
     }
 }
