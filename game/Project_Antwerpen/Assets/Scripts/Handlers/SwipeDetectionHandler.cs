@@ -4,7 +4,6 @@ using System.Collections;
 public class SwipeDetectionHandler : MonoBehaviour
 {
 
-    public GameObject overlay;
     public float minSwipeDistanceY;
     private Vector2 startpos;
 
@@ -39,11 +38,11 @@ public class SwipeDetectionHandler : MonoBehaviour
                         // some object should be triggered
                         if (Mathf.Sign(t.position.y - startpos.y) < 0) // we're swiping down
                         {
-                            overlay.SetActive(true);
+                            Camera.main.GetComponent<AnimatorHandler>().EnableAnimator(GetComponent<Animator>());
                         }
                         else
                         {
-                            overlay.SetActive(false);
+                            Camera.main.GetComponent<AnimatorHandler>().DisableAnimator(GetComponent<Animator>());
                         }
 
                     }

@@ -9,12 +9,12 @@ using System.Collections;
 public class UIHandler : MonoBehaviour {
 
     #region Unity
-    private GameObject main, overlay_obj;           // MAIN = main content of the screen; OVERLAY_OBJ = object to be displayed in maps
+    private GameObject main, overlay_obj, menu, menuBG;           // MAIN = main content of the screen; OVERLAY_OBJ = object to be displayed in maps
     public static GameObject error_message, mainHome, mainProjectsListView, project_page;     // ERROR = the error to be displayed at startup, MAINHOME = the home screen; MAINPROJECTSLISTVIEW = projectlistview, PROJECT_PAGE = page of the project to be loaded
 
     #region UI
-    // STARTUP = button at login screen ; CONFIRM (LOGIN) = when error is displayed at startup; PROJECT = project button in home screen; MAPS = maps button in home screen; SETTINGS = settings button in home screen; WEBSITE = website button in home screen; CONFIRM (MAPS) = ok button in maps screen;
-    private Button startup_bttn, confirm_bttn_login, project_bttn, maps_bttn, settings_bttn, website_bttn, confirm_bttn_maps;
+    // STARTUP = button at login screen ; CONFIRM (LOGIN) = when error is displayed at startup; PROJECT = project button in home screen; MAPS = maps button in home screen; SETTINGS = settings button in home screen; WEBSITE = website button in home screen; CONFIRM (MAPS) = ok button in maps screen; LOGO = logo in home screen; all buttons starting with menu_ are the buttons in the menu in the main screen
+    private Button startup_bttn, confirm_bttn_login, project_bttn, maps_bttn, settings_bttn, website_bttn, confirm_bttn_maps, logo_bttn, menu_home, menu_projects, menu_maps, menu_settings, menu_website, menu_logout;
     private InputField location_input; // MAPS screen
     private Dropdown maptype_drop;  // MAPS screen
     private Slider zoomSlider, scaleSlider; // MAPS screen
@@ -55,13 +55,37 @@ public class UIHandler : MonoBehaviour {
             maps_bttn = mainHome.transform.Find("maps_bttn").GetComponent<Button>();
             settings_bttn = mainHome.transform.Find("settings_bttn").GetComponent<Button>();
             website_bttn = mainHome.transform.Find("website_bttn").GetComponent<Button>();
+            logo_bttn = GameObject.Find("Header").transform.Find("logo").gameObject.GetComponent<Button>();
 
             // Assign tasks to these buttons
             project_bttn.onClick.AddListener(() => ActivateMenu(mainProjectsListView, mainHome));
             maps_bttn.onClick.AddListener(() => SceneManager.LoadScene("Maps"));
             website_bttn.onClick.AddListener(() => Application.OpenURL(NetworkManager.URL));
+            logo_bttn.onClick.AddListener(() => ShowMainMenu());
 
-            for(byte i = 0; i < projectTest_bttns.Length; i++)
+            // menu code
+            menu = GameObject.Find("Menu");
+            menuBG = menu.transform.Find("BG").gameObject;
+            menu_home = menuBG.transform.Find("menu_home").GetComponent<Button>();
+            menu_projects = menuBG.transform.Find("menu_projects").GetComponent<Button>();
+            menu_maps = menuBG.transform.Find("menu_maps").GetComponent<Button>();
+            menu_settings = menuBG.transform.Find("menu_settings").GetComponent<Button>();
+            menu_website = menuBG.transform.Find("menu_website").GetComponent<Button>();
+            menu_logout = menuBG.transform.Find("menu_logout").GetComponent<Button>();
+
+            // assign tasks to these buttons
+            menu_home.onClick.AddListener(() => LoadMainScene(SceneManager.GetActiveScene().name));
+
+            menu_projects.onClick.AddListener(() => 
+                    {   ActivateMenu(mainProjectsListView, mainHome);
+                        ShowMainMenu();
+                    });
+
+            menu_maps.onClick.AddListener(() => LoadMainScene("Maps"));
+            menu_website.onClick.AddListener(() => Application.OpenURL(NetworkManager.URL));
+            menu_logout.onClick.AddListener(() => LoadMainScene("Login"));
+
+            for (byte i = 0; i < projectTest_bttns.Length; i++)
             {
                 projectTest_bttns[i].onClick.AddListener(() => ActivateMenu(LoadProjectPage(), mainProjectsListView));
             }
@@ -132,6 +156,23 @@ public class UIHandler : MonoBehaviour {
         instance.transform.SetParent(main.transform, false);
 
         return instance;
+    }
+
+    /// <summary>
+    /// Enables/Disables the menu in the main screen when the logo is clicked.
+    /// </summary>
+    private void ShowMainMenu()
+    {
+        if (menu.GetComponent<HardwareHandler>().mainMenuIsEnabled)
+        {
+            GetComponent<AnimatorHandler>().DisableAnimator(menu.GetComponent<Animator>());
+            menu.GetComponent<HardwareHandler>().mainMenuIsEnabled = false;
+        }
+        else
+        {
+            GetComponent<AnimatorHandler>().EnableAnimator(menu.GetComponent<Animator>());
+            menu.GetComponent<HardwareHandler>().mainMenuIsEnabled = true;
+        }
     }
 
 

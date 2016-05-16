@@ -8,7 +8,7 @@ using System.Collections;
 /// </summary>
 public class HardwareHandler : MonoBehaviour {
 
-    public Text t;
+    public bool mainMenuIsEnabled = false;
 
 	// Use this for initialization
 	void Start () {
@@ -25,8 +25,6 @@ public class HardwareHandler : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        t.text = UIHandler.mNameOfMenu;
-
         if (SceneManager.GetActiveScene().name == "Maps")
         {
             if (Input.GetKey(KeyCode.Escape))
@@ -46,7 +44,7 @@ public class HardwareHandler : MonoBehaviour {
             }
             else if (UIHandler.mNameOfMenu == "")                            // if the name is empty, we are in the home scree
             {
-                if (Input.GetKey(KeyCode.Escape))                           // if he then presses back
+                if (Input.GetKey(KeyCode.Escape) && !mainMenuIsEnabled)                           // if he then presses back
                 {
                     Application.Quit();                                     // Quit the app
                 }
@@ -59,6 +57,17 @@ public class HardwareHandler : MonoBehaviour {
                     UIHandler.mainProjectsListView.SetActive(true);
                     UIHandler.mNameOfMenu = "Home";
                 }
+            }
+
+            if (Input.GetKey(KeyCode.Menu) && !mainMenuIsEnabled)
+            {
+                Camera.main.GetComponent<AnimatorHandler>().EnableAnimator(GetComponent<Animator>());
+                mainMenuIsEnabled = true;
+            }
+            else if(Input.GetKey(KeyCode.Menu) && mainMenuIsEnabled)
+            {
+                Camera.main.GetComponent<AnimatorHandler>().DisableAnimator(GetComponent<Animator>());
+                mainMenuIsEnabled = false;
             }
         }
 	}
