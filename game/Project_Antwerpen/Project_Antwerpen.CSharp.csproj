@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Handlers\AnimatorHandler.cs" />
     <Compile Include="Assets\Scripts\Handlers\HardwareHandler.cs" />
     <Compile Include="Assets\Scripts\Handlers\SwipeDetectionHandler.cs" />
+    <Compile Include="Assets\Scripts\Handlers\testProjectHandler.cs" />
     <Compile Include="Assets\Scripts\Managers\LoadMap.cs" />
     <Compile Include="Assets\Scripts\Managers\LocationManager.cs" />
     <Compile Include="Assets\Scripts\Managers\MapManager.cs" />

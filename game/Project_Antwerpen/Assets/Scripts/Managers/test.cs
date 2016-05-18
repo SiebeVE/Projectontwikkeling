@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class test : MonoBehaviour {
+public class testP : MonoBehaviour {
 
     public static Text connection, loc;
     public Button b;
