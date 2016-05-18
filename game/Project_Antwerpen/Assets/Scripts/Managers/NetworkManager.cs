@@ -8,28 +8,27 @@ using System.Net;
 public class NetworkManager {
 
     private static bool isConnected = false;
+    public static string URL = "https://www.google.be";
 
     public static IEnumerator CheckInternetConnection(string IPaddress)
     {
-        if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork || Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+        WWW www = new WWW(IPaddress);
+        yield return www;
+
+        if (www.error == null)      // There is no problem accessing the webpage
         {
-            Ping ping = new Ping(IPaddress);
-            float startTime = Time.time;
+            // so we can assume we are connected to the internet
+            isConnected = true;
 
-            while (Time.time < startTime + 5.0f)
-            {
-                yield return new WaitForSeconds(0.1f);
-            }
-
-            if (ping.isDone)
-            {
-                isConnected = true;
-            }
-            else
-            {
-                isConnected = false;
-            }
-        } 
+            // Then we need to check at wich location we are
+            LocationManager.DetermineLocation();
+        }
+        else
+        {
+            isConnected = false;
+            UIHandler.errorM.text = "We kunnen geen contact met je leggen.\r\nMaak alsjeblief verbinding met het internet.";
+            UIHandler.CheckForError();
+        }
     }
 
     /// <summary>

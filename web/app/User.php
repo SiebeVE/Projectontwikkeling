@@ -12,14 +12,13 @@ class User extends Authenticatable
 	 * @var array
 	 */
 	protected $fillable = [
-		'name',
 		'email',
 		'password',
 		'firstname',
 		'lastname',
 		'address',
 		'postal_code',
-		'telephone',
+		'city',
 		'is_admin'
 	];
 
@@ -31,6 +30,20 @@ class User extends Authenticatable
 	protected $hidden = [
 		'password', 'remember_token',
 	];
+
+	/**
+	 * Function that is standard execute on events
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		//Executed when a new user is made
+		static::creating(function ($user)
+		{
+			$user->token = str_random(30);
+		});
+	}
 
 	/**
 	 * The attributes that are mutated to dates
@@ -69,5 +82,38 @@ class User extends Authenticatable
 	public function oauthcredential()
 	{
 		return $this->hasOne('App\OAuthCredential');
+	}
+
+	/**
+	 * Give the full name of the user
+	 *
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->firstname." ".$this->lastname;
+	}
+
+	/**
+	 * Handle database when the email is confirmed
+	 */
+	public function confirmEmail()
+	{
+		$this->verified = true;
+		$this->token = NULL;
+
+		$this->save();
+	}
+
+	/**
+	 * Handle database when the changed email is confirmed
+	 */
+	public function confirmChangedEmail()
+	{
+		$this->token = NULL;
+		$this->email = $this->tempMail;
+		$this->tempMail = NULL;
+
+		$this->save();
 	}
 }

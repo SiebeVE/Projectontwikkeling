@@ -7,7 +7,7 @@ public class test : MonoBehaviour {
     public static Text connection, loc;
     public Button b;
     public static GameObject i;
-    public string IPaddress = "72.14.192.0";
+    
 
 	// Use this for initialization
 	void Start () {

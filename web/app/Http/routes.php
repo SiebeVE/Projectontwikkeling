@@ -30,29 +30,50 @@
 |
 */
 
-//Route::group(['middleware' => 'web'], function () {
-//Don't put it in the middleware web, is automatically loaded aand when twice, it breaks the roors
-Route::get('/', 'HomeController@index');
+Route::group(['middleware' => 'web'], function ()
+{
+//Don't put it in the middleware web, is automatically loaded and when twice, fixed in routeServiceProvider
+	Route::get('/', 'HomeController@index');
 
-Route::auth();
+	//Route::auth();
+	// Authentication Routes...
+	Route::get('inloggen', 'Auth\AuthController@showLoginForm');
+	Route::post('inloggen', 'Auth\AuthController@login');
+	Route::get('uitloggen', 'Auth\AuthController@logout');
 
-Route::get('/home', 'HomeController@index');
+	// Registration Routes...
+	Route::get('registreer', 'Auth\AuthController@showRegistrationForm');
+	Route::post('registreer', 'Auth\AuthController@register');
 
-Route::get('project/maken', 'ProjectController@make');
-Route::post('project/maken', 'ProjectController@postMake');
-Route::get('project/{project}/maken/fase/{phase}', 'ProjectController@getPhaseMake');
-Route::post('project/{project}/maken/fase/{phase}', 'ProjectController@postPhaseMake');
+	// Email verification routes
+	Route::get('registreer/bevestig/{token}', 'Auth\AuthController@confirmEmail');
+	Route::get('verander/bevestig/{token}', 'Auth\AuthController@confirmChangedEmail');
 
-Route::get('project/dashboard', 'ProjectController@dashboard');
+	// Password Reset Routes...
+	Route::get('wachtwoord/reset/{token?}', 'Auth\PasswordController@showResetForm');
+	Route::post('wachtwoord/email', 'Auth\PasswordController@sendResetLinkEmail');
+	Route::post('wachtwoord/reset', 'Auth\PasswordController@reset');
 
-Route::get('project/bewerk/{project}', 'ProjectController@edit');
-Route::patch('project/bewerk/{project}', 'ProjectController@update');
+	Route::get('/home', 'HomeController@index');
 
-Route::get('auth/token', 'Auth\AuthController@authAProfile');
+	Route::get('project/maken', 'ProjectController@make');
+	Route::post('project/maken', 'ProjectController@postMake');
+	Route::get('project/{project}/maken/fase/{phase}', 'ProjectController@getPhaseMake');
+	Route::post('project/{project}/maken/fase/{phase}', 'ProjectController@postPhaseMake');
 
+	Route::get('project/dashboard', 'ProjectController@dashboard');
 
-Route::group(['middleware' => 'api'], function () {
+	Route::get('project/beoordelen/{project}', 'ProjectController@getOpinion');
+	Route::post('project/beoordelen/{project}', 'ProjectController@postOpinion');
+
+	Route::get('project/bewerk/{project}', 'ProjectController@edit');
+	Route::patch('project/bewerk/{project}', 'ProjectController@update');
+
+	Route::get('auth/token', 'Auth\AuthController@authAProfile');
+});
+
+Route::group(['middleware' => 'api'], function ()
+{
 	Route::get('api/get', 'ApiController@get');
 	Route::post('api/get', 'ApiController@post');
 });
-//});
