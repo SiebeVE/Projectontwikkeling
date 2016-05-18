@@ -128,6 +128,8 @@ function initMap() {
                 marker = null;
             }
             addmarker(placecoords);
+            inputLat.value = marker.getPosition().lat();
+            inputLng.value = marker.getPosition().lng();
         });
 
 
