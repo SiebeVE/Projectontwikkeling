@@ -41,6 +41,9 @@
                             <input type="hidden" name="photoOffset" id="photoOffset" value="{{ old("photoOffset") }}">
                         </div>
                     </div>
+                    <label for="address">Adres</label>
+                    <input type="text" id="address" name="address" class="form-control input-lg"
+                           value="{{ old("address") }}">
                 </div>
                 <div class="col-md-12">
                     <div id="buttonbar" class="mine pull-right">

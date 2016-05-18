@@ -90,6 +90,7 @@ class ProjectController extends Controller
 			// Check for project
 			'name'        => 'required',
 			'description' => 'required|string|max:600',
+			'address' => 'required',
 			'longitude' => 'required',
 			'latitude' => 'required',];
 
@@ -118,6 +119,7 @@ class ProjectController extends Controller
 		$project = $request->user()->projects()->create([
 			"name"              => $request->name,
 			"description"       => $request->description,
+			"address"			=> $request->address,
 			"photo_left_offset" => $request->photoOffset,
 			"longitude" => $request->longitude,
 			"latitude" => $request->latitude,
@@ -262,9 +264,14 @@ class ProjectController extends Controller
 	public function update(Request $request, Project $project)
 	{
 
-
-		$project->update($request->all());
+		$project->update(
+			[
+				$request->all(),
+				$project->address = $request->input('address')
+			]
+		);
 		$phases = $project->phases;
+
 
 		foreach ($phases as $phase)
 		{
@@ -282,6 +289,7 @@ class ProjectController extends Controller
 			// Check for project
 			'name'        => 'required',
 			'description' => 'required|string|max:600',
+			'address' => 'required',
 			'longitude' => 'required',
 			'latitude' => 'required',];
 

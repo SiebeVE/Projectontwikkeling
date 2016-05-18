@@ -27,6 +27,9 @@
                         <textarea name="description" id="description" class="form-control"
                                   maxlength="600">{{ $project->description }}</textarea>
                     </div>
+                    <label for="address">Adres</label>
+                    <input type="text" id="address" name="address" class="form-control input-lg"
+                           value="{{ $project->address }}">
                 </div>
                 <div class="col-md-4">
                     <div class="upload">

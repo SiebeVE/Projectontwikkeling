@@ -42,7 +42,6 @@ label, nav li {
 {
 	position: relative;
 	width: 100%;
-	background-color: #F5F5F5;
 	clear: both;
 	z-index: 10;
 	height: 4em;
@@ -90,7 +89,7 @@ form[name=create] .upload #imagePlaceholder img
 
 form[name=create] textarea#description
 {
-	height: 12em;
+	height: 17em;
 }
 
 form[name=create] #phases .phase:last-child
@@ -158,6 +157,7 @@ footer.footer, nav.navbar
 .navbar-default {
 	background-color: rgba(248, 248, 248, 0);
 	border-color: transparent;
+	margin-bottom: 0;
 }
 
 nav .container .navbar-header .navbar-brand img
@@ -176,13 +176,29 @@ nav .container .navbar-brand
 #app-navbar-collapse ul
 {
 	vertical-align: middle;
-	margin-top: 20px;
+	height: 90px;
+
 
 }
 
 #app-navbar-collapse ul li a
 {
 	color: white;
+	background-color: transparent;
+	padding-top: 35px;
+	padding-bottom: 37px;
+}
+
+#app-navbar-collapse ul li ul
+{
+	color: white;
+	background-color: rgba(0,0,0,0.3);
+}
+
+#app-navbar-collapse ul li:hover
+{
+	color: white;
+	background-color: rgba(0,0,0,0.3);
 }
 
 footer p.text-muted
