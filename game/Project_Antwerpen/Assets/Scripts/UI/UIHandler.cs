@@ -11,11 +11,10 @@ public class UIHandler : MonoBehaviour {
     #region Unity
     private GameObject main, overlay_obj, menu, menuBG, project_listbttn;           // MAIN = main content of the screen; OVERLAY_OBJ = object to be displayed in maps
     public static GameObject error_message, mainHome, mainProject, project_page;     // ERROR = the error to be displayed at startup, MAINHOME = the home screen; MAINPROJECT = projectlistview, PROJECT_PAGE = page of the project to be loaded
-    private testProjectHandler tprh;
 
     #region UI
     // STARTUP = button at login screen ; CONFIRM (LOGIN) = when error is displayed at startup; PROJECT = project button in home screen; MAPS = maps button in home screen; SETTINGS = settings button in home screen; WEBSITE = website button in home screen; CONFIRM (MAPS) = ok button in maps screen; LOGO = logo in home screen; all buttons starting with menu_ are the buttons in the menu in the main screen
-    private Button startup_bttn, confirm_bttn_login, project_bttn, maps_bttn, settings_bttn, website_bttn, confirm_bttn_maps, logo_bttn, menu_home, menu_projects, menu_maps, menu_settings, menu_website, menu_logout;
+    private Button startup_bttn, confirm_bttn_login, project_bttn, maps_bttn, settings_bttn, website_bttn, confirm_bttn_maps, burger_bttn, menu_home, menu_projects, menu_maps, menu_settings, menu_website, menu_logout;
     private InputField location_input; // MAPS screen
     private Dropdown maptype_drop;  // MAPS screen
     private Slider zoomSlider, scaleSlider; // MAPS screen
@@ -46,8 +45,6 @@ public class UIHandler : MonoBehaviour {
         }
         else if (SceneManager.GetActiveScene().name == "Main")
         {
-            tprh = GetComponent<testProjectHandler>();
-
             // Find the main functioning objects
             main = GameObject.Find("Main");
             mainHome = main.transform.Find("Home").gameObject;
@@ -62,13 +59,13 @@ public class UIHandler : MonoBehaviour {
             maps_bttn = mainHome.transform.Find("maps_bttn").GetComponent<Button>();
             settings_bttn = mainHome.transform.Find("settings_bttn").GetComponent<Button>();
             website_bttn = mainHome.transform.Find("website_bttn").GetComponent<Button>();
-            logo_bttn = GameObject.Find("Header").transform.Find("logo").gameObject.GetComponent<Button>();
+            burger_bttn = GameObject.Find("Header").transform.Find("hamburger").gameObject.GetComponent<Button>();
 
             // Assign tasks to these buttons
             project_bttn.onClick.AddListener(() => ActivateMenu(mainProject, mainHome));
             maps_bttn.onClick.AddListener(() => SceneManager.LoadScene("Maps"));
             website_bttn.onClick.AddListener(() => Application.OpenURL(NetworkManager.URL));
-            logo_bttn.onClick.AddListener(() => ShowMainMenu());
+            burger_bttn.onClick.AddListener(() => ShowMainMenu());
 
             // menu code
             menu = GameObject.Find("Menu");
@@ -91,11 +88,6 @@ public class UIHandler : MonoBehaviour {
             menu_maps.onClick.AddListener(() => LoadMainScene("Maps"));
             menu_website.onClick.AddListener(() => Application.OpenURL(NetworkManager.URL));
             menu_logout.onClick.AddListener(() => LoadMainScene("Login"));
-
-            //for (byte i = 0; i < projectTest_bttns.Length; i++)
-            //{
-            //    projectTest_bttns[i].onClick.AddListener(() => ActivateMenu(LoadProjectPage(), mainProjectsListView));
-            //}
         }
         else if(SceneManager.GetActiveScene().name == "Maps")
         {
@@ -155,19 +147,50 @@ public class UIHandler : MonoBehaviour {
     /// <summary>
     /// When a button is pressed in the project_listview, the project page gets instantiated.
     /// </summary>
+    /// <param name="name">The name of the project so all the correct properties will be showed on the screen.</param>
     /// <returns>The project page gameobject.</returns>
-    private GameObject LoadProjectPage()
+    private GameObject LoadProjectPage(string name)
     {
+        GameObject prPage;
+        Image prImage;
+        Text prTitle, prStage, prDescription;
+        Project p;
+         
+        // instantiate the project page and give it the name project_page
         var instance = Instantiate(project_page);
         instance.name = "project_page";
+
+        // set the parent to be the main and give it the correct scale
         instance.transform.SetParent(main.transform, false);
+
+        // find all the gameobjects on the page
+        prPage = GameObject.Find(instance.name).transform.Find("grid").gameObject;
+        prImage = prPage.transform.Find("project_image").GetComponent<Image>();
+        prTitle = prPage.transform.Find("project_image/project_title_BG/project_title").GetComponent<Text>();
+        prStage = prPage.transform.Find("project_fase").GetComponentInChildren<Text>();
+        prDescription = prPage.transform.Find("project_description/description").GetComponent<Text>();
+
+        p = FindProject(GetComponent<testProjectHandler>().projecten, name);
+
+        prTitle.text = p.Name;
+        prImage.sprite = p.Image;
+        prStage.text = p.CurrentStage;
+        prDescription.text = p.Description;
 
         return instance;
     }
 
     /// <summary>
-    /// Enables/Disables the menu in the main screen when the logo is clicked.
+    /// Finds the corresponding project in the list of loaded projects, so the correct information is displayed on the project page
     /// </summary>
+    /// <param name="projects">The project list of the projectHandler, which was loaded from the database.</param>
+    /// <param name="value">The name of the project of which the info should be loaded.</param>
+    /// <returns>The project object corresponding to the name of the button which was clicked.</returns>
+    private Project FindProject(List<Project> projects, string value)
+    {
+        return projects.Find(p => p.Name == value);
+    }
+
     private void ShowMainMenu()
     {
         if (menu.GetComponent<HardwareHandler>().mainMenuIsEnabled)
@@ -203,6 +226,8 @@ public class UIHandler : MonoBehaviour {
             // Set the parent of the instance to be the grid, so it buttons will be displayed in there
             // and give it the correct size
             instance.transform.SetParent(grid.transform, false);
+
+            instance.GetComponent<Button>().onClick.AddListener(() => ActivateMenu(LoadProjectPage(instance.name), mainProject));
         }
     }
 

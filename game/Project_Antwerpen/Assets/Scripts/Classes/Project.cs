@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Project {
 
     private string mName, mDescription;
+    private Sprite mImage;
     private List<Stage> mStages;
     private string mCurrentStage;
 
-    public Project(string name, string description, List<Stage> stages)
+    public Project(string name, string description, Sprite image, List<Stage> stages)
     {
         mName = name;
         mDescription = description;
+        mImage = image;
 
         mStages = stages;
     }
@@ -29,13 +32,16 @@ public class Project {
     public List<Stage> Stages
     {
         get { return mStages; }
-        set { mStages = value; }
     }
 
     public string CurrentStage
     {
         get { return mCurrentStage; }
-        set { mCurrentStage = value; }
+    }
+
+    public Sprite Image
+    {
+        get { return mImage; }
     }
     #endregion
 
