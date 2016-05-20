@@ -144,4 +144,21 @@ class User extends Authenticatable
 		$this->is_admin = "0";
 		$this->save();
 	}
+
+	/**
+	 *
+	 * Function to toggle the admin boolean
+	 */
+	public function toggleAdmin()
+	{
+		if($this->isAdmin())
+		{
+			$this->is_admin = "0";
+		}
+		else
+		{
+			$this->is_admin = "1";
+		}
+		$this->save();
+	}
 }

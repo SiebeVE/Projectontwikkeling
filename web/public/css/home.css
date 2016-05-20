@@ -7,7 +7,7 @@
     background-size: cover;
 }
 
-nav.navbar, footer.footer {
+nav.navbar {
     background-color: transparent;
 }
 
@@ -17,8 +17,7 @@ nav .container .navbar-brand
 }
 
 #map {
-    height: 35em;
-    margin-top: 1em;
+    height: inherit;
 }
 
 #banner {
@@ -28,8 +27,12 @@ nav .container .navbar-brand
     padding: 3em 0 3em 0;
     background: rgba(0, 0, 0, 0.2);
     font-family: AntwerpenTall;
-    height: 20em;
+    height: 10em;
+}
 
+#banner #banner-wrapper {
+    width: 67.5em;
+    margin: auto;
 }
 
 #banner p {
@@ -39,7 +42,7 @@ nav .container .navbar-brand
 
 .banner-slogan {
     font-size: 5.5em;
-    width: 58%;
+    width: 10em;
     float: left;
     text-align: right;
     margin-right: 1.5%;
@@ -49,12 +52,12 @@ nav .container .navbar-brand
 .banner-text {
     border-left: 5px white solid;
     font-size: 1.5em;
-    width: 18.5%;
+    width: 7em;
     float: left;
     padding-left: 1%;
     line-height: 1.2em;
     padding-top: 0.4em;
-    margin-top: 4.4em;
+    margin-top: 0;
 }
 
 .banner-text p {
@@ -85,5 +88,74 @@ nav .container .navbar-brand
 
 .infoWindow p {
     font-size: 1em;
+}
+
+.mapwrapper {
+    margin-top: 1em;
+    background-color:  rgba(0,0,0,0.7);
+    padding: 0;
+    border-radius: 5px;
+    height: 50em;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mapwrapper .tabs, .mapwrapper .mapcontainer {
+    padding: 0;
+    float: left;
+    height: inherit;
+}
+
+.mapwrapper .tabs {
+    overflow-y: scroll;
+    border-radius: 5px;
+    font-family: AntwerpenRegular;
+    width: 15%;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.mapwrapper .mapcontainer {
+    width: 85%;
+}
+
+.mapwrapper .tabs button {
+     width: 99.3%;
+     height: 6em;
+     background-color: rgba(141,144,146,0.3);
+     border: none;
+     border-bottom: solid #000 1px;
+    color: white;
+    -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+}
+
+.mapwrapper .tabs button:hover {
+    background-color: 	rgba(255, 255, 255, 0.7);
+    border-bottom: solid #000 1px;
+
+}
+
+/************************************************SCROLLBAR************************/
+
+.mapwrapper .tabs::-webkit-scrollbar {
+    width: 1em;
+}
+
+.mapwrapper .tabs::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color:#f8f8ff;
+}
+
+.mapwrapper .tabs::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+    background-color: 	#fff5ee;
+    outline: 1px solid slategrey;
+    border-radius: 20px;
+}
+
+
+footer.footer {
+    background-color:transparent;
 }
 

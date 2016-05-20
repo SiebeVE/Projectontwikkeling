@@ -126,7 +126,8 @@ function initMap() {
         var infoBubble = new InfoBubble({
             map: map,
             content: '<div class="infoProject" contenteditable="false"><h3>'
-            + projects[count]['name'] + '</h3>' + '<h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p></div>',
+            + projects[count]['name'] + '</h3>' + '<h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p><p>Adres: ' +
+            projects[count]['address'] + '</p></div>',
             shadowStyle: 1,
             padding: 0,
             backgroundColor: 'rgba(0, 0 , 0, 0.7)',

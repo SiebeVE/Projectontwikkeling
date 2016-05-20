@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Project {
 
     private string mName, mDescription;
+    private Sprite mImage;
     private List<Stage> mStages;
-    private Stage mCurrentStage;
+    private string mCurrentStage;
 
-    public Project(string name, string description, List<Stage> stages)
+    public Project(string name, string description, Sprite image, List<Stage> stages)
     {
         mName = name;
         mDescription = description;
+        mImage = image;
 
         mStages = stages;
     }
@@ -29,13 +32,16 @@ public class Project {
     public List<Stage> Stages
     {
         get { return mStages; }
-        set { mStages = value; }
     }
 
-    public Stage CurrentStage
+    public string CurrentStage
     {
         get { return mCurrentStage; }
-        set { mCurrentStage = value; }
+    }
+
+    public Sprite Image
+    {
+        get { return mImage; }
     }
     #endregion
 
@@ -47,10 +53,10 @@ public class Project {
     {
         for(byte i = 0; i < stages.Count; i++)
         {
-            if(DateTime.Compare(DateTime.Today, stages[i].BeginDate) > 0 && DateTime.Compare(DateTime.Today, stages[i].EndDate) < 0)
+            if(DateTime.Compare(DateTime.Today, stages[i].BeginDate) >= 0 && DateTime.Compare(DateTime.Today, stages[i].EndDate) <= 0)
             {
                 // todays date is later than the begindate AND earlier than the enddate of the current stage
-                mCurrentStage = stages[i];
+                mCurrentStage = stages[i].Name;
                 break;
             }
         }

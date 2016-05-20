@@ -8,7 +8,10 @@ using System.Collections;
 /// </summary>
 public class HardwareHandler : MonoBehaviour {
 
-    public Text t;
+    /// <summary>
+    /// The main menu is the menu which is accessible all time (when pressing the A-button in the header)
+    /// </summary>
+    public bool mainMenuIsEnabled = false;
 
 	// Use this for initialization
 	void Start () {
@@ -25,41 +28,62 @@ public class HardwareHandler : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        t.text = UIHandler.mNameOfMenu;
-
-        if (SceneManager.GetActiveScene().name == "Maps")
+        if (!mainMenuIsEnabled) // if the main menu is not enabled
         {
-            if (Input.GetKey(KeyCode.Escape))
-            {
-                SceneManager.LoadScene("Main");
-            }
-        }
-        else if(SceneManager.GetActiveScene().name == "Main")
-        {
-            if (UIHandler.mNameOfMenu == "Home")                                 // the user came from Home, so he is in the project listview
-            {
-                if (Input.GetKey(KeyCode.Escape))                               // if he presses back
-                {
-                    UIHandler.ActivateMenu(UIHandler.mainHome, UIHandler.mainProjectsListView); // active the home screen
-                    UIHandler.mNameOfMenu = "";                                 // then we want the name of menu to be empty, so if the user then clicks on the button, the app closes
-                }
-            }
-            else if (UIHandler.mNameOfMenu == "")                            // if the name is empty, we are in the home scree
-            {
-                if (Input.GetKey(KeyCode.Escape))                           // if he then presses back
-                {
-                    Application.Quit();                                     // Quit the app
-                }
-            }
-            else if (UIHandler.mNameOfMenu == "Project")
+            if (SceneManager.GetActiveScene().name == "Maps")
             {
                 if (Input.GetKey(KeyCode.Escape))
                 {
-                    DestroyImmediate(GameObject.Find("project_page"), true);
-                    UIHandler.mainProjectsListView.SetActive(true);
-                    UIHandler.mNameOfMenu = "Home";
+                    SceneManager.LoadScene("Main");
+                }
+            }
+            else if (SceneManager.GetActiveScene().name == "Main")
+            {
+                if (UIHandler.mNameOfMenu == "Home")                                 // the user came from Home, so he is in the project listview
+                {
+                    if (Input.GetKey(KeyCode.Escape))                               // if he presses back
+                    {
+                        UIHandler.ActivateMenu(UIHandler.mainHome, UIHandler.mainProject); // active the home screen
+                        UIHandler.mNameOfMenu = "";                                 // then we want the name of menu to be empty, so if the user then clicks on the button, the app closes
+                    }
+                }
+                else if (UIHandler.mNameOfMenu == "")                            // if the name is empty, we are in the home scree
+                {
+                    if (Input.GetKey(KeyCode.Escape) && !mainMenuIsEnabled)                           // if he then presses back
+                    {
+                        Application.Quit();                                     // Quit the app
+                    }
+                }
+                else if (UIHandler.mNameOfMenu == "Project")
+                {
+                    if (Input.GetKey(KeyCode.Escape))
+                    {
+                        DestroyImmediate(GameObject.Find("project_page"), true);
+                        UIHandler.mainProject.SetActive(true);
+                        UIHandler.mNameOfMenu = "Home";
+                    }
                 }
             }
         }
-	}
+        else      // the main menu is enabled
+        {
+            // no matter where we are, we want the menu to dissapear
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                Camera.main.GetComponent<AnimatorHandler>().DisableAnimator(GetComponent<Animator>());
+                mainMenuIsEnabled = false;
+            }
+        }
+
+        if (Input.GetKey(KeyCode.Menu) && !mainMenuIsEnabled)
+        {
+            Camera.main.GetComponent<AnimatorHandler>().EnableAnimator(GetComponent<Animator>());
+            mainMenuIsEnabled = true;
+        }
+        else if (Input.GetKey(KeyCode.Menu) && mainMenuIsEnabled)
+        {
+            Camera.main.GetComponent<AnimatorHandler>().DisableAnimator(GetComponent<Animator>());
+            mainMenuIsEnabled = false;
+        }
+    }
 }

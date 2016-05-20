@@ -68,7 +68,7 @@ public class MapManager {
     {
         www = new WWW(URL);
         yield return www;
-        test.i.GetComponent<Renderer>().material.mainTexture = www.texture;
+        testP.i.GetComponent<Renderer>().material.mainTexture = www.texture;
     }
 
     /// <summary>

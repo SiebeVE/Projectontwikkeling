@@ -46,3 +46,11 @@
     </div>
 </div>
 @endsection
+
+@section('footer')
+<footer class="footer">
+    <div class="container text-center">
+        <p class="text-muted">&copy; 2016 Stad Antwerpen</p>
+    </div>
+</footer>
+    @endsection

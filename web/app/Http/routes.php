@@ -74,6 +74,8 @@ Route::group(['middleware' => 'web'], function ()
 		Route::post('project/{project}/maken/fase/{phase}', 'AdminController@postPhaseMake');
 
 		Route::get('paneel', 'AdminController@getPanel');
+		Route::get('paneel/rechten/{user}', 'AdminController@getToggleAdmin');
+		Route::post('paneel/rechten/{user}', 'AdminController@postToggleAdmin');
 	});
 });
 

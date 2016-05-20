@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use App\User;
 use finfo;
+use Auth;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -165,6 +167,27 @@ class AdminController extends Controller
 		]);
 	}
 
+	public function getToggleAdmin(User $user)
+	{
+		if(Auth::user() == $user)
+		{
+			return redirect()->action("AdminController@getPanel");
+		}
+		return view('admin.rights', ["user"=>$user]);
+	}
+
+	public function postToggleAdmin(User $user)
+	{
+		if(Auth::user() == $user)
+		{
+			return redirect()->action("AdminController@getPanel");
+		}
+
+		$user->toggleAdmin();
+
+		return redirect()->action("AdminController@getPanel");
+	}
+
 	/**
 	 * Handle the post request from making a new phase
 	 *
@@ -241,6 +264,9 @@ class AdminController extends Controller
 
 	public function getPanel()
 	{
-		return view('admin.panel');
+		// Get all users
+		$users = User::orderBy('is_admin', 'desc')->orderBy('lastname', 'asc')->orderBy('firstname', 'asc')->get();
+		//dd($users);
+		return view('admin.panel', ["users" => $users]);
 	}
 }
