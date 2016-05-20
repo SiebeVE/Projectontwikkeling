@@ -34,6 +34,7 @@ Route::group(['middleware' => 'web'], function ()
 {
 //Don't put it in the middleware web, is automatically loaded and when twice, fixed in routeServiceProvider
 	Route::get('/', 'HomeController@index');
+	//Route::get('/home', 'HomeController@index');
 
 	//Route::auth();
 	// Authentication Routes...
@@ -54,13 +55,6 @@ Route::group(['middleware' => 'web'], function ()
 	Route::post('wachtwoord/email', 'Auth\PasswordController@sendResetLinkEmail');
 	Route::post('wachtwoord/reset', 'Auth\PasswordController@reset');
 
-	Route::get('/home', 'HomeController@index');
-
-	Route::get('project/maken', 'ProjectController@make');
-	Route::post('project/maken', 'ProjectController@postMake');
-	Route::get('project/{project}/maken/fase/{phase}', 'ProjectController@getPhaseMake');
-	Route::post('project/{project}/maken/fase/{phase}', 'ProjectController@postPhaseMake');
-
 	Route::get('project/dashboard', 'ProjectController@dashboard');
 
 	Route::get('project/beoordelen/{project}', 'ProjectController@getOpinion');
@@ -70,6 +64,17 @@ Route::group(['middleware' => 'web'], function ()
 	Route::patch('project/bewerk/{project}', 'ProjectController@update');
 
 	Route::get('auth/token', 'Auth\AuthController@authAProfile');
+
+	Route::group(['prefix' => 'admin'], function ()
+	{
+		Route::get('project/maken', 'AdminController@getMakeProject');
+		Route::post('project/maken', 'AdminController@postMakeProject');
+
+		Route::get('project/{project}/maken/fase/{phase}', 'AdminController@getPhaseMake');
+		Route::post('project/{project}/maken/fase/{phase}', 'AdminController@postPhaseMake');
+
+		Route::get('paneel', 'AdminController@getPanel');
+	});
 });
 
 Route::group(['middleware' => 'api'], function ()

@@ -33,14 +33,14 @@
                         </td>
                         <td>{{ $project->created_by }}</td>
                         <td>
-                            <a href="{{ url('/project/bewerk', $project->id) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                            <a href="{{ url('/admin/project/bewerk', $project->id) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                         </td>
                     </tr>
                 @endforeach
             </table>
 
             <div>
-                <a href="{{ url('project/maken') }}">Project aanmaken</a>
+                <a href="{{ url('/admin/project/maken') }}">Project aanmaken</a>
             </div>
         </div>
     </div>
