@@ -10,15 +10,15 @@ public class UIHandler : MonoBehaviour {
 
     #region Unity
     private GameObject main, overlay_obj, menu, menuBG, project_listbttn;           // MAIN = main content of the screen; OVERLAY_OBJ = object to be displayed in maps
-    public static GameObject error_message, mainHome, mainProject, project_page;     // ERROR = the error to be displayed at startup, MAINHOME = the home screen; MAINPROJECT = projectlistview, PROJECT_PAGE = page of the project to be loaded
+    public static GameObject mainHome, mainProject, project_page, warning;     // ERROR = the error to be displayed at startup, MAINHOME = the home screen; MAINPROJECT = projectlistview, PROJECT_PAGE = page of the project to be loaded
 
     #region UI
     // STARTUP = button at login screen ; CONFIRM (LOGIN) = when error is displayed at startup; PROJECT = project button in home screen; MAPS = maps button in home screen; SETTINGS = settings button in home screen; WEBSITE = website button in home screen; CONFIRM (MAPS) = ok button in maps screen; LOGO = logo in home screen; all buttons starting with menu_ are the buttons in the menu in the main screen
-    private Button startup_bttn, confirm_bttn_login, project_bttn, maps_bttn, settings_bttn, website_bttn, confirm_bttn_maps, burger_bttn, menu_home, menu_projects, menu_maps, menu_settings, menu_website, menu_logout;
+    private Button startup_bttn, confirm_bttn_login, project_bttn, maps_bttn, settings_bttn, website_bttn, confirm_bttn_maps, burger_bttn, menu_home, menu_projects, menu_maps, menu_settings, menu_website, menu_logout, warning_bttn;
     private InputField location_input; // MAPS screen
     private Dropdown maptype_drop;  // MAPS screen
     private Slider zoomSlider, scaleSlider; // MAPS screen
-    public static Text errorM;  // text to be displayed when an error occurs at startup
+    public static RawImage map;
     #endregion
     #endregion
 
@@ -33,18 +33,18 @@ public class UIHandler : MonoBehaviour {
     {
         if(SceneManager.GetActiveScene().name == "Login")
         {
-            error_message = GameObject.Find("Canvas").transform.Find("error_message").gameObject;
-
             startup_bttn = GameObject.Find("startup_bttn").GetComponent<Button>();
-            confirm_bttn_login = error_message.transform.Find("confirm_bttn").GetComponent<Button>();
 
-            errorM = error_message.transform.Find("message").GetComponent<Text>();
-
-            startup_bttn.onClick.AddListener(() => StartCoroutine(NetworkManager.CheckInternetConnection(NetworkManager.URL)));
-            confirm_bttn_login.onClick.AddListener(() => Application.Quit());
+            startup_bttn.onClick.AddListener(() => StartCoroutine(NetworkManager.CheckInternetConnection(NetworkManager.ping)));
         }
         else if (SceneManager.GetActiveScene().name == "Main")
         {
+            // warning gameobject
+            warning = GameObject.Find("warning");
+            warning_bttn = warning.transform.Find("close_warning").GetComponent<Button>();
+
+            warning_bttn.onClick.AddListener(() => DisableWarning());
+
             // Find the main functioning objects
             main = GameObject.Find("Main");
             mainHome = main.transform.Find("Home").gameObject;
@@ -81,7 +81,15 @@ public class UIHandler : MonoBehaviour {
             menu_home.onClick.AddListener(() => LoadMainScene(SceneManager.GetActiveScene().name));
 
             menu_projects.onClick.AddListener(() => 
-                    {   ActivateMenu(mainProject, mainHome);
+                    {
+                        if (mNameOfMenu == "")
+                        {
+                            ActivateMenu(mainProject, mainHome);
+                        }
+                        else
+                        {
+                            ActivateMenu(mainProject, GameObject.Find("project_page"));
+                        }
                         ShowMainMenu();
                     });
 
@@ -91,26 +99,41 @@ public class UIHandler : MonoBehaviour {
         }
         else if(SceneManager.GetActiveScene().name == "Maps")
         {
-            overlay_obj = GameObject.Find("Canvas").transform.Find("overlay_obj").gameObject;
+            overlay_obj = GameObject.Find("menu_maps").gameObject;
 
+            map = GameObject.Find("Main").transform.Find("map").GetComponent<RawImage>();
             confirm_bttn_maps = overlay_obj.transform.Find("confirm_bttn").GetComponent<Button>();
             location_input = overlay_obj.transform.Find("location_input").GetComponent<InputField>();
             maptype_drop = overlay_obj.transform.Find("maptype_drop").GetComponent<Dropdown>();
             zoomSlider = overlay_obj.transform.Find("zoom_sldr").GetComponent<Slider>();
             scaleSlider = overlay_obj.transform.Find("scale_sldr").GetComponent<Slider>();
+
+            confirm_bttn_maps.onClick.AddListener(() => 
+                     {
+                         MapManager.SetAddress(location_input.text);
+                         StartCoroutine(MapManager.LoadMap(MapManager.URLaddress));
+                         GetComponent<AnimatorHandler>().DisableAnimator(overlay_obj.GetComponent<Animator>());
+                     });
         }
     }
 
     /// <summary>
-    /// This method will be called when there has been an error during startup.
+    /// If an error occured we want the warning to be shown.
     /// </summary>
-    public static void CheckForError()
+    public static void ShowWarning()
     {
-        if (errorM.text != string.Empty)         // there has been an error
+        if(!NetworkManager.IsConnected || LocationManager.hasFailed)
         {
-            // display the error
-            error_message.SetActive(true);
+            Camera.main.GetComponent<AnimatorHandler>().EnableAnimator(warning.GetComponent<Animator>());
         }
+    }
+
+    /// <summary>
+    /// When the close_Warning button is clicked, we want the warning to disappear 
+    /// </summary>
+    public void DisableWarning()
+    {
+        GetComponent<AnimatorHandler>().DisableAnimator(warning.GetComponent<Animator>());
     }
 
     /// <summary>
@@ -129,10 +152,18 @@ public class UIHandler : MonoBehaviour {
     /// <param name="menuToDisable">The menu which should be disabled when the other is called.</param>
     public static void ActivateMenu(GameObject menuToActivate, GameObject menuToDisable)
     {
-        menuToDisable.SetActive(false);
-        menuToActivate.SetActive(true);
+        if (menuToDisable.name == mainHome.name || menuToDisable.name == mainProject.name)
+        {
+            menuToDisable.SetActive(false);
+            ReturnToMenu(menuToDisable.name);
+        }
+        else if(menuToDisable.name == "project_page")
+        {
+            ReturnToMenu(mainHome.name);
+            DestroyImmediate(GameObject.Find("project_page"), true);
+        }
 
-        ReturnToMenu(menuToDisable.name);
+        menuToActivate.SetActive(true);
     }
 
     /// <summary>

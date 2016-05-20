@@ -8,7 +8,8 @@ using System.Net;
 public class NetworkManager {
 
     private static bool isConnected = false;
-    public static string URL = "https://www.google.be";
+    public static string URL = "https://teamgctof.multimediatechnology.be/";
+    public static string ping = "https://www.google.be";
 
     public static IEnumerator CheckInternetConnection(string IPaddress)
     {
@@ -19,16 +20,14 @@ public class NetworkManager {
         {
             // so we can assume we are connected to the internet
             isConnected = true;
-
-            // Then we need to check at wich location we are
-            LocationManager.DetermineLocation();
         }
         else
         {
             isConnected = false;
-            UIHandler.errorM.text = "We kunnen geen contact met je leggen.\r\nMaak alsjeblief verbinding met het internet.";
-            UIHandler.CheckForError();
         }
+
+        // Then we need to check at wich location we are
+        LocationManager.DetermineLocation();
     }
 
     /// <summary>
