@@ -11,7 +11,7 @@ public enum MapType
 
 public class MapManager {
 
-    private static string mURLaddress = "http://maps.googleapis.com/maps/api/staticmap?center=", API_KEY = "&key=AIzaSyAn26km9c6rfD7sWftyRa29QjwISSsIF9I";
+    private static string mURLaddress, API_KEY = "&key=AIzaSyAn26km9c6rfD7sWftyRa29QjwISSsIF9I";
     private static WWW www;
     private static int zoom, scale;
     private static MapType maptype;
@@ -68,14 +68,26 @@ public class MapManager {
     {
         www = new WWW(URL);
         yield return www;
-        testP.i.GetComponent<Renderer>().material.mainTexture = www.texture;
+        UIHandler.map.texture = www.texture;
     }
 
     /// <summary>
     /// This method creates a URL which depends on the current location. (Runs at startup.)
     /// </summary>
-    public static void SetAddress()
+    /// <param name="location">The location the user wants to find.</param>
+    public static void SetAddress(string location)
     {
-        mURLaddress += LocationManager.Latitude + "," + LocationManager.Longitude + "&zoom=13&maptype=roadmap&markers=color:red%7Clabel:A%7C" + LocationManager.Latitude + "," + LocationManager.Longitude + "&size=1920x1080" + API_KEY;
+        mURLaddress = "http://maps.googleapis.com/maps/api/staticmap?center=";
+
+        // The user has entered no input or the app starts for the first time
+        if (location == string.Empty)
+        {
+            mURLaddress += LocationManager.Latitude + "," + LocationManager.Longitude + "&zoom=13&maptype=roadmap&markers=color:red%7Clabel:A%7C" + LocationManager.Latitude + "," + LocationManager.Longitude + "&size=1920x1080" + API_KEY;
+        }
+        else if(location != string.Empty)
+        {
+            // Add desired location
+            mURLaddress += location + "&zoom=17&maptype=roadmap&markers=color:red%7Clabel:A%7C" + location + "&size=1920x1080" + API_KEY;
+        }
     }
 }

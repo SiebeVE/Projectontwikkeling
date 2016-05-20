@@ -9,7 +9,7 @@ public class LocationManager {
 
     // variables for storing latitude and longitude
     private static float lat, lon;
-    public static string error = "";
+    public static bool hasFailed = false;
 
     #region Properties
     public static float Latitude
@@ -36,7 +36,7 @@ public class LocationManager {
 
             if(Input.location.status == LocationServiceStatus.Failed)
             {
-                error = "De locatieservices konden niet worden opgestart.\r\nProbeer het nog eens.";
+                hasFailed = true;
             }
             else
             {
@@ -44,12 +44,12 @@ public class LocationManager {
                 lat = Input.location.lastData.latitude;
                 lon = Input.location.lastData.longitude;
 
-                MapManager.SetAddress();
+                MapManager.SetAddress(string.Empty);
             }
         }
         else  // Location service is not enabled
         {
-            error = "De locatieservice is niet ingeschakeld.\r\nSchakel deze in in je instellingen.";
+            hasFailed = true;
         }
 
         // finally stop the location service
@@ -57,15 +57,7 @@ public class LocationManager {
 
         if (SceneManager.GetActiveScene().name == "Login")
         {
-            if (error != string.Empty)
-            {
-                UIHandler.errorM.text = error;
-                UIHandler.CheckForError();
-            }
-            else
-            {
-                UIHandler.LoadMainScene("Main");
-            }
+            UIHandler.LoadMainScene("Main");
         }
     }
 
