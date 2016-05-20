@@ -13,6 +13,9 @@ function initMap() {
     var place;
     var placecoords = new google.maps.LatLng(51.219448, 4.402464);
     var infoWindow = new google.maps.InfoWindow({map: map});
+    var jsonInput = document.getElementById('jsonTest');
+    var projects = JSON.parse(jsonInput.value);
+    var markers = [];
 
     google.maps.InfoWindow.prototype.opened = false;
 
@@ -99,7 +102,6 @@ function initMap() {
     }
 
     function addmarker(latilongi, count) {
-            // your code here.
             //window.setTimeout(function() {
             marker = new google.maps.Marker({
                 position: latilongi,
@@ -109,14 +111,8 @@ function initMap() {
                 animation: google.maps.Animation.DROP,
                 map: map
             });
-            //}, 1500);
-
-        var jsonInput = document.getElementById('jsonTest');
-        var projects = JSON.parse(jsonInput.value);
-
-
-        var infowindow;
-
+        markers.push(marker);
+            //}, 1500)
         //map.setZoom(15);
         //infowindow = new google.maps.InfoWindow({
         //    content: '<div class="infoProject" style="width: 300px" contenteditable="false">'
@@ -160,6 +156,42 @@ function initMap() {
             else {
                 infoBubble.close(map, this);
             }
+        });
+    }
+
+    function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
+    }
+
+    function clearMarkers() {
+        setMapOnAll(null);
+    }
+
+    var tabs = document.getElementById("tabs");
+    var buttons = tabs.getElementsByTagName('button');
+    for(var i= 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function() {
+            console.log(this.id);
+            clearMarkers();
+            for(var j = 0; j < projects.length; j++)
+            {
+                //console.log(projects[j]['tags'].length);
+                for(var x = 0; x < projects[j]['tags'].length; x++)
+                //console.log(projects[j]['tags'][x]['name']);
+                if(this.id == projects[j]['tags'][x]['name'])
+                {
+                    console.log('test');
+                    newMarkerPos = new google.maps.LatLng(projects[j]['latitude'], projects[j]['longitude']);
+                    addmarker(newMarkerPos, j);
+                }
+                else if(this.id == 'alle_projecten') {
+                    newMarkerPos = new google.maps.LatLng(projects[j]['latitude'], projects[j]['longitude']);
+                    addmarker(newMarkerPos, j);
+                }
+            }
+
         });
     }
 

@@ -104,6 +104,52 @@ form[name=create] #phases .phase:last-child
 	margin-bottom: 15px;
 }
 
+button, input, select, textarea {
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+
+div.bootstrap-tagsinput{
+	background-color: #fff;
+	border: 1px solid #ccc;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	color: #555;
+	vertical-align: middle;
+	border-radius: 6px;
+	width: 100%;
+	line-height: 1.3333em;
+	cursor: text;
+	min-height: 46px;
+	padding: 10px 16px;
+	font-size: 18px;
+	margin-bottom: 1em;
+}
+
+.bootstrap-tagsinput input {
+	border: none;
+	box-shadow: none;
+	outline: none;
+	background-color: transparent;
+	padding: 0 6px;
+	margin: 0;
+	width: auto;
+	max-width: inherit;
+}
+
+.label-info {
+	background-color: #CF0039;
+}
+
+.label {
+	padding: .2em .5em .2em;
+}
+.bootstrap-tagsinput .tag {
+	margin-right: 0.2em;
+}
+
+
 form[name=create] #phases .phase:not(:first-of-type):last-child,
 form[name=createPhase] .choices .choice:not(:first-of-type):last-child
 {

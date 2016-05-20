@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+
+@section('pageCss')
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
+@endsection
+
 @section('content')
     <div class="container">
         <div class="col-md-12">
@@ -41,10 +46,24 @@
                             <input type="hidden" name="photoOffset" id="photoOffset" value="{{ old("photoOffset") }}">
                         </div>
                     </div>
+                </div>
+
+                <div class="col-md-6">
                     <label for="address">Adres</label>
                     <input type="text" id="address" name="address" class="form-control input-lg"
                            value="{{ old("address") }}">
                 </div>
+                <div class="col-md-6">
+                    {{--{!! Form::label('tags', 'Tags:') !!}
+                    {!! Form::select('tags[]', $tags, null, ['class' => 'form-control', 'multiple', 'data-role' => 'tagsinput']) !!}--}}
+                    <label for="tags">Tags</label>
+                    <select multiple id="tags" name="tags[]" data-role="tagsinput" style="display: none;">
+                        @foreach($tags as $tag)
+                            <option value="{{  $tag }}" selected="selected">{{ $tag }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="col-md-12">
                     <div id="buttonbar" class="mine pull-right">
                         <button type="button" id="labels">verberg/toon labels</button>
@@ -109,4 +128,5 @@
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&region=BE"
             async defer></script>
     <script src="{{ url('/') }}/js/projectbeheer.js"></script>
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 @endsection

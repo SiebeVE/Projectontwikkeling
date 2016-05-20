@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use finfo;
 use Illuminate\Http\Request;
 use App\User;
+use App\Tag;
+use App\DB;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +33,8 @@ class ProjectController extends Controller
 	 */
 	public function make()
 	{
-		return view('projects.make');
+		$tags = Tag::lists('name', 'id');
+		return view('projects.make', compact('tags'));
 	}
 
 	/**
@@ -133,6 +136,38 @@ class ProjectController extends Controller
 		rename($tempSaveFolder . "/" . $request->hashImage, $finalSaveFolder . "/" . $newImageName);
 
 		$project->photo_path = $publicSaveFolder . "/" . $newImageName;
+
+		//save tags with associated project
+		$project_tags = $request->input('tags');
+
+		$all_tags = Tag::all();
+
+		$tagsId = array();
+		$tag_doesnt_exist = true;
+
+		foreach ( $project_tags as $project_tag )
+		{
+			foreach( $all_tags as $all_tag)
+			{
+				if($all_tag->name == $project_tag) {
+					array_push($tagsId, $all_tag->id);
+					$tag_doesnt_exist = false;
+				}
+			}
+
+			if($tag_doesnt_exist) {
+				$newTag = Tag::create(['name' => $project_tag]);
+				//$newTag = DB::table('tags')->select('id')->where('name', '=', $project_tag);
+				$newTagId = $newTag->id;
+
+				array_push($tagsId, $newTagId);
+			}
+
+			$tag_doesnt_exist = true;
+		}
+
+		$project->tags()->attach($tagsId);
+
 		$project->save();
 
 		// Phase database handler, save the phase data in the database
@@ -147,7 +182,7 @@ class ProjectController extends Controller
 			]);
 		}
 
-		//dd("Toegevoegd!");
+		//dd($request->input('tags'));
 
 		return redirect()->action("ProjectController@getPhaseMake", [$project, 1]);
 	}
@@ -265,15 +300,19 @@ class ProjectController extends Controller
 	public function edit(Project $project)
 	{
 		$phases = $project->phases;
-		return view('projects.edit', compact('project', 'phases'));
+		$tags = $project->tags;
+
+		return view('projects.edit', compact('project', 'phases', 'tags'));
 	}
 
 	public function update(Request $request, Project $project)
 	{
 
 		$project->update(
-			$request->all(),
-			$project->address = $request->input('address')
+			[
+				$request->all(),
+				$project->address = $request->input('address')
+			]
 		);
 		$phases = $project->phases;
 
@@ -302,6 +341,8 @@ class ProjectController extends Controller
 
 
 		//dd($request->all());
+
+		//dd($tagsId);
 
 		return redirect('project/dashboard');
 	}
