@@ -185,7 +185,6 @@ nav .container .navbar-brand
 	vertical-align: middle;
 	height: 90px;
 
-
 }
 
 #app-navbar-collapse ul li a
@@ -199,13 +198,13 @@ nav .container .navbar-brand
 #app-navbar-collapse ul li ul
 {
 	color: white;
-	background-color: rgba(0,0,0,0.3);
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 #app-navbar-collapse ul li:hover
 {
 	color: white;
-	background-color: rgba(0,0,0,0.3);
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 footer p.text-muted
@@ -387,6 +386,34 @@ footer p.text-muted
 #opinion .grid-item
 {
 	position: absolute;
+}
+
+.filter-table .quick
+{
+	margin-left: 0.5em;
+	font-size: 0.8em;
+	text-decoration: none;
+}
+
+.fitler-table .quick:hover
+{
+	text-decoration: underline;
+}
+
+td.alt
+{
+	background-color: #FFC;
+	background-color: rgba(255, 255, 0, 0.2);
+}
+
+tbody tr.striped
+{
+	background-color: #F9F9F9;
+}
+
+div.admin-controls
+{
+	margin-top:20px;
 }
 
 /********************************************************* HOMEPAGE *********************/

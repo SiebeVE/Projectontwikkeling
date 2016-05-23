@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-//use App\Phase;
 use App\Project;
-//use Carbon\Carbon;
+use App\User;
+use finfo;
+use Auth;
 use Illuminate\Http\Request;
-//use App\User;
 
 use App\Http\Requests;
-use Illuminate\Support\Facades\Auth;
 
-class ProjectController extends Controller
+class AdminController extends Controller
 {
 	/**
 	 * Create a new controller instance.
@@ -20,17 +19,16 @@ class ProjectController extends Controller
 	 */
 	public function __construct()
 	{
-		$this->middleware('auth'); //Temporally off
+		$this->middleware('auth');
+		$this->middleware('admin');
 	}
 
 	/**
-	 * <<<<<<< HEAD
-	 * =======
 	 * Show the page to create a project
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function make()
+	public function getMakeProject()
 	{
 		return view('projects.make');
 	}
@@ -42,7 +40,7 @@ class ProjectController extends Controller
 	 *
 	 * @return string
 	 */
-	public function postMake(Request $request)
+	public function postMakeProject(Request $request)
 	{
 		$notAnImage = false;
 		$allowedExtensions = ["jpeg", "png"]; // from mime type => after the slash
@@ -80,7 +78,6 @@ class ProjectController extends Controller
 				{
 					$notAnImage = true;
 				}
-
 			}
 			else
 			{
@@ -93,13 +90,13 @@ class ProjectController extends Controller
 			// Check for project
 			'name'        => 'required',
 			'description' => 'required|string|max:600',
-			'address'     => 'required',
 			'longitude'   => 'required',
 			'latitude'    => 'required',];
 
 		// Phase validation handler, get all inputs of phase and put in validation array
 		//dd($request->numberOfPhases);
-		for ($curPhase = 0; $curPhase < $request->numberOfPhases; $curPhase++)
+		$numberOfPhases = $request->numberOfPhases <= 0 ? 1 : $request->numberOfPhases;
+		for ($curPhase = 0; $curPhase < $numberOfPhases; $curPhase++)
 		{
 			// Make validation array
 			$toValidate['phaseName-' . $curPhase] = 'required';
@@ -122,7 +119,6 @@ class ProjectController extends Controller
 		$project = $request->user()->projects()->create([
 			"name"              => $request->name,
 			"description"       => $request->description,
-			"address"           => $request->address,
 			"photo_left_offset" => $request->photoOffset,
 			"longitude"         => $request->longitude,
 			"latitude"          => $request->latitude,
@@ -138,7 +134,7 @@ class ProjectController extends Controller
 
 		// Phase database handler, save the phase data in the database
 		$phases = [];
-		for ($curPhase = 0; $curPhase < $request->numberOfPhases; $curPhase++)
+		for ($curPhase = 0; $curPhase < $numberOfPhases; $curPhase++)
 		{
 			$phases[$curPhase] = $project->phases()->create([
 				"name"        => $request->input('phaseName-' . $curPhase),
@@ -150,7 +146,7 @@ class ProjectController extends Controller
 
 		//dd("Toegevoegd!");
 
-		return redirect()->action("ProjectController@getPhaseMake", [$project, 1]);
+		return redirect()->action("AdminController@getPhaseMake", [$project, 1]);
 	}
 
 	/**
@@ -169,6 +165,27 @@ class ProjectController extends Controller
 		return view('projects.phase.add', [
 			'phase' => $requestedPhase
 		]);
+	}
+
+	public function getToggleAdmin(User $user)
+	{
+		if(Auth::user() == $user)
+		{
+			return redirect()->action("AdminController@getPanel");
+		}
+		return view('admin.rights', ["user"=>$user]);
+	}
+
+	public function postToggleAdmin(User $user)
+	{
+		if(Auth::user() == $user)
+		{
+			return redirect()->action("AdminController@getPanel");
+		}
+
+		$user->toggleAdmin();
+
+		return redirect()->action("AdminController@getPanel");
 	}
 
 	/**
@@ -241,175 +258,15 @@ class ProjectController extends Controller
 		{
 			// Redirect to new phase page
 			$newPhase = $phaseRelativeId + 1;
-			return redirect('project/' . $project->id . '/maken/fase/' . $newPhase);
+			return redirect('admin/project/' . $project->id . '/maken/fase/' . $newPhase);
 		}
 	}
 
-	/**
-	 * >>>>>>> 5b3952ad2d09ac8a691ddff87c50d1337b3e16c0
-	 * Show the application dashboard
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function dashboard()
+	public function getPanel()
 	{
-		$projects = Project::all();
-		return view('projects.dashboard', compact('projects'));
-	}
-
-	/**
-	 * Show the page to edit a project
-	 *
-	 * @param Project $project
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit(Project $project)
-	{
-		$phases = $project->phases;
-		return view('projects.edit', compact('project', 'phases'));
-	}
-
-	public function update(Request $request, Project $project)
-	{
-
-		$project->update(
-			$request->all(),
-			$project->address = $request->input('address')
-		);
-		$phases = $project->phases;
-
-
-		foreach ($phases as $phase)
-		{
-			$phase->update(
-				[
-					$phase->name = $request->input('phase_name' . $phase->id),
-					$phase->description = $request->input('phase_description' . $phase->id),
-					$phase->start = $request->input('phaseStartDate' . $phase->id),
-					$phase->end = $request->input('phaseEndDate' . $phase->id)
-				]
-			);
-		}
-
-		$toValidate = [
-			// Check for project
-			'name'        => 'required',
-			'description' => 'required|string|max:600',
-			'address'     => 'required',
-			'longitude'   => 'required',
-			'latitude'    => 'required',];
-
-		$this->validate($request, $toValidate);
-
-
-		//dd($request->all());
-
-		return redirect('project/dashboard');
-	}
-
-	/**
-	 * Retrieve the page where users can give their opinion on a project
-	 * An array is build that contains all the questions details
-	 *
-	 * @param Project $project
-	 *
-	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-	 */
-	public function getOpinion(Project $project)
-	{
-		$project = $project->load('phases.questions.possibleAnswers');
-		//dd($project);
-
-		//$C_now = Carbon::now();
-
-		$currentPhase = $project->getCurrentPhase();
-
-		if ($currentPhase != NULL)
-		{
-			// Build the array for the questions
-			$questionsArr = [
-				"projectName"  => $project->name,
-				"phaseName"    => $currentPhase->name,
-				"parentHeight" => $currentPhase->parentHeight
-			];
-			foreach ($currentPhase->questions as $questionNumber => $question)
-			{
-				$questionsArr["elements"][$questionNumber]["sort"] = $question->sort;
-				$questionsArr["elements"][$questionNumber]["question"] = $question->question;
-				//$questionsArr["elements"][$questionNumber]["id"] = $question->id;
-				$questionsArr["elements"][$questionNumber]["options"]["left"] = $question->leftOffset;
-				$questionsArr["elements"][$questionNumber]["options"]["top"] = $question->topOffset;
-				$questionsArr["elements"][$questionNumber]["options"]["width"] = $question->width;
-				if (count($question->possibleAnswers) > 0)
-				{
-					// Has possible answers
-					foreach ($question->possibleAnswers as $answerNumber => $possibleAnswer)
-					{
-						$questionsArr["elements"][$questionNumber]["answers"][$answerNumber]["answer"] = $possibleAnswer->answer;
-						$questionsArr["elements"][$questionNumber]["answers"][$answerNumber]["id"] = $possibleAnswer->id;
-					}
-				}
-			}
-			//dd($questionsArr);
-			return view('projects.giveOpinion', ["data" => $questionsArr]);
-		}
-		abort(404, "Geen huidige phase gevonden");
-		return NULL;
-	}
-
-	/**
-	 * Handle the incoming post request for giving an opinion
-	 *
-	 * @param Project $project
-	 * @param Request $request
-	 */
-	public function postOpinion(Project $project, Request $request)
-	{
-		$user = Auth::user();
-		$phase = $project->getCurrentPhase();
-
-		$questions = $phase->questions;
-
-		foreach ($questions as $questionId => $question)
-		{
-			if (isset($request["question-" . $questionId]))
-			{
-				// Save the opinion to the user
-				//dd($question->id);
-				$answer = $request["question-" . $questionId];
-				$multiAnswer = false;
-
-				if (is_array($answer))
-				{
-					$answer = NULL;
-					$multiAnswer = true;
-				}
-
-				$answered = $user->answers()->create([
-					"question_id"     => $question->id,
-					"answer"          => $answer,
-					"multipleAnswers" => $multiAnswer,
-				]);
-
-				if ($multiAnswer)
-				{
-					foreach ($request["question-" . $questionId] as $answer)
-					{
-						$answered->possibleAnswers()->create([
-							"possible_answer_id" => $answer
-						]);
-					}
-				}
-				//dd($request["question-".$questionId]);
-			}
-			else
-			{
-				//dd("bestaat niet");
-			}
-		}
-		//dd($questions);
-
-		dd($request);
+		// Get all users
+		$users = User::orderBy('is_admin', 'desc')->orderBy('lastname', 'asc')->orderBy('firstname', 'asc')->get();
+		//dd($users);
+		return view('admin.panel', ["users" => $users]);
 	}
 }
