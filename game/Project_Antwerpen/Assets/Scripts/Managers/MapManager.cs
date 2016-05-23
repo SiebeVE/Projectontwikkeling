@@ -69,10 +69,23 @@ public class MapManager {
     /// <returns></returns>
     public static IEnumerator LoadMap(string URL)
     {
-        new WaitForSeconds(1);
         www = new WWW(URL);
+
+        while (!www.isDone)
+        {
+            UIHandler.map.texture = Resources.Load<Sprite>("Images/Error/Laden").texture;
+        }
+
         yield return www;
-        UIHandler.map.texture = www.texture;
+
+        if (!string.IsNullOrEmpty(www.error))
+        {
+            UIHandler.map.texture = Resources.Load<Sprite>("Images/Error/Error").texture;
+        }
+        else
+        {
+            UIHandler.map.texture = www.texture;
+        }
     }
 
     /// <summary>
