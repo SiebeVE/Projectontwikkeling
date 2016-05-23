@@ -396,7 +396,7 @@ class ProjectController extends Controller
 				{
 					foreach ($request["question-" . $questionId] as $answer)
 					{
-						$answered->possibleAnswers()->create([
+						$answered->multipleAnswers()->create([
 							"possible_answer_id" => $answer
 						]);
 					}

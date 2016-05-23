@@ -76,6 +76,8 @@ Route::group(['middleware' => 'web'], function ()
 		Route::get('paneel', 'AdminController@getPanel');
 		Route::get('paneel/rechten/{user}', 'AdminController@getToggleAdmin');
 		Route::post('paneel/rechten/{user}', 'AdminController@postToggleAdmin');
+
+		Route::get('project/statistieken/{project}', 'AdminController@getStats');
 	});
 });
 
