@@ -3,17 +3,30 @@ using System.Collections;
 
 public enum MapType
 {
-    roadmap,
-    satellite,
-    terrain,
-    hybrid
+    roadmap = 0,
+    satellite = 1,
+    terrain = 2
+}
+
+public enum MarkerColors
+{
+    black,
+    brown,
+    green,
+    purple,
+    yellow,
+    blue,
+    gray,
+    orange,
+    red,
+    white
 }
 
 public class MapManager {
 
     private static string mURLaddress, API_KEY = "&key=AIzaSyAn26km9c6rfD7sWftyRa29QjwISSsIF9I";
     private static WWW www;
-    private static int zoom, scale;
+    private static int zoom = 12;
     private static MapType maptype;
 
     #region Properties
@@ -40,16 +53,6 @@ public class MapManager {
     }
 
     /// <summary>
-    /// The scale factor of the map, how much detail we want to be showed in the map?
-    /// </summary>
-    /// <remarks>Only value of 1 or 2 is supported in the free version.</remarks>
-    public static int Scale
-    {
-        get { return scale; }
-        set { scale = value; }
-    }
-
-    /// <summary>
     /// Which type of map do we want to be showed?
     /// </summary>
     public static MapType Maptype
@@ -67,8 +70,22 @@ public class MapManager {
     public static IEnumerator LoadMap(string URL)
     {
         www = new WWW(URL);
+
+        while (!www.isDone)
+        {
+            UIHandler.map.texture = Resources.Load<Sprite>("Images/Error/Laden").texture;
+        }
+
         yield return www;
-        UIHandler.map.texture = www.texture;
+
+        if (!string.IsNullOrEmpty(www.error))
+        {
+            UIHandler.map.texture = Resources.Load<Sprite>("Images/Error/Error").texture;
+        }
+        else
+        {
+            UIHandler.map.texture = www.texture;
+        }
     }
 
     /// <summary>
@@ -82,12 +99,12 @@ public class MapManager {
         // The user has entered no input or the app starts for the first time
         if (location == string.Empty)
         {
-            mURLaddress += LocationManager.Latitude + "," + LocationManager.Longitude + "&zoom=13&maptype=roadmap&markers=color:red%7Clabel:A%7C" + LocationManager.Latitude + "," + LocationManager.Longitude + "&size=1920x1080" + API_KEY;
+            mURLaddress += LocationManager.Latitude + "," + LocationManager.Longitude + "&zoom=" + zoom + "&maptype=" + maptype + "&markers=color:red%7Clabel:A%7C" + LocationManager.Latitude + "," + LocationManager.Longitude + "&size=1920x1080" + API_KEY;
         }
         else if(location != string.Empty)
         {
             // Add desired location
-            mURLaddress += location + "&zoom=17&maptype=roadmap&markers=color:red%7Clabel:A%7C" + location + "&size=1920x1080" + API_KEY;
+            mURLaddress += location + "&zoom=" + zoom + "&maptype=" + maptype + "&markers=color:red%7Clabel:A%7C" + location + "&size=1920x1080" + API_KEY;
         }
     }
 }
