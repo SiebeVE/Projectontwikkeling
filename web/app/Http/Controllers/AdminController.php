@@ -315,9 +315,10 @@ class AdminController extends Controller
 				// [ "word" => count number]
 				$wordsArray = [];
 
+				$totalAnswers = count($question->answers);
 				$questionArray = [
 					"type"         => $question->sort,
-					"totalAnswers" => count($question->answers),
+					"totalAnswers" => $totalAnswers,
 					"answers"      => [],
 				];
 				switch ($question->sort)
@@ -328,7 +329,11 @@ class AdminController extends Controller
 						foreach ($question->possibleAnswers as $possibleAnswer)
 						{
 							//dump($possibleAnswer);
-							$questionArray["answers"][$possibleAnswer->id] = ["answer" => $possibleAnswer->answer, "count" => 0];
+							$questionArray["answers"][$possibleAnswer->id] = [
+								"answer"     => $possibleAnswer->answer,
+								"count"      => 0,
+								"percentage" => 0,
+							];
 						}
 
 						foreach ($question->answers as $answer)
@@ -341,11 +346,17 @@ class AdminController extends Controller
 								{
 									//dump($multiAnswer);
 									$questionArray["answers"][$multiAnswer->possible_answer_id]["count"]++;
+									// Calculate percentage
+									$percentage = floor(($questionArray["answers"][$multiAnswer->possible_answer_id]["count"] / $totalAnswers) * 100);
+									$questionArray["answers"][$multiAnswer->possible_answer_id]["percentage"] = $percentage;
 								}
 							}
 							else
 							{
 								$questionArray["answers"][$answer->id]["count"]++;
+								// Calculate percentage
+								$percentage = floor(($questionArray["answers"][$answer->id]["count"] / $totalAnswers) * 100);
+								$questionArray["answers"][$answer->id]["percentage"] = $percentage;
 							}
 						}
 						break;
@@ -356,26 +367,11 @@ class AdminController extends Controller
 							// Just add them
 							$questionArray["answers"][] = $answer->answer;
 
-							// Smart count function
-							$wordArray = stringToWordArray($answer->answer);
-							foreach ($wordArray as $word)
-							{
-								$word = strtolower($word);
-								if(!checkIfWordIsIgnored($word))
-								{
-									if (key_exists($word, $wordsArray))
-									{
-										$wordsArray[$word]++;
-									}
-									else
-									{
-										$wordsArray[$word] = 1;
-									}
-								}
-							}
-							dump($wordsArray);
+							// Smart count function ==> put in projectController, postOpinion
+							$wordsArray = unserialize($question->word_count);
+							//dump($wordsArray);
 						}
-					$questionArray["counted"] = $wordsArray;
+						$questionArray["counted"] = $wordsArray;
 						break;
 				}
 				$phaseArray["data"][$question->question] = $questionArray;
@@ -384,7 +380,7 @@ class AdminController extends Controller
 			//dump($phase);
 		}
 		//dd(Auth::user());
-		dd($stats);
+		//dd($stats);
 		return view('admin.statistics', ["project" => $project, "stats" => $stats]);
 	}
 }

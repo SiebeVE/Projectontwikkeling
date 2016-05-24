@@ -396,10 +396,44 @@ class ProjectController extends Controller
 				{
 					foreach ($request["question-" . $questionId] as $answer)
 					{
-						$answered->multipleAnswers()->create([
+						$answered->multipleAnswerdes()->create([
 							"possible_answer_id" => $answer
 						]);
 					}
+				}
+
+				// Handle for the answer count
+				if ($question->sort == "text" || $question->sort == "textarea")
+				{
+					if ($question->word_count)
+					{
+						$prevWordsArray = unserialize($question->word_count);
+					}
+					else
+					{
+						$prevWordsArray = [];
+					}
+					//dd($prevWordsArray);
+					// Re-count the array
+					$wordArray = stringToWordArray($answered->answer);
+					foreach ($wordArray as $word)
+					{
+						$word = strtolower($word);
+						if (!checkIfWordIsIgnored($word))
+						{
+							if (key_exists($word, $prevWordsArray))
+							{
+								$prevWordsArray[$word]++;
+							}
+							else
+							{
+								$prevWordsArray[$word] = 1;
+							}
+						}
+					}
+
+					$question->word_count = serialize($prevWordsArray);
+					$question->save();
 				}
 				//dd($request["question-".$questionId]);
 			}

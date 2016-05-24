@@ -43,7 +43,7 @@ function checkIfWordIsIgnored($wordToCheck)
 	//dump($ignoredWords);
 	foreach ($ignoredWords as $row)
 	{
-		if($row->word == $wordToCheck)
+		if($row->word == $wordToCheck || $wordToCheck == "")
 		{
 			return true;
 		}
