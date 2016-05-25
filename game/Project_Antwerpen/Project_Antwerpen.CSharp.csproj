@@ -61,12 +61,16 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="LitJson">
+      <HintPath>Assets\LitJson.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Classes\Project.cs" />
     <Compile Include="Assets\Scripts\Classes\Stage.cs" />
     <Compile Include="Assets\Scripts\Handlers\AnimatorHandler.cs" />
     <Compile Include="Assets\Scripts\Handlers\HardwareHandler.cs" />
+    <Compile Include="Assets\Scripts\Handlers\InstantiateListScript.cs" />
     <Compile Include="Assets\Scripts\Handlers\ShowWarning.cs" />
     <Compile Include="Assets\Scripts\Handlers\SwipeDetectionHandler.cs" />
     <Compile Include="Assets\Scripts\Handlers\testProjectHandler.cs" />
@@ -74,7 +78,8 @@
     <Compile Include="Assets\Scripts\Managers\LocationManager.cs" />
     <Compile Include="Assets\Scripts\Managers\MapManager.cs" />
     <Compile Include="Assets\Scripts\Managers\NetworkManager.cs" />
-    <Compile Include="Assets\Scripts\Managers\test.cs" />
+    <Compile Include="Assets\Scripts\Managers\ProjectManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\UI\UIHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
