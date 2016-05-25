@@ -167,18 +167,32 @@ class AdminController extends Controller
 		]);
 	}
 
+	/**
+	 * Get the page that shows the final warning before toggle admin
+	 *
+	 * @param User $user
+	 *
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+	 */
 	public function getToggleAdmin(User $user)
 	{
-		if(Auth::user() == $user)
+		if (Auth::user() == $user)
 		{
 			return redirect()->action("AdminController@getPanel");
 		}
-		return view('admin.rights', ["user"=>$user]);
+		return view('admin.rights', ["user" => $user]);
 	}
 
+	/**
+	 * Handle the post of the toggle admin
+	 *
+	 * @param User $user
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function postToggleAdmin(User $user)
 	{
-		if(Auth::user() == $user)
+		if (Auth::user() == $user)
 		{
 			return redirect()->action("AdminController@getPanel");
 		}
@@ -262,11 +276,111 @@ class AdminController extends Controller
 		}
 	}
 
+	/**
+	 * Get the page of the admin panel
+	 *
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 */
 	public function getPanel()
 	{
 		// Get all users
 		$users = User::orderBy('is_admin', 'desc')->orderBy('lastname', 'asc')->orderBy('firstname', 'asc')->get();
 		//dd($users);
 		return view('admin.panel', ["users" => $users]);
+	}
+
+
+	/**
+	 * Get the project page with statistics
+	 *
+	 * @param Project $project
+	 *
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 */
+	public function getStats(Project $project)
+	{
+		$stats = NULL;
+		$fullProject = $project->load('phases.questions.answers.multipleAnswerdes', 'phases.questions.possibleAnswers');
+
+		foreach ($fullProject->phases as $phase)
+		{
+			$phaseArray = [
+				"start"       => $phase->start->format('d/m/Y'),
+				"eind"        => $phase->end->format('d/m/Y'),
+				"description" => $phase->description,
+				"data"        => [],
+			];
+			foreach ($phase->questions as $question)
+			{
+				// [ "word" => count number]
+				$wordsArray = [];
+
+				$totalAnswers = count($question->answers);
+				$questionArray = [
+					"type"         => $question->sort,
+					"totalAnswers" => $totalAnswers,
+					"answers"      => [],
+				];
+				switch ($question->sort)
+				{
+					case "radio":
+					case "checkbox":
+						// Count the answers
+						foreach ($question->possibleAnswers as $possibleAnswer)
+						{
+							//dump($possibleAnswer);
+							$questionArray["answers"][$possibleAnswer->id] = [
+								"answer"     => $possibleAnswer->answer,
+								"count"      => 0,
+								"percentage" => 0,
+							];
+						}
+
+						foreach ($question->answers as $answer)
+						{
+							//dump($answer);
+							if ($answer->multipleAnswers == "1" && $answer->answer == NULL)
+							{
+								// Checkbox
+								foreach ($answer->multipleAnswerdes as $multiAnswer)
+								{
+									//dump($multiAnswer);
+									$questionArray["answers"][$multiAnswer->possible_answer_id]["count"]++;
+									// Calculate percentage
+									$percentage = floor(($questionArray["answers"][$multiAnswer->possible_answer_id]["count"] / $totalAnswers) * 100);
+									$questionArray["answers"][$multiAnswer->possible_answer_id]["percentage"] = $percentage;
+								}
+							}
+							else
+							{
+								$questionArray["answers"][$answer->id]["count"]++;
+								// Calculate percentage
+								$percentage = floor(($questionArray["answers"][$answer->id]["count"] / $totalAnswers) * 100);
+								$questionArray["answers"][$answer->id]["percentage"] = $percentage;
+							}
+						}
+						break;
+					case "text":
+					case "textarea":
+						foreach ($question->answers as $answer)
+						{
+							// Just add them
+							$questionArray["answers"][] = $answer->answer;
+
+							// Smart count function ==> put in projectController, postOpinion
+							$wordsArray = unserialize($question->word_count);
+							//dump($wordsArray);
+						}
+						$questionArray["counted"] = $wordsArray;
+						break;
+				}
+				$phaseArray["data"][$question->question] = $questionArray;
+			}
+			$stats[$phase->name] = $phaseArray;
+			//dump($phase);
+		}
+		//dd(Auth::user());
+		//dd($stats);
+		return view('admin.statistics', ["project" => $project, "stats" => $stats]);
 	}
 }

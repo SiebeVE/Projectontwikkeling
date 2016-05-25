@@ -16,7 +16,8 @@ class Question extends Model
 		'question',
 		'leftOffset',
 		'topOffset',
-		'width'
+		'width',
+		'word_count'
 	];
 
 	/**
