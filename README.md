@@ -2,14 +2,18 @@
 
 ##API
 API-url: `https://teamgctof.multimediatechnology.be/api`
+>For accessing the API you need the `[appSecret]`
 
 ###Authentication
 _Fetch a JSON Web Token_  
-####GET `/getToken`
-|Parameters  |                          |  
-| ---------- | ------------------------- |  
-| username|[username]|  
-| password|[password]|  
+_Check to see if possible to create own jwt in unity_
+####POST `/getToken`
+|Parameters| |  
+| ---- | ---- | 
+|username|[username]|  
+|password|[password]|
+|secret|[appSecret]|  
+
 **Response**  
 ```json
 {
@@ -18,4 +22,4 @@ _Fetch a JSON Web Token_
 "error":"[errorText]"
 }
 ```
-*Status is either ok or error and error is only available if there is an error*
+_Status is either ok or error and error is only available if there is an error_
