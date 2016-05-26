@@ -60,12 +60,19 @@ public class ProjectManager : MonoBehaviour {
                                                                         new Stage("Fase 4", new System.DateTime(2016, 6, 13), new System.DateTime(2016, 6,18))
                                                                       }));
 
+        projects.Add(new Project("Project6", "beschrijving project 6", 51.1638351f, 4.139883f, images[4], new List<Stage>()
+                                                                      {
+                                                                        new Stage("En als laatste hebben we 5", new System.DateTime(2016, 5, 5), new System.DateTime(2016, 5, 17)),
+                                                                        new Stage("Here comes the sixth!", new System.DateTime(2016, 5, 17), new System.DateTime(2016,6,5)),
+                                                                        new Stage("Fase 3", new System.DateTime(2016, 6,5), new System.DateTime(2016, 6, 13)),
+                                                                        new Stage("Fase 4", new System.DateTime(2016, 6, 13), new System.DateTime(2016, 6,18))
+                                                                      }));
+
 
     }
 
     void Start()
     {
-        // hello from the other side
         if (SceneManager.GetActiveScene().name == "Maps")
         {
             InstantiateListScript.CreateListItemInstance(map_list_item, parent, projects);
