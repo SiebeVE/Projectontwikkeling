@@ -15,7 +15,19 @@ class Project extends Model
 		'longitude'
 	];
 
-	protected $dates = ['deleted_at'];
+	/**
+	 * The attributes that should be hidden for arrays.
+	 *
+	 * @var array
+	 */
+	protected $hidden = [
+		'user_id',
+		"publishTime",
+		"deleted_at",
+		"created_by"
+	];
+
+	protected $dates = ['deleted_at', 'publishTime'];
 
 	/**
 	 * Get the user of the project

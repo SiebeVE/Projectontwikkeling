@@ -81,8 +81,11 @@ Route::group(['middleware' => 'web'], function ()
 	});
 });
 
-Route::group(['middleware' => 'api'], function ()
+Route::group(["prefix" => "api", 'middleware' => 'api'], function ()
 {
-	Route::get('api/get', 'ApiController@get');
-	Route::post('api/get', 'ApiController@post');
+	Route::group(["prefix" => "get"], function ()
+	{
+		Route::get('login', 'ApiController@getLogin');
+		Route::get('projects', 'ApiController@getProjects');
+	});
 });
