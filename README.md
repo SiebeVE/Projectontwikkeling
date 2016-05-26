@@ -45,12 +45,12 @@ _Fetch all the projects and phases_
 ####GET `/get/projects`
 | Parameters  | |  
 | ---- | ---- |  
-| |  |  
-_There aren't any parameters required_  
+|secret|[appSecret]|  
 **Response**  
 *Success*
 ```json
-[
+"status": "ok",
+"projects": [
   {
     "id": "[int projectId]",
     "name": "[string projectName]",
