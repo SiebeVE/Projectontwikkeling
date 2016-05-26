@@ -43,8 +43,6 @@ public class LocationManager {
                 // Pass current location to location variables.
                 lat = Input.location.lastData.latitude;
                 lon = Input.location.lastData.longitude;
-
-                MapManager.SetAddress(string.Empty);
             }
         }
         else  // Location service is not enabled
@@ -57,8 +55,12 @@ public class LocationManager {
 
         if (SceneManager.GetActiveScene().name == "Login")
         {
-            UIHandler.LoadMainScene("Main");
+            UIHandler.LoadScene("Main");
         }
+        else if(SceneManager.GetActiveScene().name == "Main")
+        {
+            UIHandler.ShowWarning();
+        } 
     }
 
     /// <summary>
@@ -67,12 +69,7 @@ public class LocationManager {
     /// <returns>True if the service is enabled. False otherwise.</returns>
     private static bool IsLocationServiceEnabled()
     {
-        if (Input.location.isEnabledByUser)
-        {
-            return true;
-        }
-
-        return false;
+        return Input.location.isEnabledByUser;
     }
     #endregion
 }
