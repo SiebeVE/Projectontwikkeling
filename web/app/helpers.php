@@ -11,6 +11,42 @@
  *
  * @param $message
  */
-function flash($message) {
+function flash($message)
+{
 	session()->flash('message', $message);
+}
+
+/**
+ * Get an array of all words in a string
+ *
+ * @param $string
+ *
+ * @return array
+ */
+function stringToWordArray($string)
+{
+	$newString = preg_replace('/[^A-Za-z 0-9\-]/', ' ', $string);
+	$newArray = explode(" ", $newString);
+	return $newArray;
+}
+
+/**
+ * Check if the given word is in the array to ignore it
+ *
+ * @param $wordToCheck
+ *
+ * @return bool
+ */
+function checkIfWordIsIgnored($wordToCheck)
+{
+	$ignoredWords = \App\Word::get();
+	//dump($ignoredWords);
+	foreach ($ignoredWords as $row)
+	{
+		if($row->word == $wordToCheck || $wordToCheck == "")
+		{
+			return true;
+		}
+	}
+	return false;
 }

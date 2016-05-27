@@ -1,27 +1,86 @@
-# Laravel PHP Framework
+#Project A
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+##API
+API-url: `https://teamgctof.multimediatechnology.be/api`
+>For accessing the API you need the `[appSecret]`
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+###Authentication
+_Fetch a JSON Web Token and the user_  
+_Check to see if possible to create own jwt in unity_
+####GET `/get/login`
+| Parameters  | |  
+| ---- | ---- |  
+|email|[email]|  
+|password|[password]|
+|secret|[appSecret]|
+**Response**  
+*Success*
+```json
+{
+"status":"ok",
+"token":"[string token]",
+"user":{
+  "id": "[int id]",
+  "email": "[string email]",
+  "firstname": "[string firstname]",
+  "lastname": "[string lastname",
+  "postal_code": "[string postalCode]",
+  "city": "[string city]",
+  "is_admin": "[tinyint isAdmin]",
+  "created_at": "[date created_at]",
+  "updated_at": "[date updated_at]"
+  },
+}
+```
+*Failure*
+```json
+{
+"status":"error",
+"error": "[string errorText]"
+}
+```
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
-
-## Official Documentation
-
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+###Project
+_Fetch all the projects and phases_  
+####GET `/get/projects`
+| Parameters  | |  
+| ---- | ---- |  
+|secret|[appSecret]|  
+**Response**  
+*Success*
+```json
+"status": "ok",
+"projects": [
+  {
+    "id": "[int projectId]",
+    "name": "[string projectName]",
+    "description": "[string projectDescription]",
+    "address": "[string projectAddress]",
+    "photo_path": "[string projectRelativePathToPicture]",
+    "photo_left_offset": "[string projectPictureOffset (Ex.: -12px)]",
+    "latitude": "[string projectLatitude]",
+    "longitude": "[string projectLongitude]",
+    "created_at": "[date createProjectdAt]",
+    "updated_at": "[date updatedProjectAt]",
+    "phases": [
+      {
+        "id": "[int phaseId]",
+        "name": "[string phaseName]",
+        "description": "[string description]",
+        "start": "[date startDatePhase]",
+        "end": "[date endDatePhase]",
+        "parentHeight": "[string heightOfContainer (Ex.: 255px)]",
+        "created_at": "[date createPhaseAt]",
+        "updated_at": "[date updatedPhaseAt]",
+      }
+    ]
+  }
+]
+```
+*Failure*
+```json
+{
+"status":"error",
+"error": "[string errorText]"
+}
+```

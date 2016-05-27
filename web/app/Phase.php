@@ -13,6 +13,17 @@ class Phase extends Model
 		'end',
 	];
 
+	/**
+	 * Fields that are hidden when showing array of data
+	 *
+	 * @var array
+	 */
+	protected $hidden = [
+		"project_id",
+		"deleted_at",
+		"created_by"
+	];
+
 	protected $dates = ['deleted_at', 'start', 'end'];
 
 	/**

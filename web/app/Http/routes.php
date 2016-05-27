@@ -80,11 +80,16 @@ Route::group(['middleware' => 'web'], function ()
 		Route::get('paneel', 'AdminController@getPanel');
 		Route::get('paneel/rechten/{user}', 'AdminController@getToggleAdmin');
 		Route::post('paneel/rechten/{user}', 'AdminController@postToggleAdmin');
+
+		Route::get('project/statistieken/{project}', 'AdminController@getStats');
 	});
 });
 
-Route::group(['middleware' => 'api'], function ()
+Route::group(["prefix" => "api", 'middleware' => 'api'], function ()
 {
-	Route::get('api/get', 'ApiController@get');
-	Route::post('api/get', 'ApiController@post');
+	Route::group(["prefix" => "get"], function ()
+	{
+		Route::get('login', 'ApiController@getLogin');
+		Route::get('projects', 'ApiController@getProjects');
+	});
 });

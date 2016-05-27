@@ -57,14 +57,14 @@
                     <div class="upload form-group">
                         <label class="label-control" for="image">Upload foto</label>
                         <div id="imagePlaceholder">
-                            <img src="{{ old("hashImage") != "" ? url('/images/tempProject', old("hashImage")) : "" }}"
+                            <img src="{{ old("hashImage") != "" ? url( $project->photo_path, old("hashImage")) : "" }}"
                                  alt="Project afbeelding">
                             <label for="image">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </label>
                             <input type="file" name="image" id="image">
                             <input type="hidden" name="hashImage" id="hashImage" value="{{ old("hashImage") }}">
-                            <input type="hidden" name="photoOffset" id="photoOffset" value="{{ old("photoOffset") }}">
+                            <input type="hidden" name="photoOffset" id="photoOffset" value="{{ $project->photo_left_offset }}">
                         </div>
                     </div>
                     <div class="form-group">

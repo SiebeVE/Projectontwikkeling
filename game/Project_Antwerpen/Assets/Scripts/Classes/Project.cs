@@ -5,14 +5,26 @@ using UnityEngine;
 public class Project {
 
     private string mName, mDescription;
+    private float mLat, mLon;
+    private string mCurrentStage;
     private Sprite mImage;
     private List<Stage> mStages;
-    private string mCurrentStage;
 
-    public Project(string name, string description, Sprite image, List<Stage> stages)
+    /// <summary>
+    /// Project Constructor
+    /// </summary>
+    /// <param name="name">The project's name</param>
+    /// <param name="description">The project's description</param>
+    /// <param name="lat">The project's latitude</param>
+    /// <param name="lon">The project's longitude</param>
+    /// <param name="image">The project's headerimage</param>
+    /// <param name="stages">The stages of the project</param>
+    public Project(string name, string description, float lat, float lon, Sprite image, List<Stage> stages)
     {
         mName = name;
         mDescription = description;
+        mLat = lat;
+        mLon = lon;
         mImage = image;
 
         mStages = stages;
@@ -27,6 +39,16 @@ public class Project {
     public string Description
     {
         get { return mDescription; }
+    }
+
+    public float Latitude
+    {
+        get { return mLat; }
+    }
+
+    public float Longitude
+    {
+        get { return mLon; }
     }
 
     public List<Stage> Stages

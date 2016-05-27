@@ -46,7 +46,7 @@ class Answer extends Model
 		return $this->belongsTo('App\User');
 	}
 
-	public function possibleAnswers()
+	public function multipleAnswerdes()
 	{
 		return $this->hasMany('App\MultipleAnswerd');
 	}

@@ -463,7 +463,12 @@ tbody tr.striped
 
 div.admin-controls
 {
-	margin-top:20px;
+	margin-top: 20px;
+}
+
+.chart
+{
+	height: 20em;
 }
 
 /********************************************************* HOMEPAGE *********************/

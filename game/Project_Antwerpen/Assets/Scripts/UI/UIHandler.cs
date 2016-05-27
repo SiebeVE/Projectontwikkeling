@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// Handles all UI related subjects. (Finding GO's, assign functions, responsive design...)
@@ -9,36 +10,49 @@ using System.Collections.Generic;
 public class UIHandler : MonoBehaviour {
 
     #region Unity
-    private GameObject main, overlay_obj, menu, menuBG, project_listbttn;           // MAIN = main content of the screen; OVERLAY_OBJ = object to be displayed in maps
-    public static GameObject mainHome, mainProject, project_page, warning;     // ERROR = the error to be displayed at startup, MAINHOME = the home screen; MAINPROJECT = projectlistview, PROJECT_PAGE = page of the project to be loaded
-
+    private GameObject main, overlay_obj, menu, menuBG, project_listbttn;
+    public static GameObject mainHome, mainProject, mainSettings, project_page, warning;
     #region UI
-    // STARTUP = button at login screen ; CONFIRM (LOGIN) = when error is displayed at startup; PROJECT = project button in home screen; MAPS = maps button in home screen; SETTINGS = settings button in home screen; WEBSITE = website button in home screen; CONFIRM (MAPS) = ok button in maps screen; LOGO = logo in home screen; all buttons starting with menu_ are the buttons in the menu in the main screen
-    private Button startup_bttn, confirm_bttn_login, project_bttn, maps_bttn, settings_bttn, website_bttn, confirm_bttn_maps, burger_bttn, menu_home, menu_projects, menu_maps, menu_settings, menu_website, menu_logout, warning_bttn;
-    private InputField location_input; // MAPS screen
-    private Dropdown maptype_drop;  // MAPS screen
-    private Slider zoomSlider, scaleSlider; // MAPS screen
+    public static Button startup_bttn, project_bttn, maps_bttn, settings_bttn, website_bttn, confirm_bttn_maps, burger_bttn, menu_home, menu_projects, menu_maps, menu_settings, menu_website, menu_logout, warning_bttn;
+
+    /// <summary>
+    /// Text component of the location field in the map screen
+    /// </summary>
+    public static Text location_string;
+
+    public static InputField location_input;
+    public static Dropdown maptype_drop;
+    public static Slider zoomSlider,radiusSlider, timerSlider;
     public static RawImage map;
     #endregion
     #endregion
 
+    #region fields
     /// <summary>
-    /// name of the menu which should be loaded when the user presses the back button
+    /// Name of the menu which should be loaded when the user presses the back button
     /// </summary>
-    public static string mNameOfMenu = "";
-
-    //public Button[] projectTest_bttns = new Button[] { };
+    public static string mNameOfMenu = "", sceneName = "";
+    private static ProjectManager prM;
+    private const byte MIN_TIMER_WARNING = 5;
+    private const float STANDARD_TIMER_VALUE = 15f, STANDARD_RADIUS_VALUE = 10f;
+    public static int timer_slider_value;
+    #endregion
 
     void Awake()
     {
-        if(SceneManager.GetActiveScene().name == "Login")
+        sceneName = SceneManager.GetActiveScene().name;
+        prM = GetComponent<ProjectManager>();
+
+        if (sceneName == "Login")
         {
             startup_bttn = GameObject.Find("startup_bttn").GetComponent<Button>();
 
             startup_bttn.onClick.AddListener(() => StartCoroutine(NetworkManager.CheckInternetConnection(NetworkManager.ping)));
         }
-        else if (SceneManager.GetActiveScene().name == "Main")
+        else if (sceneName == "Main")
         {
+            mNameOfMenu = "";
+
             // warning gameobject
             warning = GameObject.Find("warning");
             warning_bttn = warning.transform.Find("close_warning").GetComponent<Button>();
@@ -49,6 +63,19 @@ public class UIHandler : MonoBehaviour {
             main = GameObject.Find("Main");
             mainHome = main.transform.Find("Home").gameObject;
             mainProject = main.transform.Find("Project").gameObject;
+            mainSettings = main.transform.Find("Settings").gameObject;
+
+            // Main menu code
+            menu = GameObject.Find("Menu");
+            menuBG = menu.transform.Find("BG").gameObject;
+
+            menu_projects = menuBG.transform.Find("menu_projects").GetComponent<Button>();
+            menu_maps = menuBG.transform.Find("menu_maps").GetComponent<Button>();
+            menu_settings = menuBG.transform.Find("menu_settings").GetComponent<Button>();
+
+            // settings code
+            radiusSlider = mainSettings.transform.Find("radius_sldr/Slider").GetComponent<Slider>();
+            timerSlider = mainSettings.transform.Find("timer_sldr/Slider").GetComponent<Slider>();
 
             // Find the resources
             project_page = Resources.Load<GameObject>("Prefabs/project_page");
@@ -64,68 +91,219 @@ public class UIHandler : MonoBehaviour {
             // Assign tasks to these buttons
             project_bttn.onClick.AddListener(() => ActivateMenu(mainProject, mainHome));
             maps_bttn.onClick.AddListener(() => SceneManager.LoadScene("Maps"));
+            settings_bttn.onClick.AddListener(() => ActivateMenu(mainSettings, mainHome));
+
+            // Clicking on the maps button in the main menu brings us to the map screen
+            menu_maps.onClick.AddListener(() => LoadScene("Maps"));
+
+            // open website
             website_bttn.onClick.AddListener(() => Application.OpenURL(NetworkManager.URL));
-            burger_bttn.onClick.AddListener(() => ShowMainMenu());
 
-            // menu code
-            menu = GameObject.Find("Menu");
-            menuBG = menu.transform.Find("BG").gameObject;
-            menu_home = menuBG.transform.Find("menu_home").GetComponent<Button>();
-            menu_projects = menuBG.transform.Find("menu_projects").GetComponent<Button>();
-            menu_maps = menuBG.transform.Find("menu_maps").GetComponent<Button>();
-            menu_settings = menuBG.transform.Find("menu_settings").GetComponent<Button>();
-            menu_website = menuBG.transform.Find("menu_website").GetComponent<Button>();
-            menu_logout = menuBG.transform.Find("menu_logout").GetComponent<Button>();
+            menu_settings.onClick.AddListener(() =>
+                    {
+                        GameObject obj = null;
 
-            // assign tasks to these buttons
-            menu_home.onClick.AddListener(() => LoadMainScene(SceneManager.GetActiveScene().name));
+                        if(mNameOfMenu == "")
+                        {
+                            obj = mainHome;
+                        }
+                        else if(mNameOfMenu == "Home")
+                        {
+                            obj = mainProject;
+                        }
+                        else
+                        {
+                            obj = GameObject.Find("project_page");
+                        }
+
+                        ActivateMenu(mainSettings, obj);
+
+                        ShowMainMenu();
+                    });
 
             menu_projects.onClick.AddListener(() => 
                     {
-                        if (mNameOfMenu == "")
+                        if (mNameOfMenu == "") // the previous menu is null, so we can assume we are in the home screen
                         {
                             ActivateMenu(mainProject, mainHome);
                         }
-                        else
+                        else if(mainSettings.activeInHierarchy) // we are in the settings screen
+                        {
+                            ActivateMenu(mainProject, mainSettings);
+                        }
+                        else if(mNameOfMenu == "Project")   // we are on a project_page
                         {
                             ActivateMenu(mainProject, GameObject.Find("project_page"));
                         }
                         ShowMainMenu();
                     });
 
-            menu_maps.onClick.AddListener(() => LoadMainScene("Maps"));
-            menu_website.onClick.AddListener(() => Application.OpenURL(NetworkManager.URL));
-            menu_logout.onClick.AddListener(() => LoadMainScene("Login"));
-        }
-        else if(SceneManager.GetActiveScene().name == "Maps")
-        {
-            overlay_obj = GameObject.Find("menu_maps").gameObject;
+            // set a radius to determine which projects should be loaded
+            radiusSlider.onValueChanged.AddListener((value) => radiusSlider.transform.Find("value").GetComponent<Text>().text = value.ToString());
 
+            timerSlider.onValueChanged.AddListener((value) =>
+                {
+                    timerSlider.transform.Find("value").GetComponent<Text>().text = value.ToString();
+                    timer_slider_value = (int)value;
+
+                    if (value < MIN_TIMER_WARNING)  // Show a warning when the user sets a timer value less than 5 minutes
+                    {
+                        mainSettings.transform.Find("timer_sldr/warning").gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        mainSettings.transform.Find("timer_sldr/warning").gameObject.SetActive(false);
+                    }
+                });
+
+            // First load the settings from the previous session
+            // if they exist
+            if (PlayerPrefs.HasKey("radius"))
+            {
+                SettingsManager.LoadData();
+            }
+            else // set standards
+            {
+                radiusSlider.value = STANDARD_RADIUS_VALUE;
+                timerSlider.value = STANDARD_TIMER_VALUE;
+
+                SettingsManager.SaveData();
+            }
+
+            timer_slider_value = (int)timerSlider.value;
+        }
+        else if(sceneName == "Maps")
+        {
+            GameObject listview = GameObject.Find("Main").transform.Find("list_go").gameObject;     // the listview in the mapsscreen
+            location_string = listview.transform.Find("list_part/list/grid/Location/Lbl").GetComponent<Text>(); // text component in the buttons in the list view
+            overlay_obj = GameObject.Find("menu_maps"); // menu in mapsscreen
+
+            // bars button in header
+            burger_bttn = listview.transform.Find("Header/hamburger").GetComponent<Button>();
+
+            // Main menu code
+            menu = listview.transform.Find("list_part/Menu").gameObject;
+            menuBG = menu.transform.Find("BG").gameObject;
+
+            // find the map in the scene
             map = GameObject.Find("Main").transform.Find("map").GetComponent<RawImage>();
+
+            // find all components in the overlay menu
             confirm_bttn_maps = overlay_obj.transform.Find("confirm_bttn").GetComponent<Button>();
             location_input = overlay_obj.transform.Find("location_input").GetComponent<InputField>();
             maptype_drop = overlay_obj.transform.Find("maptype_drop").GetComponent<Dropdown>();
             zoomSlider = overlay_obj.transform.Find("zoom_sldr").GetComponent<Slider>();
-            scaleSlider = overlay_obj.transform.Find("scale_sldr").GetComponent<Slider>();
 
-            confirm_bttn_maps.onClick.AddListener(() => 
+            //StartCoroutine(MapManager.ReturnLocationName(location_input.text, location_string));
+
+            confirm_bttn_maps.onClick.AddListener(() =>
                      {
-                         MapManager.SetAddress(location_input.text);
-                         StartCoroutine(MapManager.LoadMap(MapManager.URLaddress));
+                         StartCoroutine(CheckLocationName());
                          GetComponent<AnimatorHandler>().DisableAnimator(overlay_obj.GetComponent<Animator>());
                      });
+
+            zoomSlider.onValueChanged.AddListener((value) => 
+                    {
+                        ZoomMap(value);
+                        StartCoroutine(CheckLocationName());
+                    });
+
+            maptype_drop.onValueChanged.AddListener((value) =>
+                {
+                    ChangeMapType(value);
+                    StartCoroutine(CheckLocationName());
+                });
+        };
+
+        if (sceneName == "Main" || sceneName == "Maps")
+        {
+            // Find all main menu buttons, this is the same for the main screen as for the maps screen
+            menu_home = menuBG.transform.Find("menu_home").GetComponent<Button>();
+            menu_website = menuBG.transform.Find("menu_website").GetComponent<Button>();
+            menu_logout = menuBG.transform.Find("menu_logout").GetComponent<Button>();
+
+            // assign tasks to these buttons
+            menu_home.onClick.AddListener(() => 
+                {
+                    LoadScene("Main");
+                    SettingsManager.SaveData();
+                });
+
+            menu_website.onClick.AddListener(() => Application.OpenURL(NetworkManager.URL));
+            menu_logout.onClick.AddListener(() => 
+                {
+                    LoadScene("Login");
+                    SettingsManager.SaveData();
+                });
+
+            burger_bttn.onClick.AddListener(() => ShowMainMenu());
+
+            // we want the location to be updated after a certain amount of time
+            InvokeRepeating("CallDetermineLocation", 0, (timer_slider_value * 60));   // We multiply by 60 to measure the time in minutes (Standard is seconds)
         }
     }
 
     /// <summary>
-    /// If an error occured we want the warning to be shown.
+    /// Checks if a location has been filled in and if it's different from the already returned value.
+    /// </summary>
+    private IEnumerator CheckLocationName()
+    {
+        // Check if a location has been filled in and is different from the value in the list
+        //if (location_input.text != string.Empty && location_string.text != location_input.text)
+        //{
+            // ask for the latitude and logitude of the desired location
+            yield return StartCoroutine(MapManager.ReturnLatLong(location_input.text, prM.projects));
+        //}
+
+        // update the location name in the listview live with the map
+        yield return StartCoroutine(MapManager.ReturnLocationName(location_input.text, location_string));
+    }
+
+    /// <summary>
+    /// Shows a warning when location couldn't be updated, otherwise the maps URL is set.
     /// </summary>
     public static void ShowWarning()
     {
-        if(!NetworkManager.IsConnected || LocationManager.hasFailed)
+        if (!NetworkManager.IsConnected || LocationManager.hasFailed)
         {
             Camera.main.GetComponent<AnimatorHandler>().EnableAnimator(warning.GetComponent<Animator>());
         }
+        else
+        {
+            MapManager.SetAddress(string.Empty, prM.projects);
+        }
+    }
+
+    /// <summary>
+    /// Method to be called after the amount of time we specified.
+    /// </summary>
+    private void CallDetermineLocation()
+    {
+        StartCoroutine(NetworkManager.CheckInternetConnection(NetworkManager.ping));
+    }
+
+    /// <summary>
+    /// Changes the maptype live.
+    /// </summary>
+    /// <param name="maptype">the selected value in the dropdownlist</param>
+    private void ChangeMapType(int maptype)
+    {
+        MapManager.Maptype = (MapType)maptype;
+        //MapManager.SetAddress(location_input.text, prM.projects); // we changed a parameter in the URL, so we want to change the URL
+
+        // can't use StartCoroutine in a class which doesn't derive from monobehaviour!
+       // StartCoroutine(MapManager.LoadMap(MapManager.URLaddress));
+    }
+
+    /// <summary>
+    /// Changes the zoom level of the map (live).
+    /// </summary>
+    /// <param name="zoomlevel">The value of the slider object.</param>
+    private void ZoomMap(float zoomlevel)
+    {
+        MapManager.Zoom = (int)zoomlevel;
+       // MapManager.SetAddress(location_input.text, prM.projects);
+        //StartCoroutine(MapManager.LoadMap(MapManager.URLaddress));
     }
 
     /// <summary>
@@ -137,10 +315,10 @@ public class UIHandler : MonoBehaviour {
     }
 
     /// <summary>
-    /// Loads the Main scene when all requirements are met.
+    /// Loads the required scene.
     /// </summary>
     /// <param name="sceneName">The name of the scene which will be loaded.</param>
-    public static void LoadMainScene(string sceneName)
+    public static void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
     }
@@ -152,8 +330,13 @@ public class UIHandler : MonoBehaviour {
     /// <param name="menuToDisable">The menu which should be disabled when the other is called.</param>
     public static void ActivateMenu(GameObject menuToActivate, GameObject menuToDisable)
     {
-        if (menuToDisable.name == mainHome.name || menuToDisable.name == mainProject.name)
+        if (menuToDisable.name == mainHome.name || menuToDisable.name == mainProject.name || menuToDisable.name == mainSettings.name)
         {
+            if(menuToDisable.name == mainSettings.name)
+            {
+                SettingsManager.SaveData();
+            }
+
             menuToDisable.SetActive(false);
             ReturnToMenu(menuToDisable.name);
         }
@@ -201,7 +384,7 @@ public class UIHandler : MonoBehaviour {
         prStage = prPage.transform.Find("project_fase").GetComponentInChildren<Text>();
         prDescription = prPage.transform.Find("project_description/description").GetComponent<Text>();
 
-        p = FindProject(GetComponent<testProjectHandler>().projecten, name);
+        p = FindProject(GetComponent<ProjectManager>().projects, name);
 
         prTitle.text = p.Name;
         prImage.sprite = p.Image;
@@ -222,6 +405,9 @@ public class UIHandler : MonoBehaviour {
         return projects.Find(p => p.Name == value);
     }
 
+    /// <summary>
+    /// Shows the main menu gameobject on screen
+    /// </summary>
     private void ShowMainMenu()
     {
         if (menu.GetComponent<HardwareHandler>().mainMenuIsEnabled)
@@ -261,5 +447,4 @@ public class UIHandler : MonoBehaviour {
             instance.GetComponent<Button>().onClick.AddListener(() => ActivateMenu(LoadProjectPage(instance.name), mainProject));
         }
     }
-
 }

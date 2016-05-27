@@ -28,7 +28,11 @@ class User extends Authenticatable
 	 * @var array
 	 */
 	protected $hidden = [
-		'password', 'remember_token',
+		'password',
+		'remember_token',
+		"token",
+		"verified",
+		"tempMail",
 	];
 
 	/**
@@ -146,19 +150,17 @@ class User extends Authenticatable
 	}
 
 	/**
-	 *
 	 * Function to toggle the admin boolean
 	 */
 	public function toggleAdmin()
 	{
-		if($this->isAdmin())
+		if ($this->isAdmin())
 		{
-			$this->is_admin = "0";
+			$this->removeAdmin();
 		}
 		else
 		{
-			$this->is_admin = "1";
+			$this->makeAdmin();
 		}
-		$this->save();
 	}
 }
