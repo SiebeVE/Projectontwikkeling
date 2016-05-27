@@ -16,6 +16,7 @@ function initMap() {
     var jsonInput = document.getElementById('jsonTest');
     var projects = JSON.parse(jsonInput.value);
     var markers = [];
+    var infoBubblesHolder;
 
     google.maps.InfoWindow.prototype.opened = false;
 
@@ -122,22 +123,23 @@ function initMap() {
         var infoBubble = new InfoBubble({
             map: map,
             content: '<div class="infoProject" contenteditable="false"><h3>'
-            + projects[count]['name'] + '</h3>' + '<h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p><p>Adres: ' +
-            projects[count]['address'] + '</p></div>',
+            + projects[count]['name'] + '</h3>' + '<h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p><h6>Adres: ' +
+            projects[count]['address'] + '</h6></div>',
             shadowStyle: 1,
             padding: 0,
-            backgroundColor: 'rgba(0, 0 , 0, 0.7)',
-            borderRadius: 4,
+            backgroundColor: 'rgba(207,0,57,1)',
+            borderRadius: 8,
             arrowSize: 20,
             borderWidth: 1,
-            borderColor: '#2c2c2c',
+            borderColor: '#CF0039',
             disableAutoPan: true,
             hideCloseButton: true,
             arrowPosition: 30,
             backgroundClassName: 'infoBubble',
-            arrowStyle: 2
+            arrowStyle: 2,
         });
 
+        markers.push(infoBubble);
         //infoBubble.open(map, marker);
 
         google.maps.event.addListener(marker, 'click', function () {
@@ -152,6 +154,7 @@ function initMap() {
 
             if (!infoBubble.isOpen()) {
                 infoBubble.open(map, this);
+                infoBubble.setMap(null);
             }
             else {
                 infoBubble.close(map, this);

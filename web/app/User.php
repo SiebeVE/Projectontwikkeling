@@ -91,7 +91,7 @@ class User extends Authenticatable
 	 */
 	public function getName()
 	{
-		return $this->firstname." ".$this->lastname;
+		return $this->firstname . " " . $this->lastname;
 	}
 
 	/**
@@ -114,6 +114,51 @@ class User extends Authenticatable
 		$this->email = $this->tempMail;
 		$this->tempMail = NULL;
 
+		$this->save();
+	}
+
+	/**
+	 * Check if the user is an admin
+	 *
+	 * @return bool
+	 */
+	public function isAdmin()
+	{
+		return ($this->is_admin == "1" ? true : false);
+	}
+
+	/**
+	 * Make the current user an admin
+	 */
+	public function makeAdmin()
+	{
+		$this->is_admin = "1";
+		$this->save();
+	}
+
+	/**
+	 * Remove the current user as an admin
+	 */
+	public function removeAdmin()
+	{
+		$this->is_admin = "0";
+		$this->save();
+	}
+
+	/**
+	 *
+	 * Function to toggle the admin boolean
+	 */
+	public function toggleAdmin()
+	{
+		if($this->isAdmin())
+		{
+			$this->is_admin = "0";
+		}
+		else
+		{
+			$this->is_admin = "1";
+		}
 		$this->save();
 	}
 }

@@ -1,6 +1,24 @@
 @extends('layouts.app')
 
+@section('pageCss')
+    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
+@endsection
+
 @section('content')
+    <div id="banner" >
+        <div id="banner-wrapper" class="clearfix">
+            <div class="banner-slogan">
+                <p>Atypisch Antwerpen</p>
+
+            </div>
+            <div class="banner-text">
+                <p>Projecten</p>
+                <p>in jouw</p>
+                <p>buurt</p>
+            </div>
+        </div>
+    </div>
+
 <div class="container dashboard">
     <div class="col-md-12">
         <h1>Dashboard</h1>
@@ -10,7 +28,7 @@
                     <th>Project</th>
                     <th>Start datum</th>
                     <th>Eind datum</th>
-                    <th>Gecreeërd door</th>
+                    <th>Adres</th>
                     <th></th>
                 </tr>
 
@@ -31,16 +49,16 @@
                                 @endif
                             @endforeach
                         </td>
-                        <td>{{ $project->created_by }}</td>
+                        <td>{{ $project->address }}</td>
                         <td>
-                            <a href="{{ url('/project/bewerk', $project->id) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                            <a href="{{ url('/admin/project/bewerk', $project->id) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                         </td>
                     </tr>
                 @endforeach
             </table>
 
-            <div>
-                <a href="{{ url('project/maken') }}">Project aanmaken</a>
+            <div class="col-md-12">
+                <a href="{{ url('/admin/project/maken') }}" class="pull-right" id="createButton">Project aanmaken</a>
             </div>
         </div>
     </div>

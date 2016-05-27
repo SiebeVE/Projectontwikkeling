@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Phase;
+//use App\Phase;
 use App\Project;
-use Carbon\Carbon;
-use finfo;
+//use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\User;
 use App\Tag;
 use App\DB;
+
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
@@ -95,9 +95,9 @@ class ProjectController extends Controller
 			// Check for project
 			'name'        => 'required',
 			'description' => 'required|string|max:600',
-			'address' => 'required',
-			'longitude' => 'required',
-			'latitude' => 'required',];
+			'address'     => 'required',
+			'longitude'   => 'required',
+			'latitude'    => 'required',];
 
 		// Phase validation handler, get all inputs of phase and put in validation array
 		//dd($request->numberOfPhases);
@@ -124,10 +124,10 @@ class ProjectController extends Controller
 		$project = $request->user()->projects()->create([
 			"name"              => $request->name,
 			"description"       => $request->description,
-			"address"			=> $request->address,
+			"address"           => $request->address,
 			"photo_left_offset" => $request->photoOffset,
-			"longitude" => $request->longitude,
-			"latitude" => $request->latitude,
+			"longitude"         => $request->longitude,
+			"latitude"          => $request->latitude,
 		]);
 
 		// Move picture and rename and save path in database
@@ -279,8 +279,7 @@ class ProjectController extends Controller
 		}
 	}
 
-	/**
-	 * Show the application dashboard
+	 /* Show the application dashboard
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
@@ -333,9 +332,9 @@ class ProjectController extends Controller
 			// Check for project
 			'name'        => 'required',
 			'description' => 'required|string|max:600',
-			'address' => 'required',
-			'longitude' => 'required',
-			'latitude' => 'required',];
+			'address'     => 'required',
+			'longitude'   => 'required',
+			'latitude'    => 'required',];
 
 		$this->validate($request, $toValidate);
 
@@ -344,7 +343,7 @@ class ProjectController extends Controller
 
 		//dd($tagsId);
 
-		return redirect('project/dashboard');
+		return redirect('admin/project/dashboard');
 	}
 
 	/**
@@ -394,6 +393,7 @@ class ProjectController extends Controller
 			return view('projects.giveOpinion', ["data" => $questionsArr]);
 		}
 		abort(404, "Geen huidige phase gevonden");
+		return NULL;
 	}
 
 	/**

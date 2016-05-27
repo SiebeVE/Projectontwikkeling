@@ -106,6 +106,7 @@ class AuthController extends Controller
 		client_secret=" . env('OAUTH_SECRET') . "&
 		redirect_uri=" . env('OAUTH_REDIRECT') . "&
 		scope=name email" . "&
+		state=e6580c575d5aea4ffa58fdf9dc465dacae35edc58fba99dded5d2755fc3f7586&
 		lng=nl";
 
 		return view('auth.login', ["OAuthLink" => $link]);
@@ -113,10 +114,10 @@ class AuthController extends Controller
 
 	public function authAProfile(Request $request)
 	{
-
+		//dd($request);
 		$client = new Client([
 			'curl'        => [CURLOPT_SSL_VERIFYPEER => false], // Bij self signed certificaten, moet weg wanneer niet self signed
-			'headers'     => ['Authorization' => $request->token_type . " " . $request->access_token],
+			'headers'     => ['Authorization ' => $request->token_type . " " . $request->access_token],
 			'http_errors' => false,
 		]);
 		//$client = new Client([
@@ -124,6 +125,7 @@ class AuthController extends Controller
 		//]);
 		$responseToken = $client->get(env("OAUTH_APROFILE"));
 		$jsonResponse = json_decode($responseToken->getBody());
+		//dd($jsonResponse);
 		if (isset($jsonResponse->success) && $jsonResponse->success)
 		{
 			// Save data in the database if necessary and login user
@@ -167,6 +169,7 @@ class AuthController extends Controller
 			dd($jsonResponse);
 		}
 		dd($jsonResponse->data);
+		return null;
 	}
 
 	/**

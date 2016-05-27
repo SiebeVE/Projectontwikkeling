@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('pageCss')
-    <link href="{{ url('/') }}/css/home.css" rel="stylesheet">
+    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
+    <link href="{{ url('/') }}/css/homeMap.css" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -14,7 +15,7 @@
             </div>
             <div class="banner-text">
                 <p>Projecten</p>
-                <p>In jouw</p>
+                <p>in jouw</p>
                 <p>buurt</p>
             </div>
         </div>

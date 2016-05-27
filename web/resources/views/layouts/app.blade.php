@@ -60,8 +60,8 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ url('/home') }}">Home</a>
-                        <li><a href="{{ url('/project/dashboard') }}">Projectbeheer</a></li>
+                        <li><a href="{{ url('/') }}">Home</a>
+                        <li><a href="{{ url('admin/project/dashboard') }}">Projectbeheer</a></li>
                         <li><a href="{{ url('/info') }}">Info</a></li>
                         <li><a href="{{ url('/contact') }}">Contact</a></li>
                     </ul>
@@ -79,6 +79,9 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
+                                @if(Auth::user()->isAdmin())
+                                <li><a href="{{ url('/admin/paneel') }}"><i class="fa fa-btn fa-cogs"></i>Admin paneel</a></li>
+                                @endif
                                 <li><a href="{{ url('/uitloggen') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
                             </ul>
                         </li>
