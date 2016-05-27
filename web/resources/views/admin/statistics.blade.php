@@ -39,6 +39,11 @@
                     @endforeach
                 </div>
             @endforeach
+            <div class="hidden ignoredWords">
+                @foreach($ignoredWords as $word)
+                    <span>{{$word->word}}</span>
+                @endforeach
+            </div>
         </div>
     </div>
 @endsection
@@ -48,6 +53,9 @@
     <script>
         (function ( $ ) {
             Chart.defaults.global.maintainAspectRatio = false;
+            Chart.defaults.global.legend.position = 'bottom';
+            Chart.defaults.global.title.display = true;
+            Chart.defaults.global.title.padding = 5;
             $(function () {
                 $(".phase-stats").each(function () {
                     var $curentPhase = $(this);
@@ -56,6 +64,7 @@
                     $questions.each(function () {
                                 var $currentQuestion = $(this);
                                 var $newCanvasDiv = $("<div>").addClass("col-md-4").addClass("col-sm-6").addClass("col-xs-12").addClass("chart");
+                                var $controls = $("<div>").addClass("controls").text("Bewerk");
                                 var $newCanvas = $("<canvas>").data("questionKey", $currentQuestion.data("questionKey"));
                                 //                        console.log($newCanvas);
                                 var chartType = "bar";
@@ -92,22 +101,6 @@
                                             }
                                         }
                                     };
-//                                    options = {
-//                                        scales: {
-//                                            yAxes: [
-//                                                {
-//                                                    ticks: {
-//                                                        beginAtZero: true
-//                                                    }
-//                                                } ],
-//                                            xAxes: [
-//                                                {
-//                                                    ticks: {
-//                                                        beginAtZero: true
-//                                                    }
-//                                                } ]
-//                                        }
-//                                    };
                                     hasAnswers = true;
                                 }
                                 else {
@@ -143,6 +136,7 @@
 
                                 if (hasAnswers) {
                                     $newCanvasDiv.append($newCanvas);
+                                    $newCanvasDiv.append($controls);
                                     $chartsDiv.append($newCanvasDiv);
 
                                     var chart = new Chart($newCanvas, {

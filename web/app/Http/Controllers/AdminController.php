@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Project;
 use App\User;
+use App\Word;
 use finfo;
 use Auth;
 use Illuminate\Http\Request;
@@ -379,8 +380,14 @@ class AdminController extends Controller
 			$stats[$phase->name] = $phaseArray;
 			//dump($phase);
 		}
-		//dd(Auth::user());
-		//dd($stats);
-		return view('admin.statistics', ["project" => $project, "stats" => $stats]);
+
+		// Fetch all words with soft deletes
+		$ignoredWords = Word::get();
+		//dd($ignoredWords);
+		return view('admin.statistics', [
+			"project"      => $project,
+			"stats"        => $stats,
+			"ignoredWords" => $ignoredWords,
+		]);
 	}
 }
