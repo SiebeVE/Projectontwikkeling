@@ -66,6 +66,14 @@ public static class MapManager {
         get { return maptype; }
         set { maptype = value; }
     }
+
+    /// <summary>
+    /// The temporary projectslist contains all projects within the radius.
+    /// </summary>
+    public static List<Project> TempProjects
+    {
+        get { return tempProjects; }
+    }
     #endregion 
 
     /// <summary>
@@ -100,6 +108,10 @@ public static class MapManager {
     /// <param name="location">The location the user wants to find.</param>
     public static void SetAddress(string location, List<Project> projects)
     {
+        // set list empty so when a new location is searched, the list doesn't add buttons
+        // to the already existing ones
+        tempProjects.Clear();
+
         mURLaddress = "http://maps.googleapis.com/maps/api/staticmap?center=";
 
         // The user has entered no input or the app starts for the first time
@@ -111,7 +123,7 @@ public static class MapManager {
         else if(location != string.Empty)
         {
             // Add desired location
-            mURLaddress += location + "&zoom=" + zoom + "&maptype=" + maptype + "&markers=color:red%7Clabel:A%7C" + location;
+            mURLaddress += location + "&zoom=" + zoom + "&maptype=" + maptype + "&markers=color:red%7Clabel:A%7C" + location + "%7Csize=mid";
             AddProjects(projects, searchedLat, searchedLong);
         }
 
@@ -121,6 +133,8 @@ public static class MapManager {
         if (UIHandler.sceneName == "Maps")
         {
             MapLoader.CallLoadMap();
+
+            InstantiateListScript.CreateListItemInstance(UIHandler.map_list_item, UIHandler.grid, tempProjects);
 
             // set the searched values back to zero to prevent this method from running
             searchedLat = 0;
@@ -144,6 +158,9 @@ public static class MapManager {
             if((int)CalculateDistanceProjects(projects[i].Latitude, projects[i].Longitude, lat, lon) <= PlayerPrefs.GetInt("radius"))
             {
                 mURLaddress += "&markers=color:" + (MarkerColors)r.Next(0, Enum.GetValues(typeof(MarkerColors)).Length) + "%7Clabel:" + alphabet[currentIndex] + "%7C" + projects[i].Latitude + "," + projects[i].Longitude;
+
+                // add this project to the temp projects list so it will only display the projects within the desired radius
+                tempProjects.Add(projects[i]);
                 currentIndex++;
             }
         }
@@ -157,9 +174,19 @@ public static class MapManager {
     /// <param name="projects">The projectManager projects list.</param>
     public static IEnumerator ReturnLatLong(string location, List<Project> projects)
     {
-        location = location.Replace(" ", "%20");
+        string url = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 
-        WWW www = new WWW("https://maps.googleapis.com/maps/api/geocode/json?address=" + location + API_KEY);
+        if (location == string.Empty)
+        {
+            url += LocationManager.Latitude + "," + LocationManager.Longitude + API_KEY;
+        }
+        else
+        {
+            location = location.Replace(" ", "%20");
+            url += location + API_KEY;
+        }
+
+        WWW www = new WWW(url);
         yield return www;
 
         if(www.error == null)

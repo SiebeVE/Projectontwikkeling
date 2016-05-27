@@ -11,7 +11,7 @@ public class UIHandler : MonoBehaviour {
 
     #region Unity
     private GameObject main, overlay_obj, menu, menuBG, project_listbttn;
-    public static GameObject mainHome, mainProject, mainSettings, project_page, warning;
+    public static GameObject mainHome, mainProject, mainSettings, project_page, warning, map_list_item, grid;
     #region UI
     public static Button startup_bttn, project_bttn, maps_bttn, settings_bttn, website_bttn, confirm_bttn_maps, burger_bttn, menu_home, menu_projects, menu_maps, menu_settings, menu_website, menu_logout, warning_bttn;
 
@@ -53,11 +53,10 @@ public class UIHandler : MonoBehaviour {
         {
             mNameOfMenu = "";
 
+            #region Finding Gameobjects
             // warning gameobject
             warning = GameObject.Find("warning");
             warning_bttn = warning.transform.Find("close_warning").GetComponent<Button>();
-
-            warning_bttn.onClick.AddListener(() => DisableWarning());
 
             // Find the main functioning objects
             main = GameObject.Find("Main");
@@ -87,14 +86,31 @@ public class UIHandler : MonoBehaviour {
             settings_bttn = mainHome.transform.Find("settings_bttn").GetComponent<Button>();
             website_bttn = mainHome.transform.Find("website_bttn").GetComponent<Button>();
             burger_bttn = GameObject.Find("Header").transform.Find("hamburger").gameObject.GetComponent<Button>();
+            #endregion
+
+            warning_bttn.onClick.AddListener(() => DisableWarning());
 
             // Assign tasks to these buttons
             project_bttn.onClick.AddListener(() => ActivateMenu(mainProject, mainHome));
-            maps_bttn.onClick.AddListener(() => SceneManager.LoadScene("Maps"));
+
+            maps_bttn.onClick.AddListener(() =>
+            {
+                // to be sure, make sure the user will always see the roadmap type first
+                MapManager.Maptype = MapType.roadmap;
+                MapManager.SetAddress(string.Empty, prM.projects);
+                SceneManager.LoadScene("Maps");
+            });
+
             settings_bttn.onClick.AddListener(() => ActivateMenu(mainSettings, mainHome));
 
             // Clicking on the maps button in the main menu brings us to the map screen
-            menu_maps.onClick.AddListener(() => LoadScene("Maps"));
+            menu_maps.onClick.AddListener(() =>
+                {
+                    // to be certain, makesure the user will always see the roadmap type first
+                    MapManager.Maptype = MapType.roadmap;
+                    MapManager.SetAddress(string.Empty, prM.projects);
+                    LoadScene("Maps");
+                });
 
             // open website
             website_bttn.onClick.AddListener(() => Application.OpenURL(NetworkManager.URL));
@@ -171,6 +187,9 @@ public class UIHandler : MonoBehaviour {
             }
 
             timer_slider_value = (int)timerSlider.value;
+
+            // we want the location to be updated after a certain amount of time
+            InvokeRepeating("CallDetermineLocation", 0, (timer_slider_value * 60));   // We multiply by 60 to measure the time in minutes (Standard is seconds)
         }
         else if(sceneName == "Maps")
         {
@@ -194,7 +213,9 @@ public class UIHandler : MonoBehaviour {
             maptype_drop = overlay_obj.transform.Find("maptype_drop").GetComponent<Dropdown>();
             zoomSlider = overlay_obj.transform.Find("zoom_sldr").GetComponent<Slider>();
 
-            //StartCoroutine(MapManager.ReturnLocationName(location_input.text, location_string));
+            // find the list item which needs to be instantiated into the list
+            map_list_item = Resources.Load<GameObject>("Prefabs/map_list_item");
+            grid = GameObject.Find("Main").transform.Find("list_go/list_part/list/grid").gameObject;
 
             confirm_bttn_maps.onClick.AddListener(() =>
                      {
@@ -237,9 +258,6 @@ public class UIHandler : MonoBehaviour {
                 });
 
             burger_bttn.onClick.AddListener(() => ShowMainMenu());
-
-            // we want the location to be updated after a certain amount of time
-            InvokeRepeating("CallDetermineLocation", 0, (timer_slider_value * 60));   // We multiply by 60 to measure the time in minutes (Standard is seconds)
         }
     }
 
@@ -248,13 +266,9 @@ public class UIHandler : MonoBehaviour {
     /// </summary>
     private IEnumerator CheckLocationName()
     {
-        // Check if a location has been filled in and is different from the value in the list
-        //if (location_input.text != string.Empty && location_string.text != location_input.text)
-        //{
-            // ask for the latitude and logitude of the desired location
-            yield return StartCoroutine(MapManager.ReturnLatLong(location_input.text, prM.projects));
-        //}
-
+        // ask for the latitude and logitude of the desired location
+        yield return StartCoroutine(MapManager.ReturnLatLong(location_input.text, prM.projects)); // wait until finished
+        
         // update the location name in the listview live with the map
         yield return StartCoroutine(MapManager.ReturnLocationName(location_input.text, location_string));
     }
@@ -289,10 +303,6 @@ public class UIHandler : MonoBehaviour {
     private void ChangeMapType(int maptype)
     {
         MapManager.Maptype = (MapType)maptype;
-        //MapManager.SetAddress(location_input.text, prM.projects); // we changed a parameter in the URL, so we want to change the URL
-
-        // can't use StartCoroutine in a class which doesn't derive from monobehaviour!
-       // StartCoroutine(MapManager.LoadMap(MapManager.URLaddress));
     }
 
     /// <summary>
@@ -302,8 +312,6 @@ public class UIHandler : MonoBehaviour {
     private void ZoomMap(float zoomlevel)
     {
         MapManager.Zoom = (int)zoomlevel;
-       // MapManager.SetAddress(location_input.text, prM.projects);
-        //StartCoroutine(MapManager.LoadMap(MapManager.URLaddress));
     }
 
     /// <summary>

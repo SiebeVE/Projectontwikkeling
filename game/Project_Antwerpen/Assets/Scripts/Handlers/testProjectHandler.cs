@@ -21,9 +21,4 @@ public class testProjectHandler : MonoBehaviour {
         GetComponent<UIHandler>().LoadProjectList(prM.projects);
 	
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class SwipeDetectionHandler : MonoBehaviour
-{
-
+{ 
     public float minSwipeDistanceY;
     private Vector2 startpos;
 
