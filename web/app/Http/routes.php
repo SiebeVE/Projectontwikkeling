@@ -55,18 +55,22 @@ Route::group(['middleware' => 'web'], function ()
 	Route::post('wachtwoord/email', 'Auth\PasswordController@sendResetLinkEmail');
 	Route::post('wachtwoord/reset', 'Auth\PasswordController@reset');
 
-	Route::get('project/dashboard', 'ProjectController@dashboard');
+	// Info and Contact page
+	Route::get('info', 'PageController@info');
+	Route::get('contact', 'PageController@contact');
 
 	Route::get('project/beoordelen/{project}', 'ProjectController@getOpinion');
 	Route::post('project/beoordelen/{project}', 'ProjectController@postOpinion');
-
-	Route::get('project/bewerk/{project}', 'ProjectController@edit');
-	Route::patch('project/bewerk/{project}', 'ProjectController@update');
 
 	Route::get('auth/token', 'Auth\AuthController@authAProfile');
 
 	Route::group(['prefix' => 'admin'], function ()
 	{
+		Route::get('project/dashboard', 'ProjectController@dashboard');
+
+		Route::get('project/bewerk/{project}', 'ProjectController@edit');
+		Route::patch('project/bewerk/{project}', 'ProjectController@update');
+
 		Route::get('project/maken', 'AdminController@getMakeProject');
 		Route::post('project/maken', 'AdminController@postMakeProject');
 

@@ -8,6 +8,8 @@ use App\Word;
 use finfo;
 use Auth;
 use Illuminate\Http\Request;
+use App\Tag;
+use App\DB;
 
 use App\Http\Requests;
 
@@ -31,7 +33,8 @@ class AdminController extends Controller
 	 */
 	public function getMakeProject()
 	{
-		return view('projects.make');
+		$tags = Tag::lists('name', 'id');
+		return view('projects.make', compact('tags'));
 	}
 
 	/**
@@ -131,6 +134,38 @@ class AdminController extends Controller
 		rename($tempSaveFolder . "/" . $request->hashImage, $finalSaveFolder . "/" . $newImageName);
 
 		$project->photo_path = $publicSaveFolder . "/" . $newImageName;
+
+		//save tags with associated project
+		$project_tags = $request->input('tags');
+
+		$all_tags = Tag::all();
+
+		$tagsId = array();
+		$tag_doesnt_exist = true;
+
+		foreach ( $project_tags as $project_tag )
+		{
+			foreach( $all_tags as $all_tag)
+			{
+				if($all_tag->name == $project_tag) {
+					array_push($tagsId, $all_tag->id);
+					$tag_doesnt_exist = false;
+				}
+			}
+
+			if($tag_doesnt_exist) {
+				$newTag = Tag::create(['name' => $project_tag]);
+				//$newTag = DB::table('tags')->select('id')->where('name', '=', $project_tag);
+				$newTagId = $newTag->id;
+
+				array_push($tagsId, $newTagId);
+			}
+
+			$tag_doesnt_exist = true;
+		}
+
+		$project->tags()->attach($tagsId);
+
 		$project->save();
 
 		// Phase database handler, save the phase data in the database

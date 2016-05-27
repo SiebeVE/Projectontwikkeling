@@ -1,7 +1,27 @@
 @extends('layouts.app')
 
+@section('pageCss')
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
+    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
+@endsection
+
+
 @section('content')
-    <div class="container">
+<div id="banner" >
+    <div id="banner-wrapper" class="clearfix">
+        <div class="banner-slogan">
+            <p>Atypisch Antwerpen</p>
+
+        </div>
+        <div class="banner-text">
+            <p>Projecten</p>
+            <p>in jouw</p>
+            <p>buurt</p>
+        </div>
+    </div>
+</div>
+
+<div class="container containerProject">
         <div class="col-md-12">
             <h1>Projectnaam bewerken</h1>
             @if(count($errors) > 0)
@@ -13,7 +33,7 @@
                     </ul>
                 </div>
             @endif
-            <form id="form" name="create" method="POST" action="/project/bewerk/{{ $project->id }}" enctype='multipart/form-data'>
+            <form id="form" name="create" method="POST" action="" enctype='multipart/form-data'>
                 {{ csrf_field() }}
                 {{ method_field('PATCH') }}
                 <div class="col-md-8">
@@ -27,49 +47,66 @@
                         <textarea name="description" id="description" class="form-control"
                                   maxlength="600">{{ $project->description }}</textarea>
                     </div>
-                    <label for="address">Adres</label>
-                    <input type="text" id="address" name="address" class="form-control input-lg"
-                           value="{{ $project->address }}">
+                    <div class="form-group">
+                        <label for="address">Adres</label>
+                        <input type="text" id="address" name="address" class="form-control input-lg"
+                               value="{{ $project->address }}">
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="upload">
+                    <div class="upload form-group">
                         <label class="label-control" for="image">Upload foto</label>
                         <div id="imagePlaceholder">
-                            <img src="{{ old("hashImage") != "" ? url('/images/tempProject', old("hashImage")) : "" }}"
+                            <img src="{{ old("hashImage") != "" ? url( $project->photo_path, old("hashImage")) : "" }}"
                                  alt="Project afbeelding">
                             <label for="image">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </label>
                             <input type="file" name="image" id="image">
                             <input type="hidden" name="hashImage" id="hashImage" value="{{ old("hashImage") }}">
-                            <input type="hidden" name="photoOffset" id="photoOffset" value="{{ old("photoOffset") }}">
+                            <input type="hidden" name="photoOffset" id="photoOffset" value="{{ $project->photo_left_offset }}">
                         </div>
                     </div>
-                </div>
-                <div class="col-md-12">
-                    <div id="buttonbar" class="mine pull-right">
-                        <button type="button" id="labels">verberg/toon labels</button>
-                        <button type="button" id="addMarker">marker toevoegen</button>
-                        <button type="button" id="removeMarker">marker verwijderen</button>
-                        <button type="button" id="placeMarker">Position marker</button>
-                        <input id="place-input" type="text" placeholder="Antwerpen" />
-                        <input type="" name="latitude" id="latitude" value="{{ (count($errors) > 0) ? old("latitude") : $project->latitude }}">
-                        <input type="hidden" name="longitude" id="longitude" value="{{ (count($errors) > 0) ? old("longitude") : $project->longitude }}">
+                    <div class="form-group">
+                        {{--{!! Form::label('tags', 'Tags:') !!}
+                        {!! Form::select('tags[]', $tags, null, ['class' => 'form-control', 'multiple', 'data-role' => 'tagsinput']) !!}--}}
+                        <label for="tags">Tags</label>
+                        <select multiple id="tags" name="tags[]" data-role="tagsinput" style="display: none;">
+                            @foreach($tags as $tag)
+                                <option value="{{  $tag->name }}" selected="selected">{{ $tag->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="locatieplaceholder" id="map">
+                </div>
 
+                <div class="col-md-12">
+                    <label for="location">Locatie</label>
+                    <div class="location">
+                        <div id="buttonbar" class="mine pull-right">
+                            <button type="button" id="labels">verberg/toon labels</button>
+                            <button type="button" id="addMarker">marker toevoegen</button>
+                            <button type="button" id="removeMarker">marker verwijderen</button>
+                            <button type="button" id="placeMarker">Position marker</button>
+                            <input id="place-input" type="text" placeholder="Antwerpen" />
+                            <input type="hidden" name="latitude" id="latitude" value="{{ (count($errors) > 0) ? old("latitude") : $project->latitude }}">
+                            <input type="hidden" name="longitude" id="longitude" value="{{ (count($errors) > 0) ? old("longitude") : $project->longitude }}">
+                        </div>
+                        <div class="locatieplaceholder" id="map">
+
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-12" id="phases">
                     <hr>
+                    <h2>Fases bewerken</h2>
                     <div class="phase">
                         <ul>
-                            @foreach($phases as $phase)
+                            @foreach($phases as $phase){{--
                                 <li>
                                     <input type="checkbox" id="cb{{ $phase->id }}"/>
-                                    <label for="cb{{ $phase->id }}" class="label-header">{{ $phase->name }}</label>
+                                    <label for="cb{{ $phase->id }}" class="label-header">{{ $phase->name }}</label>--}}
                                     @include('projects/phase-edit', ['phase' => $phase])
-                                </li>
+                              {{--  </li>--}}
                             @endforeach
                             {{--<li>
                                 <input type="checkbox" id="cb3"/>
@@ -85,7 +122,7 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary pull-right">Project Bewerken</button>
+                    <button type="submit" class="btn btn-primary pull-right createButton">Project Bewerken</button>
                 </div>
             </form>
         </div>
@@ -98,4 +135,5 @@
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&region=BE"
             async defer></script>
     <script src="{{ url('/') }}/js/projectbeheer.js"></script>
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 @endsection

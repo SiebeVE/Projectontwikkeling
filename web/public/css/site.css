@@ -96,13 +96,59 @@ form[name=create] .upload #imagePlaceholder img
 
 form[name=create] textarea#description
 {
-	height: 17em;
+	height: 14em;
 }
 
 form[name=create] #phases .phase:last-child
 {
 	margin-bottom: 15px;
 }
+
+button, input, select, textarea {
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+
+div.bootstrap-tagsinput{
+	background-color: #fff;
+	border: 1px solid #ccc;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	color: #555;
+	vertical-align: middle;
+	border-radius: 6px;
+	width: 100%;
+	line-height: 1.3333em;
+	cursor: text;
+	min-height: 46px;
+	padding: 10px 16px;
+	font-size: 18px;
+	margin-bottom: 1em;
+}
+
+.bootstrap-tagsinput input {
+	border: none;
+	box-shadow: none;
+	outline: none;
+	background-color: transparent;
+	padding: 0 6px;
+	margin: 0;
+	width: auto;
+	max-width: inherit;
+}
+
+.label-info {
+	background-color: #0091D3;
+}
+
+.label {
+	padding: .2em .5em .2em;
+}
+.bootstrap-tagsinput .tag {
+	margin-right: 0.2em;
+}
+
 
 form[name=create] #phases .phase:not(:first-of-type):last-child,
 form[name=createPhase] .choices .choice:not(:first-of-type):last-child
@@ -182,29 +228,36 @@ nav .container .navbar-brand
 
 #app-navbar-collapse ul
 {
-	vertical-align: middle;
-	height: 90px;
+	width: inherit;
+	border: none;
+	box-shadow: none;
 
 }
 
 #app-navbar-collapse ul li a
 {
 	color: white;
+	font-weight: 700;
 	background-color: transparent;
 	padding-top: 35px;
 	padding-bottom: 37px;
+	font-size: 1.3em;
 }
 
 #app-navbar-collapse ul li ul
 {
+	margin: auto;
 	color: white;
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: rgba(0,0,0,0.4);
 }
 
-#app-navbar-collapse ul li:hover
+#app-navbar-collapse ul li a:hover
 {
-	color: white;
-	background-color: rgba(0, 0, 0, 0.3);
+	color: black;
+}
+
+#app-navbar-collapse ul:first-child{
+	margin-left: 2em;
 }
 
 footer p.text-muted
@@ -228,7 +281,7 @@ footer p.text-muted
 	border-radius: 5px;
 	padding: 5px 5px 5px 25px;
 	color: white;
-	background-color: #CF0039;
+	background-color: #0091D3;
 	width: 100%;
 	height: 40px;
 	font-size: 1.5em;
@@ -237,7 +290,7 @@ footer p.text-muted
 
 .phase li .label-header:hover
 {
-	background-color: #81001F;
+	background-color: #0064B4;
 }
 
 .phase input[type=checkbox]
@@ -251,7 +304,6 @@ footer p.text-muted
 	max-width: 100%;
 	opacity: 0;
 	border-bottom: solid 1px #EEE;
-	background-color: white;
 	overflow: hidden;
 	white-space: nowrap;
 	-webkit-transition: all 1s ease;
@@ -295,10 +347,8 @@ footer p.text-muted
   margin-left: -25px;*/
 }
 
-.phase-edit .col-md-8, .phase-edit .col-md-4
-{
-	margin-top: 20px;
-	margin-bottom: 15px;
+form[name=create] .phase textarea#description {
+	height: 8em;
 }
 
 #map

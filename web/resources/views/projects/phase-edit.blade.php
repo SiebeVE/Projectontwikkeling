@@ -10,19 +10,6 @@
             </div>
         </div>
      <div class="col-md-4">
-         <div class="upload">
-             <label class="label-control" for="image">Upload foto</label>
-             <div id="imagePlaceholder">
-                 <img src="{{ old("hashImage") != "" ? url('/images/tempProject', old("hashImage")) : "" }}"
-                      alt="Project afbeelding">
-                 <label for="image">
-                     <i class="fa fa-plus" aria-hidden="true"></i>
-                 </label>
-                 <input type="file" name="image" id="image">
-                 <input type="hidden" name="hashImage" id="hashImage" value="{{ old("hashImage") }}">
-                 <input type="hidden" name="photoOffset" id="photoOffset" value="{{ old("photoOffset") }}">
-             </div>
-         </div>
      </div>
         <div class="col-md-4">
             <div class="col-md-12">

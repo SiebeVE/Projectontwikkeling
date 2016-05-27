@@ -61,7 +61,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         <li><a href="{{ url('/') }}">Home</a>
-                        <li><a href="{{ url('/project/dashboard') }}">Projectbeheer</a></li>
+                        <li><a href="{{ url('admin/project/dashboard') }}">Projectbeheer</a></li>
                         <li><a href="{{ url('/info') }}">Info</a></li>
                         <li><a href="{{ url('/contact') }}">Contact</a></li>
                     </ul>

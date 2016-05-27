@@ -1,0 +1,67 @@
+#map {
+    height: inherit;
+}
+
+.mapwrapper {
+    margin-top: 1em;
+    background-color:  rgba(255,255,255, 0.9);
+    padding: 0;
+    border-radius: 5px;
+    height: 50em;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mapwrapper .tabs, .mapwrapper .mapcontainer {
+    padding: 0;
+    float: left;
+    height: inherit;
+}
+
+.mapwrapper .tabs {
+    overflow-y: scroll;
+    border-radius: 5px;
+    font-family: AntwerpenRegular;
+    width: 15%;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.mapwrapper .mapcontainer {
+    width: 85%;
+}
+
+.mapwrapper .tabs button {
+    width: 99%;
+    height: 4em;
+    background-color: rgba(255,255,255, 0.9);
+    border: none;
+    border-bottom: solid rgb(184,204,234) 1px;
+    color: black;
+    -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+    font-size: 1.5em;
+}
+
+.mapwrapper .tabs button:hover {
+    background-color: 	rgba(184,204,234, 0.5);
+
+}
+
+/************************************************SCROLLBAR************************/
+
+.mapwrapper .tabs::-webkit-scrollbar {
+    width: 1em;
+}
+
+.mapwrapper .tabs::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color:#f8f8ff;
+}
+
+.mapwrapper .tabs::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+    background-color: 	#fff5ee;
+    outline: 1px solid slategrey;
+    border-radius: 20px;
+}
