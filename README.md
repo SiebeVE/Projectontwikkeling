@@ -10,9 +10,9 @@ _Check to see if possible to create own jwt in unity_
 ####GET `/get/login`
 | Parameters  | |  
 | ---- | ---- |  
-|email|[email]|  
-|password|[password]|
-|secret|[appSecret]|
+|email|[string email]|  
+|password|[string password]|
+|secret|[string appSecret]|
 **Response**  
 *Success*
 ```json
@@ -45,7 +45,7 @@ _Fetch all the projects and phases_
 ####GET `/get/projects`
 | Parameters  | |  
 | ---- | ---- |  
-|secret|[appSecret]|  
+|secret|[string appSecret]|  
 **Response**  
 *Success*
 ```json
