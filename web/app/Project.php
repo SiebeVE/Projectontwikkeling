@@ -10,6 +10,7 @@ class Project extends Model
 	protected $fillable = [
 		'name',
 		'description',
+		'address',
 		'photo_left_offset',
 		'latitude',
 		'longitude'
@@ -50,6 +51,17 @@ class Project extends Model
 
 		return $this->hasMany('App\Phase');
 	}
+
+	/**
+	 * Get all the tags of this project
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
+	public function tags()
+	{
+		return $this->belongsToMany('App\Tag')->withTimestamps();
+	}
+
 
 	/**
 	 * Get the current phase in time

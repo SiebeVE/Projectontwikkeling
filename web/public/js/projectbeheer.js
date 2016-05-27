@@ -20,7 +20,6 @@ var btnRemoveMarker = document.getElementById('removeMarker');
 var inputLat = document.getElementById('latitude');
 var inputLng = document.getElementById('longitude');
 var marker;
-var infowindow;
 var toggle = false;
 if(inputLat && inputLng) {
     var initMarkerLat = inputLat.value;
@@ -66,6 +65,76 @@ function initMap() {
     var btnPlace = document.getElementById('placeMarker');
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(btnPlace);
 
+    var btnLabels = document.getElementById('labels');
+    var btnBar = document.getElementById('buttonbar');
+    var mapButtons = btnBar.getElementsByTagName('button');
+
+    for(var i = 0; i < mapButtons.length; i++)
+    {
+        mapButtons[i].addEventListener("mouseover", function(){
+            this.style.backgroundColor = '#e7e7e7';
+            console.log('test');
+        });
+
+        mapButtons[i].addEventListener("mouseout", function(){
+            this.style.backgroundColor = 'white';
+            console.log('test');
+        });
+        mapButtons[i].addEventListener("click", function(){
+            this.style.backgroundColor = 'white';
+            console.log('test');
+        });
+    }
+
+    btnPlace.style.marginTop = '9.5px';
+    btnPlace.style.padding = '8px';
+    btnPlace.style.color = 'rgb(86, 86, 86)';
+    btnPlace.style.backgroundColor = 'white';
+    btnPlace.style.borderRadius = '2px'
+    btnPlace.style.backgroundClip = 'paddingbox';
+    btnPlace.style.border = 'none';
+    btnPlace.style.marginRight = '1em';
+    btnPlace.style.marginLeft = '0.5em';
+    btnPlace.style.boxShadow = 'rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px';
+
+    btnRemoveMarker.style.marginTop = '1em';
+    btnRemoveMarker.style.padding = '8px';
+    btnRemoveMarker.style.color = 'rgb(86, 86, 86)';
+    btnRemoveMarker.style.backgroundColor = 'white';
+    btnRemoveMarker.style.backgroundClip = 'paddingbox';
+    btnRemoveMarker.style.border = 'none';
+    btnRemoveMarker.style.borderRight = 'solid #e9e9e9 0.3px';
+    btnRemoveMarker.style.boxShadow = 'rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px';
+
+    btnAddMarker.style.marginTop = '1em';
+    btnAddMarker.style.padding = '8px';
+    btnAddMarker.style.color = 'rgb(86, 86, 86)';
+    btnAddMarker.style.backgroundColor = 'white';
+    btnAddMarker.style.borderBottomLeftRadius = '2px';
+    btnAddMarker.style.borderTopLeftRadius = '2px';
+    btnAddMarker.style.backgroundClip = 'paddingbox';
+    btnAddMarker.style.border = 'none';
+    btnAddMarker.style.borderRight = 'solid #e9e9e9 0.3px';
+    btnAddMarker.style.boxShadow = 'rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px';
+
+
+    btnLabels.style.marginTop = '1em';
+    btnLabels.style.padding = '8px';
+    btnLabels.style.color = 'rgb(86, 86, 86)';
+    btnLabels.style.backgroundColor = 'white';
+    btnLabels.style.borderBottomRightRadius = '2px';
+    btnLabels.style.borderTopRightRadius = '2px';
+    btnLabels.style.backgroundClip = 'paddingbox';
+    btnLabels.style.border = 'none';
+    btnLabels.style.marginRight = '1em';
+    btnLabels.style.boxShadow = 'rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px';
+
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(btnLabels);
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(btnRemoveMarker);
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(btnAddMarker);
+
+
+
         //var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         var initPosition;
 
@@ -77,32 +146,20 @@ function initMap() {
             initPosition = Antwerpen;
         }
         //window.setTimeout(function() {
-            marker = new google.maps.Marker({
-                position: initPosition,
-                title: 'Your Location',
-                animation: google.maps.Animation.DROP,
-                draggable: true,
-                map: map
-            });
+            addmarker(initPosition);
         //}, 2000)
 
         google.maps.event.addListener(marker, 'dragend', function () {
-            infowindow.close;
             inputLat.value = this.getPosition().lat();
             inputLng.value = this.getPosition().lng();
             map.panTo(marker.getPosition());
             //map.setZoom(15);
         });
 
-        infowindow = new google.maps.InfoWindow({
-            content: '<div id="infodiv" style="width: 300px" contenteditable="true">Move me!</div>'
-        });
-
         var autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
 
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
-            infowindow.close();
             place = autocomplete.getPlace();
             placecoords = place.geometry.location;
             if (place.geometry.viewport) {
@@ -151,26 +208,14 @@ function initMap() {
         else {
             alert('verwijder je vorige marker als je er een nieuwe wilt aanmaken');
         }
-
-        var infowindow = new google.maps.InfoWindow({
-            content: '<div id="infodiv2">infowindow!</div>'
-        });
         //map.setZoom(15);
         map.panTo(marker.getPosition());
-        infowindow = new google.maps.InfoWindow({
-            content: '<div id="infodiv" style="width: 300px" contenteditable="true">Adress</div>'
-        });
 
         google.maps.event.addListener(marker, 'dragend', function () {
-            infowindow.close;
             inputLat.value = this.getPosition().lat();
             inputLng.value = this.getPosition().lng();
             map.panTo(marker.getPosition());
             //map.setZoom(15);
-        });
-
-        google.maps.event.addListener(marker, 'mouseover', function () {
-            infowindow.open(map, marker);
         });
     }
 
@@ -186,7 +231,6 @@ function initMap() {
 
     document.getElementById('labels').addEventListener("click", function() {
         if(!toggle) {
-            map.setZoom(13);
             map.setMapTypeId('hide_street_names');
             toggle = true;
         }

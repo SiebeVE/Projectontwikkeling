@@ -1,8 +1,25 @@
 @extends('layouts.app')
 
+@section('pageCss')
+    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
+@endsection
+
 @section('content')
+    <div id="banner">
+        <div id="banner-wrapper" class="clearfix">
+            <div class="banner-slogan">
+                <p>Atypisch Antwerpen</p>
+
+            </div>
+            <div class="banner-text">
+                <p>Projecten</p>
+                <p>in jouw</p>
+                <p>buurt</p>
+            </div>
+        </div>
+    </div>
     <div class="container">
-        <div class="col-md-12">
+        <div class="col-md-12 admin">
             <h1>Admin</h1>
             <table class="table" id="users-table">
                 <thead>
@@ -36,9 +53,9 @@
     <script src="{{ url('/') }}/js/jquery.filtertable.min.js"></script>
     <script>
         jQuery.noConflict();
-        (function ( $ ) {
+        (function ($) {
             $(function () {
-                var stripeTable = function ( $table ) { //stripe the table (jQuery selector)
+                var stripeTable = function ($table) { //stripe the table (jQuery selector)
                     $table.find('tr').removeClass('striped').filter(':visible:even').addClass('striped');
                 };
 
@@ -46,7 +63,7 @@
                 $table.filterTable({
                     minRows: 3,
                     placeholder: "Zoek in deze tabel",
-                    callback: function ( term, table ) {
+                    callback: function (term, table) {
                         stripeTable(table);
                     }
                 });

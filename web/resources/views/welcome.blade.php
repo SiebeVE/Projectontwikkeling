@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('pageCss')
-    <link href="{{ url('/') }}/css/home.css" rel="stylesheet">
+    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
+    <link href="{{ url('/') }}/css/homeMap.css" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -14,20 +15,17 @@
             </div>
             <div class="banner-text">
                 <p>Projecten</p>
-                <p>In jouw</p>
+                <p>in jouw</p>
                 <p>buurt</p>
             </div>
         </div>
     </div>
     <div class="mapwrapper clearfix">
-        <div class="tabs">
-            <button type="button" id="tag1">Alle Projecten</button>
-            <button type="button" id="tag1">Projecten die ik volg</button>
-            <button type="button" id="tag1">Dichtbijzijnde projecten</button>
-            <button type="button" id="tag1">Culturele projecten</button>
-            <button type="button" id="tag1">Sociale projecten</button>
-            <button type="button" id="tag1">Toekomstige projecten</button>
-            <button type="button" id="tag1">Algemene projecten</button>
+        <div class="tabs" id="tabs">
+            <button type="button" data="alle_projecten" id="alle_projecten">Alle Projecten</button>
+            @foreach( $tags as $tag )
+                <button type="button" data="{{ $tag->id }}" id="{{ $tag->name }}">{{ $tag->name }}</button>
+            @endforeach
         </div>
         <div id="hiddeninput">
             @for( $i = 0; $i < count($lat_array); $i++)
