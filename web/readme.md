@@ -1,7 +1,7 @@
 #Project A
 
 ##API
-API-url: `https://teamgctof.multimediatechnology.be/api`
+API-url: `https://laravel.siebeve.be/api`
 >For accessing the API you need the `[appSecret]`
 
 ###Authentication
@@ -10,9 +10,9 @@ _Check to see if possible to create own jwt in unity_
 ####GET `/get/login`
 | Parameters  | |  
 | ---- | ---- |  
-|email|[email]|  
-|password|[password]|
-|secret|[appSecret]|
+|email|[string email]|  
+|password|[string password]|
+|secret|[string appSecret]|
 **Response**  
 *Success*
 ```json
@@ -42,10 +42,10 @@ _Check to see if possible to create own jwt in unity_
 
 ###Project
 _Fetch all the projects and phases_  
-####GET `/get/projects`
+####GET `/get/projects`  
 | Parameters  | |  
 | ---- | ---- |  
-|secret|[appSecret]|  
+|secret|[string appSecret]|  
 **Response**  
 *Success*
 ```json
@@ -81,6 +81,39 @@ _Fetch all the projects and phases_
 ```json
 {
 "status":"error",
+"error": "[string errorText]"
+}
+```
+
+###Ignored Words
+_Add or remove words for statistics_  
+####POST `/post/statistics/word`
+
+| Parameters |        |  
+| ---------- | ------ |  
+|word|[string newWord]|
+
+**Authorization**
+
+| Header | Content |
+| ---- | ----|
+|Authorization|Bearer [string token]|
+
+_Token is a JWT_  
+
+**Response**  
+*Success*
+```json
+"status": "ok"
+```
+| Header | Content |
+| ---- | ----|
+|Authorization|Bearer [string token]|
+*Failure*
+```json
+{
+"status":"error",
+"authorization": "succes|error|
 "error": "[string errorText]"
 }
 ```

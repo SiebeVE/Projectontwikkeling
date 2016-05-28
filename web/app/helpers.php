@@ -45,7 +45,7 @@ function checkIfWordIsIgnored($wordToCheck)
 	{
 		if($row->word == $wordToCheck || $wordToCheck == "")
 		{
-			return true;
+			return false;
 		}
 	}
 	return false;
