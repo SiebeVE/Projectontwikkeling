@@ -19,6 +19,8 @@ public class MapLoader : MonoBehaviour {
 
         // Secondly, load the map
         StartCoroutine(MapManager.LoadMap(MapManager.URLaddress));
+
+        InstantiateListScript.CreateListItemInstance(UIHandler.map_list_item, UIHandler.grid, MapManager.TempProjects);
     }
 
     /// <summary>

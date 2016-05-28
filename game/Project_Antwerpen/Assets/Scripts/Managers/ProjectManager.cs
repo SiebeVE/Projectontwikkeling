@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 /// <summary>
@@ -9,17 +8,9 @@ public class ProjectManager : MonoBehaviour {
 
     public List<Project> projects = new List<Project>();
     public Sprite[] images = new Sprite[] { };
-    private GameObject map_list_item, parent;
 
     void Awake()
     {
-        // if we're in the map scene, add a resource to the list_button and define the parent of where it will be instantiated.
-        if(SceneManager.GetActiveScene().name == "Maps")
-        {
-            map_list_item = Resources.Load<GameObject>("Prefabs/map_list_item");
-            parent = GameObject.Find("Main").transform.Find("list_go/list_part/list/grid").gameObject;
-        }
-
         projects.Add(new Project("Project1", "beschrijving project 1", 51.172506f, 4.369673f, images[0], new List<Stage>()
                                                                       {
                                                                         new Stage("Hallo Project 1", new System.DateTime(2016, 5, 18), new System.DateTime(2016, 6, 1)),
@@ -69,13 +60,5 @@ public class ProjectManager : MonoBehaviour {
                                                                       }));
 
 
-    }
-
-    void Start()
-    {
-        if (SceneManager.GetActiveScene().name == "Maps")
-        {
-            InstantiateListScript.CreateListItemInstance(map_list_item, parent, projects);
-        }
     }
 }
