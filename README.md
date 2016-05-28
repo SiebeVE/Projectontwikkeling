@@ -42,7 +42,7 @@ _Check to see if possible to create own jwt in unity_
 
 ###Project
 _Fetch all the projects and phases_  
-####GET `/get/projects`
+####GET `/get/projects`  
 | Parameters  | |  
 | ---- | ---- |  
 |secret|[string appSecret]|  
@@ -77,6 +77,39 @@ _Fetch all the projects and phases_
   }
 ]
 ```
+*Failure*
+```json
+{
+"status":"error",
+"error": "[string errorText]"
+}
+```
+
+###Ignored Words
+_Add or remove words for statistics_  
+####POST `/post/statistics/word`
+
+| Parameters |        |  
+| ---------- | ------ |  
+|word|[string newWord]|
+
+**Authorization**
+
+| Header | Content |
+| ---- | ----|
+|Authorization|Bearer [string token]|
+
+_Token is a JWT_  
+>This is a refresh token, so in a success response their is a new Authorization header  
+
+**Response**  
+*Success*
+```json
+"status": "ok"
+```
+| Header | Content |
+| ---- | ----|
+|Authorization|Bearer [string token]|
 *Failure*
 ```json
 {
