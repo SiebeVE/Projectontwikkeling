@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-using System.Collections;
 
 /// <summary>
 /// Contains logic for determing the device's location.
 /// </summary>
-public class LocationManager {
+public static class LocationManager {
 
     // variables for storing latitude and longitude
     private static float lat, lon;
@@ -53,11 +51,11 @@ public class LocationManager {
         // finally stop the location service
         Input.location.Stop();
 
-        if (SceneManager.GetActiveScene().name == "Login")
+        if (Commons.SCENE_NAME == Commons.LOGIN_SCENE_NAME)
         {
-            UIHandler.LoadScene("Main");
+            Commons.LoadScene(Commons.MAIN_SCENE_NAME);
         }
-        else if(SceneManager.GetActiveScene().name == "Main")
+        else if(Commons.SCENE_NAME == Commons.MAIN_SCENE_NAME)
         {
             UIHandler.ShowWarning();
         } 

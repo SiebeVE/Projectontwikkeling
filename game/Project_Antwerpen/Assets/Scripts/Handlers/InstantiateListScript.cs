@@ -31,7 +31,7 @@ public static class InstantiateListScript {
             var instance = Object.Instantiate(go);
 
             instance.name = projects[i].Name;
-            instance.transform.Find("Letter").GetComponent<Text>().text = MapManager.alphabet[i].ToString();
+            instance.transform.Find("Letter").GetComponent<Text>().text = Commons.ALPHABET[i].ToString();
             instance.transform.Find("Lbl").GetComponent<Text>().text = projects[i].Name;
 
             instance.transform.SetParent(parent.transform, false);

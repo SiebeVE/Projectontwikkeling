@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Classes\Commons.cs" />
     <Compile Include="Assets\Scripts\Classes\Project.cs" />
     <Compile Include="Assets\Scripts\Classes\Stage.cs" />
     <Compile Include="Assets\Scripts\Handlers\AnimatorHandler.cs" />
