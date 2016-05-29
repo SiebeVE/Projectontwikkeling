@@ -153,14 +153,30 @@ public class ProjectManager {
         }
     }
 
-    public static IEnumerator ReturnImage(string imageURL, Image image)
+    /// <summary>
+    /// Returns the header image of the project (if there is one) and sets the background on the project page.
+    /// </summary>
+    /// <param name="imageURL">The URL to the image.</param>
+    /// <param name="image">The Image component where the image should be displayed.</param>
+    /// <returns></returns>
+    public static IEnumerator ReturnImage(string imageURL, RawImage image)
     {
         WWW www = new WWW(NetworkManager.URL + imageURL);
+
+        while (!www.isDone)
+        {
+            image.texture = Resources.Load<Sprite>("Images/Error/Laden").texture;
+        }
+
         yield return www;
 
         if(www.error == null)
         {
-            //image.sprite = www.texture;
+            image.texture = www.texture;
+        }
+        else
+        {
+            image.texture = Resources.Load<Sprite>("Images/Error/No_Image").texture;
         }
     }
 

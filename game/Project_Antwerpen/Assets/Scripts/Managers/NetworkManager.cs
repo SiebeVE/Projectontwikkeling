@@ -7,7 +7,7 @@ using System.Collections;
 public static class NetworkManager {
 
     private static bool isConnected = false;
-    public static string URL = "https://teamgctof.multimediatechnology.be";
+    public static string URL = "http://teamgctof.multimediatechnology.be";
     public static string ping = "https://www.google.be";
 
     public static IEnumerator CheckInternetConnection(string IPaddress)

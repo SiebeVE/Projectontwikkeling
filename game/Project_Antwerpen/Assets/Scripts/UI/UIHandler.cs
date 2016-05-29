@@ -358,8 +358,8 @@ public class UIHandler : MonoBehaviour {
     private GameObject LoadProjectPage(string name)
     {
         GameObject prPage;
-        Image prImage;
-        Text prTitle, prStage, prDescription;
+        RawImage prImage;
+        Text prTitle, prPlace, prStage, prDescription;
         Project p;
          
         // instantiate the project page and give it the name project_page
@@ -371,15 +371,22 @@ public class UIHandler : MonoBehaviour {
 
         // find all the gameobjects on the page
         prPage = GameObject.Find(instance.name).transform.Find("grid").gameObject;
-        prImage = prPage.transform.Find("project_image").GetComponent<Image>();
+        prImage = prPage.transform.Find("project_image").GetComponent<RawImage>();
         prTitle = prPage.transform.Find("project_image/project_title_BG/project_title").GetComponent<Text>();
-        prStage = prPage.transform.Find("project_fase").GetComponentInChildren<Text>();
+        prPlace = prPage.transform.Find("project_image/project_title_BG/project_place").GetComponent<Text>();
+        prStage = prPage.transform.Find("project_fase/fase_txt").GetComponent<Text>();
         prDescription = prPage.transform.Find("project_description/description").GetComponent<Text>();
 
         p = FindProject(ProjectManager.projects, name);
 
         prTitle.text = p.Name;
-        //prImage.sprite = p.ImagePath;
+
+        // Return the location of the given project
+        StartCoroutine(MapManager.ReturnLocationName(p, prPlace));
+
+        // set the image background
+        StartCoroutine(ProjectManager.ReturnImage(p.ImagePath, prImage));
+
         prStage.text = p.CurrentStage;
         prDescription.text = p.Description;
 

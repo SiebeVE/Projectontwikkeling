@@ -200,6 +200,12 @@ public static class MapManager {
         }
     }
 
+    /// <summary>
+    /// Returns the location name (to load in the maps screen)
+    /// </summary>
+    /// <param name="input">Which location have we prompted?</param>
+    /// <param name="location_string">In which text object should we write the information?</param>
+    /// <returns></returns>
     public static IEnumerator ReturnLocationName(string input, Text location_string)
     {
         // we haven't searched for a location
@@ -230,6 +236,36 @@ public static class MapManager {
         {
             // there's no need to search the location name because it's already filled in by the user
             location_string.text = input;
+        }
+    }
+
+    /// <summary>
+    /// Returns the location name of a given project (to load on the project page)
+    /// </summary>
+    /// <param name="project">The project of which we want the location.</param>
+    /// <param name="location_string">In which text object should we write the information?</param>
+    /// <returns></returns>
+    public static IEnumerator ReturnLocationName(Project project, Text location_string)
+    {
+        // so we make a URL and return a json containing the information we need
+        WWW www = new WWW("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + project.Latitude + "," + project.Longitude + "&result_type=street_address" + Commons.API_KEY);
+        yield return www;
+
+        // there was no error
+        if (www.error == null)
+        {
+            // read data from json file
+            JsonData data = JsonMapper.ToObject(www.text);
+        
+            // Google returned OK status code, so we have at least one address
+            if (data[Commons.STATUS].ToString().ToUpper() == Commons.OK_STATUS_CODE)
+            {
+                location_string.text = GetData(data, "formatted_address");
+            }
+            else
+            {
+                location_string.text = "Geen locatie";
+            }
         }
     }
 
