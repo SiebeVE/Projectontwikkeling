@@ -12,11 +12,4 @@ class Word extends Model
 	 * @var array
 	 */
 	protected $fillable = ['word'];
-
-	/**
-	 * The attributes that are mutated to dates
-	 *
-	 * @var array
-	 */
-	protected $dates = ['deleted_at'];
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Project;
 use App\User;
+use App\Word;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use JWTAuth;
@@ -16,7 +17,7 @@ class ApiController extends Controller
 	public function __construct()
 	{
 		//$this->middleware("auth.basic", ["except" =>"post"]);
-		$this->middleware("jwt.refresh", ["except" =>[
+		$this->middleware("jwt.auth", ["except" => [
 			"getLogin",
 			"getProjects"]
 		]);
@@ -31,9 +32,9 @@ class ApiController extends Controller
 	 */
 	public function getLogin(Request $request)
 	{
-		$responseData = ["status"=>"error", ];
+		$responseData = ["status" => "error",];
 		$httpCode = 401;
-		if($request->has("secret") && $request->has("email") && $request->has("password"))
+		if ($request->has("secret") && $request->has("email") && $request->has("password"))
 		{
 			$secret = $request->input("secret");
 			if ($secret == env("API_SECRET"))
@@ -47,7 +48,7 @@ class ApiController extends Controller
 					if (Auth::once(["email" => $userName, "password" => $password]))
 					{
 						$user = Auth::user();
-						if($user->verified)
+						if ($user->verified)
 						{
 							try
 							{
@@ -68,7 +69,8 @@ class ApiController extends Controller
 								$httpCode = 500;
 							}
 						}
-						else{
+						else
+						{
 							$responseData["error"] = "The users email is not yet verified";
 						}
 					}
@@ -109,8 +111,8 @@ class ApiController extends Controller
 	{
 		$responseData = ["status" => "error"];
 		$httpCode = 401;
-		
-		if($request->has("secret") && $request->has("secret") == env("API_SECRET"))
+
+		if ($request->has("secret") && $request->has("secret") == env("API_SECRET"))
 		{
 			//$user = $this->getAuthenticatedUser();
 			$projects = Project::with("phases")->get();
@@ -135,6 +137,51 @@ class ApiController extends Controller
 			$responseData["error"] = "Not correct API Secret";
 		}
 		return response()->json($responseData, $httpCode);
+	}
+
+	public function addIgnoredWord(Request $request)
+	{
+		$responseData = ["status" => "error", "authorization" => "success"];
+
+		if ($request->has("word"))
+		{
+			$user = $this->getAuthenticatedUser();
+			if ($user)
+			{
+				$word = Word::firstOrCreate([
+					"word" => $request->word
+				]);
+				$responseData["status"] = "success";
+			}
+		}
+		else
+		{
+			$responseData["error"] = "Not all required fields are present";
+		}
+
+		return response()->json($responseData);
+	}
+
+	public function deleteIgnoredWord(Request $request)
+	{
+		$responseData = ["status" => "error", "authorization" => "success"];
+
+		if ($request->has("word"))
+		{
+			$user = $this->getAuthenticatedUser();
+			if ($user)
+			{
+				$word = Word::where("word", $request->word);
+				$word->delete();
+				$responseData["status"] = "success";
+			}
+		}
+		else
+		{
+			$responseData["error"] = "Not all required fields are present";
+			$responseData["data"] = $request;
+		}
+		return response()->json($responseData);
 	}
 
 	/**

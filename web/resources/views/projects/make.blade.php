@@ -99,6 +99,7 @@
                 <div class="col-md-12" id="phases">
                     <hr>
                     <h2>Fases toevoegen</h2>
+                    {{--Special notation so you can use a variable $numberOfPhases--}}
                     {{""); (old('numberOfPhases') != "" ? $numberOfPhases =  old('numberOfPhases') : $numberOfPhases = 0 }}
                     <input type="hidden" name="numberOfPhases" id="numberOfPhases"
                            value="{{$numberOfPhases}}">
