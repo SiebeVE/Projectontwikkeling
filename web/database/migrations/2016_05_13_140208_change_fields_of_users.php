@@ -13,10 +13,10 @@ class ChangeFieldsOfUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            //$table->dropColumn("address");
-            //$table->dropColumn("telephone");
-            //$table->dropColumn("house_number");
-            //$table->dropColumn("name");
+            $table->dropColumn("address");
+            $table->dropColumn("telephone");
+            $table->dropColumn("house_number");
+            $table->dropColumn("name");
         });
     }
 
