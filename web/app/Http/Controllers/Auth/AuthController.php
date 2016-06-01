@@ -204,7 +204,7 @@ class AuthController extends Controller
 
 
 		//return redirect()->back();
-		//return redirect($this->redirectPath());
+		return redirect($this->redirectPath());
 	}
 
 	/**
