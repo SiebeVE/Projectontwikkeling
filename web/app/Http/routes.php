@@ -61,6 +61,7 @@ Route::group(['middleware' => 'web'], function ()
 
 	Route::get('project/beoordelen/{project}', 'ProjectController@getOpinion');
 	Route::post('project/beoordelen/{project}', 'ProjectController@postOpinion');
+	Route::get('project/overzicht', 'ProjectController@overzicht');
 
 	Route::get('auth/token', 'Auth\AuthController@authAProfile');
 

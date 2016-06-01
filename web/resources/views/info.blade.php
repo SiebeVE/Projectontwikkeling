@@ -24,6 +24,7 @@
             <h3>We helpen je graag verder!</h3>
 
             <div class="col-md-6">
+                <form method="POST" enctype='multipart/form-data' name="postMessage">
                 <div class="form-group">
                     <label for="subject">Onderwerp</label>
                     <input type="text" id="subject" name="subject" class="form-control input-lg"
@@ -35,6 +36,7 @@
                                   maxlength="600"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary pull-right messageButton">Verzenden</button>
+                </form>
             </div>
             <div id="contact" class="col-md-6">
                 <div id="address" class="col-md-12">

@@ -23,13 +23,11 @@
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
     <style>
-        body
-        {
+        body {
             font-family: 'Lato';
         }
 
-        .fa-btn
-        {
+        .fa-btn {
             margin-right: 6px;
         }
     </style>
@@ -38,18 +36,18 @@
 <div id="wrapper">
     @yield('banner')
     <div id="content">
-    <nav class="navbar navbar-default navbar-static-top">
-        <div class="container">
-            <div class="navbar-header">
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="containerNav">
+                <div class="navbar-header">
 
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+                    <!-- Collapsed Hamburger -->
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#app-navbar-collapse">
+                        <span class="sr-only">Toggle Navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
@@ -61,44 +59,39 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         <li><a href="{{ url('/') }}">Home</a>
-                        <li><a href="{{ url('admin/project/dashboard') }}">Projectbeheer</a></li>
-                        <li><a href="{{ url('/info') }}">Info</a></li>
-                        <li><a href="{{ url('/contact') }}">Contact</a></li>
+                        <li><a href="{{ url('/project/overzicht') }}">Overzicht</a></li>
+                        <li><a href="{{ url('/info') }}">Contact</a></li>
                     </ul>
 
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <li><a href="{{ url('/inloggen') }}">Login</a></li>
-                        <li><a href="{{ url('/registreer') }}">Register</a></li>
-                    @else
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->getName() }} <span class="caret"></span>
-                            </a>
+                    <!-- Right Side Of Navbar -->
+                    <ul class="nav navbar-nav navbar-right">
+                        <!-- Authentication Links -->
+                        @if (Auth::guest())
+                            <li><a href="{{ url('/inloggen') }}">Login</a></li>
+                            <li><a href="{{ url('/registreer') }}">Register</a></li>
+                        @else
 
-                            <ul class="dropdown-menu" role="menu">
-                                @if(Auth::user()->isAdmin())
-                                <li><a href="{{ url('/admin/paneel') }}"><i class="fa fa-btn fa-cogs"></i>Admin paneel</a></li>
-                                @endif
-                                <li><a href="{{ url('/uitloggen') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
-                            </ul>
-                        </li>
-                    @endif
-                </ul>
+
+
+                            @if(Auth::user()->isAdmin())
+                                <li><a href="{{ url('admin/project/dashboard') }}">Projectbeheer</a></li>
+                                <li><a href="{{ url('/admin/paneel') }}"><i class="fa fa-btn fa-cogs"></i>Admin
+                                        paneel</a></li>
+                            @endif
+                            <li><a href="{{ url('/uitloggen') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                        @endif
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    @yield('content')
+        @yield('content')
     </div>
 </div>
 
 
-
 @yield('footer')
-<!-- JavaScripts -->
+        <!-- JavaScripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="{{ url('/') }}/scripts/jquery-ui.min.js"></script>

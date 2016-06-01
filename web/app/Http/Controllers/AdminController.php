@@ -93,6 +93,7 @@ class AdminController extends Controller
 			// Check for project
 			'name'        => 'required',
 			'description' => 'required|string|max:600',
+			"address"     => 'required',
 			'longitude'   => 'required',
 			'latitude'    => 'required',];
 
@@ -113,7 +114,7 @@ class AdminController extends Controller
 		if ($notAnImage || $request->hashImage == "")
 		{
 			// When the file has failed on mime or php getimagesize
-			return redirect("project/maken")->withErrors(["U moet een foto toevoegen."])->withInput();
+			return redirect("admin/project/maken")->withErrors(["U moet een foto toevoegen."])->withInput();
 		}
 
 
@@ -122,6 +123,7 @@ class AdminController extends Controller
 		$project = $request->user()->projects()->create([
 			"name"              => $request->name,
 			"description"       => $request->description,
+			"address"           => $request->address,
 			"photo_left_offset" => $request->photoOffset,
 			"longitude"         => $request->longitude,
 			"latitude"          => $request->latitude,
@@ -301,7 +303,7 @@ class AdminController extends Controller
 		if ($numberOfPhases == $phaseRelativeId)
 		{
 			// Finished new phases
-			return redirect('project/dashboard');
+			return redirect('admin/project/dashboard');
 		}
 		else
 		{

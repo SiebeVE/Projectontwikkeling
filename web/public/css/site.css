@@ -207,6 +207,11 @@ footer.footer, nav.navbar
 	background-color: #CF0039;
 }
 
+.containerNav {
+	width: 80%;
+	margin: auto;
+}
+
 .navbar-default
 {
 	background-color: rgba(248, 248, 248, 0);
@@ -214,13 +219,13 @@ footer.footer, nav.navbar
 	margin-bottom: 0;
 }
 
-nav .container .navbar-header .navbar-brand img
+nav .containerNav .navbar-header .navbar-brand img
 {
 	height: 90px;
 
 }
 
-nav .container .navbar-brand
+nav .containerNav .navbar-brand
 {
 	padding: 0;
 	height: 90px;
@@ -242,6 +247,9 @@ nav .container .navbar-brand
 	padding-top: 35px;
 	padding-bottom: 37px;
 	font-size: 1.3em;
+	transition: color .25s ease-in-out;
+	-moz-transition: color .25s ease-in-out;
+	-webkit-transition: color .25s ease-in-out;
 }
 
 #app-navbar-collapse ul li ul

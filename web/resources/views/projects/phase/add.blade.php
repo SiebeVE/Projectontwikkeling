@@ -1,7 +1,27 @@
 @extends('layouts.app')
 
+@section('pageCss')
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
+    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
+@endsection
+
 @section('content')
-    <div class="container">
+
+    <div id="banner" >
+        <div id="banner-wrapper" class="clearfix">
+            <div class="banner-slogan">
+                <p>Atypisch Antwerpen</p>
+
+            </div>
+            <div class="banner-text">
+                <p>Projecten</p>
+                <p>in jouw</p>
+                <p>buurt</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container containerPhase">
         <div class="col-md-12">
             <h1>{{ $phase->name }} maken</h1>
             <p class="text-muted">Van {{ date("d/m/Y", strtotime($phase->start)) }}
@@ -71,7 +91,7 @@
                     <div id="input-specific"></div>
                     <a id="addBlock" class="btn btn-success">Blok toevoegen</a>
                 </div>
-                <button type="submit" class="btn btn-succes">Fase toevoegen</button>
+                <button type="submit" class="btn btn-succes createButton pull-right">Fase toevoegen</button>
             </form>
         </div>
     </div>
@@ -193,6 +213,9 @@
                 var inputName = "question-" + blockNumber;
                 var $label;
                 var $input;
+                var $close = $("<div>").addClass("close");
+                var $cross = $("<i>").addClass("cross").addClass("fa").addClass("fa-times");
+                $close.append($cross);
                 switch (typeOfField) {
                     case "text":
                         console.log("ok-texr");
@@ -250,7 +273,7 @@
                         break;
                 }
 
-                $newBlock.append($label).append($input);
+                $newBlock.append($close).append($label).append($input);
                 console.log($newBlock);
                 // Append new blok in examples
                 $grid.append($newBlock).packery('addItems', $newBlock);
@@ -403,7 +426,15 @@
                 $("body").append($dummyForm);
                 $dummyForm.submit();
 
+
             });
+
+            /*******************************CLICK EVENT********************************/
+
+            $("#example-field").on("click","i.fa.fa-times", function() {
+                $(this).parent().parent().fadeOut(500,function() { $(this).remove(); });
+            });
+
         })(jQuery);
     </script>
 @endsection

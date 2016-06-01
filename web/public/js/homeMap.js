@@ -110,7 +110,8 @@ function initMap() {
                 icon: '../images/googleMarker/googleMarker.png',
                 clickable: true,
                 animation: google.maps.Animation.DROP,
-                map: map
+                map: map,
+                optimized: false
             });
         markers.push(marker);
             //}, 1500)
@@ -122,16 +123,17 @@ function initMap() {
 
         var infoBubble = new InfoBubble({
             map: map,
-            content: '<div class="infoProject" contenteditable="false"><h3>'
-            + projects[count]['name'] + '</h3>' + '<h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p><h6>Adres: ' +
-            projects[count]['address'] + '</h6></div>',
+            content: '<div class="infoProject clearfix" contenteditable="false"><h3>'
+            + projects[count]['name'] + '</h3>' + '<div class="projectContent"><h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p><h6>Adres: ' +
+            projects[count]['address'] + '</h6></div><div class="projectImageContainer"><img class="projectImage" src="' + projects[count]['photo_path'] +
+            '" alt="project foto"/><div class="projectlink"><a class="pull-right" href="#">Bekijk het project!</a></div></div></div>',
             shadowStyle: 1,
             padding: 0,
-            backgroundColor: 'rgba(207,0,57,1)',
+            backgroundColor: 'rgba(255,255,255,1)',
             borderRadius: 8,
             arrowSize: 20,
             borderWidth: 1,
-            borderColor: '#CF0039',
+            borderColor: 'white',
             disableAutoPan: true,
             hideCloseButton: true,
             arrowPosition: 30,
@@ -160,6 +162,9 @@ function initMap() {
                 infoBubble.close(map, this);
             }
         });
+
+        new google.maps.event.addListener(marker, 'mouseover', function(e) {toggleBounce(this)});
+        new google.maps.event.addListener(marker, 'mouseout', function(e) {toggleBounce(this)});
     }
 
     function setMapOnAll(map) {
@@ -209,5 +214,14 @@ function initMap() {
             toggle = false;
         }
     });
+
+    function toggleBounce(marker) {
+
+        if (marker.getAnimation() != null) {
+            marker.setAnimation(null);
+        } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    }
 
 }

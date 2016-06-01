@@ -40,12 +40,12 @@
                     <div class="form-group">
                         <label for="name">Project titel</label>
                         <input type="text" id="name" name="name" class="form-control input-lg"
-                               value="{{ $project->name }}">
+                               value="{{ old('name') == 0 ? $project->name : old('name')}}">
                     </div>
                     <div class="form-group">
                         <label for="description">Beschrijving</label>
                         <textarea name="description" id="description" class="form-control"
-                                  maxlength="600">{{ $project->description }}</textarea>
+                                  maxlength="600">{{ old('description') == 0 ? $project->description : old('name') }}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="address">Adres</label>
@@ -57,15 +57,18 @@
                     <div class="upload form-group">
                         <label class="label-control" for="image">Upload foto</label>
                         <div id="imagePlaceholder">
-                            <img src="{{ old("hashImage") != "" ? url( $project->photo_path, old("hashImage")) : "" }}"
+                            <img style="display: inline; left: {{ $project->photo_left_offset }}" src="{{ old("hashImage") != "" ? url( '/images/tempProject', old("hashImage")) : $project->photo_path }}"
                                  alt="Project afbeelding">
                             <label for="image">
+                                @if($project->photo_path == "")
                                 <i class="fa fa-plus" aria-hidden="true"></i>
+                                @endif
                             </label>
                             <input type="file" name="image" id="image">
                             <input type="hidden" name="hashImage" id="hashImage" value="{{ old("hashImage") }}">
-                            <input type="hidden" name="photoOffset" id="photoOffset" value="{{ $project->photo_left_offset }}">
+                            <input type="hidden" name="photoOffset" id="photoOffset" value="{{ old("photoOffset")  }}">
                         </div>
+
                     </div>
                     <div class="form-group">
                         {{--{!! Form::label('tags', 'Tags:') !!}
@@ -130,8 +133,7 @@
 @endsection
 
 @section('pageJs')
-
-
+    <script src="{{ url('/') }}/scripts/create.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&region=BE"
             async defer></script>
     <script src="{{ url('/') }}/js/projectbeheer.js"></script>
