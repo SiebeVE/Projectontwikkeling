@@ -9,6 +9,7 @@ use finfo;
 use Auth;
 use JWTAuth;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use App\Tag;
 use App\DB;
 
@@ -325,7 +326,9 @@ class AdminController extends Controller
 		// Get all users
 		$users = User::orderBy('is_admin', 'desc')->orderBy('lastname', 'asc')->orderBy('firstname', 'asc')->get();
 		//dd($users);
-		return view('admin.panel', ["users" => $users]);
+		return view('admin.panel', ["users" => $users
+			//, "authenticatedUser" => Auth::user()
+		]);
 	}
 
 

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('pageCss')
-    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/homeMap.css" rel="stylesheet">
 @endsection
 

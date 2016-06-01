@@ -17,22 +17,11 @@
     <link href="{{ url('/') }}/css/nouislider.min.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/site.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/grid.css" rel="stylesheet">
+    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
 
     @yield('pageCss')
 
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
-
-    <style>
-        body
-        {
-            font-family: 'Lato';
-        }
-
-        .fa-btn
-        {
-            margin-right: 6px;
-        }
-    </style>
 </head>
 <body id="app-layout">
 <div id="wrapper">
@@ -69,17 +58,17 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
-                    @if (Auth::guest())
+                    @if ($userGuest)
                         <li><a href="{{ url('/inloggen') }}">Login</a></li>
                         <li><a href="{{ url('/registreer') }}">Register</a></li>
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->getName() }} <span class="caret"></span>
+                                {{ $userName }} <span class="caret"></span>
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
-                                @if(Auth::user()->isAdmin())
+                                @if($userIsAdmin)
                                 <li><a href="{{ url('/admin/paneel') }}"><i class="fa fa-btn fa-cogs"></i>Admin paneel</a></li>
                                 @endif
                                 <li><a href="{{ url('/uitloggen') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
@@ -101,11 +90,8 @@
 <!-- JavaScripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="{{ url('/') }}/scripts/jquery-ui.min.js"></script>
-<script src="{{ url('/') }}/scripts/site.js"></script>
-<script>
-
-</script>
+<script src="{{ url('/') }}/js/jquery-ui.min.js"></script>
+<script src="{{ url('/') }}/js/site.js"></script>
 
 @yield('pageJs')
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}

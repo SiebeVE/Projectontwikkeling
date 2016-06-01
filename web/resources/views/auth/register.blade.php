@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
-
 @section('pageCss')
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
-    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
 @endsection
 
 
@@ -148,6 +146,7 @@
         </div>
     </div>
 @endsection
+
 @section('footer')
     <footer class="footer">
         <div class="container text-center">

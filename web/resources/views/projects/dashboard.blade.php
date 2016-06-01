@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('pageCss')
-    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -71,4 +70,4 @@
         <p class="text-muted">&copy; 2016 Stad Antwerpen</p>
     </div>
 </footer>
-    @endsection
+@endsection
