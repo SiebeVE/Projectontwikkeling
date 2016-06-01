@@ -1,7 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using System.Collections;
 
 /// <summary>
 /// Detects whether a hardware button is pressed.
@@ -16,11 +13,11 @@ public class HardwareHandler : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-        if(SceneManager.GetActiveScene().name == "Main")
+        if(Commons.SCENE_NAME == Commons.MAIN_SCENE_NAME || Commons.SCENE_NAME == Commons.LOGIN_SCENE_NAME)
         {
             Screen.orientation = ScreenOrientation.Portrait;
         }
-        else if (SceneManager.GetActiveScene().name == "Maps")
+        else if (Commons.SCENE_NAME == Commons.MAPS_SCENE_NAME)
         {
             Screen.orientation = ScreenOrientation.Landscape;
         }
@@ -30,37 +27,37 @@ public class HardwareHandler : MonoBehaviour {
 	void Update () {
         if (!mainMenuIsEnabled) // if the main menu is not enabled
         {
-            if (SceneManager.GetActiveScene().name == "Maps")
+            if (Commons.SCENE_NAME == Commons.MAPS_SCENE_NAME)
             {
                 if (Input.GetKey(KeyCode.Escape))
                 {
-                    SceneManager.LoadScene("Main");
+                    Commons.LoadScene(Commons.MAIN_SCENE_NAME);
                 }
             }
-            else if (SceneManager.GetActiveScene().name == "Main")
+            else if (Commons.SCENE_NAME == Commons.MAIN_SCENE_NAME)
             {
-                if (UIHandler.mNameOfMenu == "Home")                                 // the user came from Home, so he is in the project listview
+                if (Commons.NAME_OF_MENU == Commons.HOME_MENU)                                 // the user came from Home, so he is in the project listview
                 {
                     if (Input.GetKey(KeyCode.Escape))                               // if he presses back
                     {
                         UIHandler.ActivateMenu(UIHandler.mainHome, UIHandler.mainProject); // active the home screen
-                        UIHandler.mNameOfMenu = "";                                 // then we want the name of menu to be empty, so if the user then clicks on the button, the app closes
+                        Commons.NAME_OF_MENU = "";                                 // then we want the name of menu to be empty, so if the user then clicks on the button, the app closes
                     }
                 }
-                else if (UIHandler.mNameOfMenu == "")                            // if the name is empty, we are in the home scree
+                else if (Commons.NAME_OF_MENU == "")                            // if the name is empty, we are in the home scree
                 {
                     if (Input.GetKey(KeyCode.Escape) && !mainMenuIsEnabled)                           // if he then presses back
                     {
                         Application.Quit();                                     // Quit the app
                     }
                 }
-                else if (UIHandler.mNameOfMenu == "Project")
+                else if (Commons.NAME_OF_MENU == Commons.PROJECTS_MENU)
                 {
                     if (Input.GetKey(KeyCode.Escape))
                     {
                         DestroyImmediate(GameObject.Find("project_page"), true);
                         UIHandler.mainProject.SetActive(true);
-                        UIHandler.mNameOfMenu = "Home";
+                        Commons.NAME_OF_MENU = Commons.HOME_MENU;
                     }
                 }
             }

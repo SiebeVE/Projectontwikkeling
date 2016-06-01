@@ -31,8 +31,6 @@ public class UIHandler : MonoBehaviour {
     /// <summary>
     /// Name of the menu which should be loaded when the user presses the back button
     /// </summary>
-    public static string mNameOfMenu = "", sceneName = "";
-    private static ProjectManager prM;
     private const byte MIN_TIMER_WARNING = 5;
     private const float STANDARD_TIMER_VALUE = 15f, STANDARD_RADIUS_VALUE = 10f;
     public static int timer_slider_value;
@@ -40,18 +38,22 @@ public class UIHandler : MonoBehaviour {
 
     void Awake()
     {
-        sceneName = SceneManager.GetActiveScene().name;
-        prM = GetComponent<ProjectManager>();
+        // Set the scene name
+        Commons.SCENE_NAME = SceneManager.GetActiveScene().name;
 
-        if (sceneName == "Login")
+        if (Commons.SCENE_NAME == Commons.LOGIN_SCENE_NAME)
         {
             startup_bttn = GameObject.Find("startup_bttn").GetComponent<Button>();
 
-            startup_bttn.onClick.AddListener(() => StartCoroutine(NetworkManager.CheckInternetConnection(NetworkManager.ping)));
+            startup_bttn.onClick.AddListener(() =>
+                {
+                    //StartCoroutine(NetworkManager.CheckInternetConnection(NetworkManager.ping));
+                    StartCoroutine(ProjectManager.GetProjects());
+                });
         }
-        else if (sceneName == "Main")
+        else if (Commons.SCENE_NAME == Commons.MAIN_SCENE_NAME)
         {
-            mNameOfMenu = "";
+            Commons.NAME_OF_MENU = "";
 
             #region Finding Gameobjects
             // warning gameobject
@@ -97,8 +99,8 @@ public class UIHandler : MonoBehaviour {
             {
                 // to be sure, make sure the user will always see the roadmap type first
                 MapManager.Maptype = MapType.roadmap;
-                MapManager.SetAddress(string.Empty, prM.projects);
-                SceneManager.LoadScene("Maps");
+                MapManager.SetAddress(string.Empty, ProjectManager.projects);
+                Commons.LoadScene(Commons.MAPS_SCENE_NAME);
             });
 
             settings_bttn.onClick.AddListener(() => ActivateMenu(mainSettings, mainHome));
@@ -108,8 +110,8 @@ public class UIHandler : MonoBehaviour {
                 {
                     // to be certain, makesure the user will always see the roadmap type first
                     MapManager.Maptype = MapType.roadmap;
-                    MapManager.SetAddress(string.Empty, prM.projects);
-                    LoadScene("Maps");
+                    MapManager.SetAddress(string.Empty, ProjectManager.projects);
+                    Commons.LoadScene(Commons.MAPS_SCENE_NAME);
                 });
 
             // open website
@@ -119,11 +121,11 @@ public class UIHandler : MonoBehaviour {
                     {
                         GameObject obj = null;
 
-                        if(mNameOfMenu == "")
+                        if(Commons.NAME_OF_MENU == "")
                         {
                             obj = mainHome;
                         }
-                        else if(mNameOfMenu == "Home")
+                        else if(Commons.NAME_OF_MENU == Commons.HOME_MENU)
                         {
                             obj = mainProject;
                         }
@@ -139,7 +141,7 @@ public class UIHandler : MonoBehaviour {
 
             menu_projects.onClick.AddListener(() => 
                     {
-                        if (mNameOfMenu == "") // the previous menu is null, so we can assume we are in the home screen
+                        if (Commons.NAME_OF_MENU == "") // the previous menu is null, so we can assume we are in the home screen
                         {
                             ActivateMenu(mainProject, mainHome);
                         }
@@ -147,7 +149,7 @@ public class UIHandler : MonoBehaviour {
                         {
                             ActivateMenu(mainProject, mainSettings);
                         }
-                        else if(mNameOfMenu == "Project")   // we are on a project_page
+                        else if(Commons.NAME_OF_MENU == Commons.PROJECTS_MENU)   // we are on a project_page
                         {
                             ActivateMenu(mainProject, GameObject.Find("project_page"));
                         }
@@ -191,7 +193,7 @@ public class UIHandler : MonoBehaviour {
             // we want the location to be updated after a certain amount of time
             InvokeRepeating("CallDetermineLocation", 0, (timer_slider_value * 60));   // We multiply by 60 to measure the time in minutes (Standard is seconds)
         }
-        else if(sceneName == "Maps")
+        else if(Commons.SCENE_NAME == Commons.MAPS_SCENE_NAME)
         {
             GameObject listview = GameObject.Find("Main").transform.Find("list_go").gameObject;     // the listview in the mapsscreen
             location_string = listview.transform.Find("list_part/list/grid/Location/Lbl").GetComponent<Text>(); // text component in the buttons in the list view
@@ -236,7 +238,7 @@ public class UIHandler : MonoBehaviour {
                 });
         };
 
-        if (sceneName == "Main" || sceneName == "Maps")
+        if (Commons.SCENE_NAME == Commons.MAIN_SCENE_NAME || Commons.SCENE_NAME == Commons.MAPS_SCENE_NAME)
         {
             // Find all main menu buttons, this is the same for the main screen as for the maps screen
             menu_home = menuBG.transform.Find("menu_home").GetComponent<Button>();
@@ -246,14 +248,14 @@ public class UIHandler : MonoBehaviour {
             // assign tasks to these buttons
             menu_home.onClick.AddListener(() => 
                 {
-                    LoadScene("Main");
+                    Commons.LoadScene(Commons.MAIN_SCENE_NAME);
                     SettingsManager.SaveData();
                 });
 
             menu_website.onClick.AddListener(() => Application.OpenURL(NetworkManager.URL));
             menu_logout.onClick.AddListener(() => 
                 {
-                    LoadScene("Login");
+                    Commons.LoadScene(Commons.LOGIN_SCENE_NAME);
                     SettingsManager.SaveData();
                 });
 
@@ -267,7 +269,7 @@ public class UIHandler : MonoBehaviour {
     private IEnumerator CheckLocationName()
     {
         // ask for the latitude and logitude of the desired location
-        yield return StartCoroutine(MapManager.ReturnLatLong(location_input.text, prM.projects)); // wait until finished
+        yield return StartCoroutine(MapManager.ReturnLatLong(location_input.text, ProjectManager.projects)); // wait until finished
         
         // update the location name in the listview live with the map
         yield return StartCoroutine(MapManager.ReturnLocationName(location_input.text, location_string));
@@ -284,7 +286,7 @@ public class UIHandler : MonoBehaviour {
         }
         else
         {
-            MapManager.SetAddress(string.Empty, prM.projects);
+            MapManager.SetAddress(string.Empty, ProjectManager.projects);
         }
     }
 
@@ -323,15 +325,6 @@ public class UIHandler : MonoBehaviour {
     }
 
     /// <summary>
-    /// Loads the required scene.
-    /// </summary>
-    /// <param name="sceneName">The name of the scene which will be loaded.</param>
-    public static void LoadScene(string sceneName)
-    {
-        SceneManager.LoadScene(sceneName);
-    }
-
-    /// <summary>
     /// Activates the desired menu on the screen, depending on where you are in the app.
     /// </summary>
     /// <param name="menuToActivate">The menu which should be called.</param>
@@ -346,24 +339,15 @@ public class UIHandler : MonoBehaviour {
             }
 
             menuToDisable.SetActive(false);
-            ReturnToMenu(menuToDisable.name);
+            Commons.ReturnToMenu(menuToDisable.name);
         }
         else if(menuToDisable.name == "project_page")
         {
-            ReturnToMenu(mainHome.name);
+            Commons.ReturnToMenu(mainHome.name);
             DestroyImmediate(GameObject.Find("project_page"), true);
         }
 
         menuToActivate.SetActive(true);
-    }
-
-    /// <summary>
-    /// Returns the gameobject name which we came from (for finding out which menu should be called)
-    /// </summary>
-    /// <param name="nameOfMenu">The name of the menu which should be activated.</param>
-    public static string ReturnToMenu(string nameOfMenu)
-    {
-        return mNameOfMenu = nameOfMenu;
     }
 
     /// <summary>
@@ -374,8 +358,8 @@ public class UIHandler : MonoBehaviour {
     private GameObject LoadProjectPage(string name)
     {
         GameObject prPage;
-        Image prImage;
-        Text prTitle, prStage, prDescription;
+        RawImage prImage;
+        Text prTitle, prPlace, prStage, prDescription;
         Project p;
          
         // instantiate the project page and give it the name project_page
@@ -387,15 +371,22 @@ public class UIHandler : MonoBehaviour {
 
         // find all the gameobjects on the page
         prPage = GameObject.Find(instance.name).transform.Find("grid").gameObject;
-        prImage = prPage.transform.Find("project_image").GetComponent<Image>();
+        prImage = prPage.transform.Find("project_image").GetComponent<RawImage>();
         prTitle = prPage.transform.Find("project_image/project_title_BG/project_title").GetComponent<Text>();
-        prStage = prPage.transform.Find("project_fase").GetComponentInChildren<Text>();
+        prPlace = prPage.transform.Find("project_image/project_title_BG/project_place").GetComponent<Text>();
+        prStage = prPage.transform.Find("project_fase/fase_txt").GetComponent<Text>();
         prDescription = prPage.transform.Find("project_description/description").GetComponent<Text>();
 
-        p = FindProject(GetComponent<ProjectManager>().projects, name);
+        p = FindProject(ProjectManager.projects, name);
 
         prTitle.text = p.Name;
-        prImage.sprite = p.Image;
+
+        // Return the location of the given project
+        StartCoroutine(MapManager.ReturnLocationName(p, prPlace));
+
+        // set the image background
+        StartCoroutine(ProjectManager.ReturnImage(p.ImagePath, prImage));
+
         prStage.text = p.CurrentStage;
         prDescription.text = p.Description;
 
