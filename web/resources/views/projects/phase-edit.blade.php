@@ -14,11 +14,11 @@
         <div class="col-md-4">
             <div class="col-md-12">
                 <label class="control-label" for="startDate">Start datum</label>
-                <input type="date" class="form-control" id="startDate" name="phaseStartDate{{ $phase->id }}" value="{{ $phase->start }}">
+                <input type="date" class="form-control" id="startDate" name="phaseStartDate{{ $phase->id }}" value="{{  $phase->start->toDateString() }}">
             </div>
             <div class="col-md-12">
                 <label class="control-label" for="endDate">Eind datum</label>
-                <input type="date" class="form-control" id="endDate" name="phaseEndDate{{ $phase->id }}" value="{{ $phase->end }}">
+                <input type="date" class="form-control" id="endDate" name="phaseEndDate{{ $phase->id }}" value="{{ $phase->end->toDateString()}}">
             </div>
         </div>
     </div>
