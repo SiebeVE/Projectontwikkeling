@@ -477,6 +477,22 @@ div.admin-controls
 .chart
 {
 	height: 20em;
+	padding-bottom: 15px;
+}
+
+.chart .controls
+{
+	position: absolute;
+	right: 5px;
+	top: 0;
+	cursor: pointer;
+}
+
+.chart .controls:before
+{
+	padding-right: 5px;
+	font: normal normal normal 14px/1 FontAwesome;
+	content: "\f040"
 }
 
 /********************************************************* HOMEPAGE *********************/

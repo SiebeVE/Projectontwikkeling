@@ -25,14 +25,12 @@ public enum MarkerColors
 
 public static class MapManager {
 
-    private static string mURLaddress, STATUS = "status", OK_STATUS_CODE = "OK";
+    private static string mURLaddress;
     private static WWW www;
     private static int zoom = 12;
     private static MapType maptype;
     private static List<Project> tempProjects = new List<Project>();
 
-    public static string API_KEY = "&key=AIzaSyAn26km9c6rfD7sWftyRa29QjwISSsIF9I";
-    public static char[] alphabet = new char[25] { 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
     private static float searchedLat, searchedLong;
 
     #region Properties
@@ -40,12 +38,6 @@ public static class MapManager {
     {
         get { return mURLaddress; }
         set { mURLaddress = value; }
-    }
-
-    public static WWW Www
-    {
-        get { return www; }
-        set { www = value; }
     }
 
     /// <summary>
@@ -65,6 +57,14 @@ public static class MapManager {
     {
         get { return maptype; }
         set { maptype = value; }
+    }
+
+    /// <summary>
+    /// The temporary projectslist contains all projects within the radius.
+    /// </summary>
+    public static List<Project> TempProjects
+    {
+        get { return tempProjects; }
     }
     #endregion 
 
@@ -100,6 +100,10 @@ public static class MapManager {
     /// <param name="location">The location the user wants to find.</param>
     public static void SetAddress(string location, List<Project> projects)
     {
+        // set list empty so when a new location is searched, the list doesn't add buttons
+        // to the already existing ones
+        tempProjects.Clear();
+
         mURLaddress = "http://maps.googleapis.com/maps/api/staticmap?center=";
 
         // The user has entered no input or the app starts for the first time
@@ -111,16 +115,18 @@ public static class MapManager {
         else if(location != string.Empty)
         {
             // Add desired location
-            mURLaddress += location + "&zoom=" + zoom + "&maptype=" + maptype + "&markers=color:red%7Clabel:A%7C" + location;
+            mURLaddress += location + "&zoom=" + zoom + "&maptype=" + maptype + "&markers=color:red%7Clabel:A%7C" + location + "%7Csize=mid";
             AddProjects(projects, searchedLat, searchedLong);
         }
 
         // at last add the size and API key
-        mURLaddress += "&size=1920x1080" + API_KEY;
+        mURLaddress += "&size=1920x1080" + Commons.API_KEY;
 
-        if (UIHandler.sceneName == "Maps")
+        if (Commons.SCENE_NAME == Commons.MAPS_SCENE_NAME)
         {
             MapLoader.CallLoadMap();
+
+            InstantiateListScript.CreateListItemInstance(UIHandler.map_list_item, UIHandler.grid, tempProjects);
 
             // set the searched values back to zero to prevent this method from running
             searchedLat = 0;
@@ -143,7 +149,10 @@ public static class MapManager {
         {
             if((int)CalculateDistanceProjects(projects[i].Latitude, projects[i].Longitude, lat, lon) <= PlayerPrefs.GetInt("radius"))
             {
-                mURLaddress += "&markers=color:" + (MarkerColors)r.Next(0, Enum.GetValues(typeof(MarkerColors)).Length) + "%7Clabel:" + alphabet[currentIndex] + "%7C" + projects[i].Latitude + "," + projects[i].Longitude;
+                mURLaddress += "&markers=color:" + (MarkerColors)r.Next(0, Enum.GetValues(typeof(MarkerColors)).Length) + "%7Clabel:" + Commons.ALPHABET[currentIndex] + "%7C" + projects[i].Latitude + "," + projects[i].Longitude;
+
+                // add this project to the temp projects list so it will only display the projects within the desired radius
+                tempProjects.Add(projects[i]);
                 currentIndex++;
             }
         }
@@ -157,16 +166,26 @@ public static class MapManager {
     /// <param name="projects">The projectManager projects list.</param>
     public static IEnumerator ReturnLatLong(string location, List<Project> projects)
     {
-        location = location.Replace(" ", "%20");
+        string url = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 
-        WWW www = new WWW("https://maps.googleapis.com/maps/api/geocode/json?address=" + location + API_KEY);
+        if (location == string.Empty)
+        {
+            url += LocationManager.Latitude + "," + LocationManager.Longitude + Commons.API_KEY;
+        }
+        else
+        {
+            location = location.Replace(" ", "%20");
+            url += location + Commons.API_KEY;
+        }
+
+        WWW www = new WWW(url);
         yield return www;
 
         if(www.error == null)
         {
             JsonData dataLatLong = JsonMapper.ToObject(www.text);
 
-            if (dataLatLong[STATUS].ToString() == OK_STATUS_CODE)
+            if (dataLatLong[Commons.STATUS].ToString().ToUpper() == Commons.OK_STATUS_CODE)
             {
                 double[] tempArray = GetLatLon(dataLatLong["results"][0]["geometry"]["location"]);
 
@@ -181,13 +200,19 @@ public static class MapManager {
         }
     }
 
+    /// <summary>
+    /// Returns the location name (to load in the maps screen)
+    /// </summary>
+    /// <param name="input">Which location have we prompted?</param>
+    /// <param name="location_string">In which text object should we write the information?</param>
+    /// <returns></returns>
     public static IEnumerator ReturnLocationName(string input, Text location_string)
     {
         // we haven't searched for a location
         if (input == string.Empty)
         {
             // so we make a URL and return a json containing the information we need
-            WWW www = new WWW("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + LocationManager.Latitude + "," + LocationManager.Longitude + "&result_type=street_address" + API_KEY);
+            WWW www = new WWW("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + LocationManager.Latitude + "," + LocationManager.Longitude + "&result_type=street_address" + Commons.API_KEY);
             yield return www;
 
             // there was no error
@@ -197,7 +222,7 @@ public static class MapManager {
                 JsonData data = JsonMapper.ToObject(www.text);
 
                 // Google returned OK status code, so we have at least one address
-                if (data[STATUS].ToString() == OK_STATUS_CODE)
+                if (data[Commons.STATUS].ToString().ToUpper() == Commons.OK_STATUS_CODE)
                 {
                     location_string.text = GetData(data, "formatted_address");
                 }
@@ -211,6 +236,36 @@ public static class MapManager {
         {
             // there's no need to search the location name because it's already filled in by the user
             location_string.text = input;
+        }
+    }
+
+    /// <summary>
+    /// Returns the location name of a given project (to load on the project page)
+    /// </summary>
+    /// <param name="project">The project of which we want the location.</param>
+    /// <param name="location_string">In which text object should we write the information?</param>
+    /// <returns></returns>
+    public static IEnumerator ReturnLocationName(Project project, Text location_string)
+    {
+        // so we make a URL and return a json containing the information we need
+        WWW www = new WWW("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + project.Latitude + "," + project.Longitude + "&result_type=street_address" + Commons.API_KEY);
+        yield return www;
+
+        // there was no error
+        if (www.error == null)
+        {
+            // read data from json file
+            JsonData data = JsonMapper.ToObject(www.text);
+        
+            // Google returned OK status code, so we have at least one address
+            if (data[Commons.STATUS].ToString().ToUpper() == Commons.OK_STATUS_CODE)
+            {
+                location_string.text = GetData(data, "formatted_address");
+            }
+            else
+            {
+                location_string.text = "Geen locatie";
+            }
         }
     }
 

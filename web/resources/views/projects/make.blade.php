@@ -3,7 +3,6 @@
 
 @section('pageCss')
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
-    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -99,6 +98,7 @@
                 <div class="col-md-12" id="phases">
                     <hr>
                     <h2>Fases toevoegen</h2>
+                    {{--Special notation so you can use a variable $numberOfPhases--}}
                     {{""); (old('numberOfPhases') != "" ? $numberOfPhases =  old('numberOfPhases') : $numberOfPhases = 0 }}
                     <input type="hidden" name="numberOfPhases" id="numberOfPhases"
                            value="{{$numberOfPhases}}">
@@ -150,7 +150,7 @@
 @endsection
 
 @section('pageJs')
-    <script src="{{ url('/') }}/scripts/create.js"></script>
+    <script src="{{ url('/') }}/js/create.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&region=BE"
             async defer></script>
     <script src="{{ url('/') }}/js/projectbeheer.js"></script>

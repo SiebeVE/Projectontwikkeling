@@ -17,6 +17,7 @@
     <link href="{{ url('/') }}/css/nouislider.min.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/site.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/grid.css" rel="stylesheet">
+    <link href="{{ url('/') }}/css/main.css" rel="stylesheet">
 
     @yield('pageCss')
 
@@ -63,6 +64,7 @@
                         <li><a href="{{ url('/info') }}">Contact</a></li>
                     </ul>
 
+
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
@@ -82,6 +84,7 @@
                         @endif
                     </ul>
                 </div>
+
             </div>
         </nav>
 
@@ -94,11 +97,8 @@
         <!-- JavaScripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="{{ url('/') }}/scripts/jquery-ui.min.js"></script>
-<script src="{{ url('/') }}/scripts/site.js"></script>
-<script>
-
-</script>
+<script src="{{ url('/') }}/js/jquery-ui.min.js"></script>
+<script src="{{ url('/') }}/js/site.js"></script>
 
 @yield('pageJs')
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}

@@ -93,4 +93,14 @@ Route::group(["prefix" => "api", 'middleware' => 'api'], function ()
 		Route::get('login', 'ApiController@getLogin');
 		Route::get('projects', 'ApiController@getProjects');
 	});
+
+	Route::group(["prefix" => "post"], function ()
+	{
+		Route::post('statistics/word', 'ApiController@addIgnoredWord');
+	});
+
+	Route::group(["prefix" => "delete"], function ()
+	{
+		Route::delete('statistics/word', 'ApiController@deleteIgnoredWord');
+	});
 });

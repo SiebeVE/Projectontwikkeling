@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Project {
 
     private string mName, mDescription;
     private float mLat, mLon;
-    private string mCurrentStage;
-    private Sprite mImage;
+    private string mCurrentStage = "";
+    private string mImagePath;
     private List<Stage> mStages;
 
     /// <summary>
@@ -17,16 +16,16 @@ public class Project {
     /// <param name="description">The project's description</param>
     /// <param name="lat">The project's latitude</param>
     /// <param name="lon">The project's longitude</param>
-    /// <param name="image">The project's headerimage</param>
+    /// <param name="imagePath">The path to the project's headerimage</param>
     /// <param name="stages">The stages of the project</param>
-    public Project(string name, string description, float lat, float lon, Sprite image, List<Stage> stages)
+    public Project(string name, string description, float lat, float lon, string imagePath, List<Stage> stages)
     {
         mName = name;
         mDescription = description;
         mLat = lat;
         mLon = lon;
-        mImage = image;
-
+        mImagePath = imagePath;
+        
         mStages = stages;
     }
 
@@ -61,9 +60,9 @@ public class Project {
         get { return mCurrentStage; }
     }
 
-    public Sprite Image
+    public string ImagePath
     {
-        get { return mImage; }
+        get { return mImagePath; }
     }
     #endregion
 
@@ -73,14 +72,22 @@ public class Project {
     /// <param name="stages">The list of stages of this project.</param>
     public void DetermineCurrentStage(List<Stage> stages)
     {
-        for(byte i = 0; i < stages.Count; i++)
+        if (stages.Count > 0)
         {
-            if(DateTime.Compare(DateTime.Today, stages[i].BeginDate) >= 0 && DateTime.Compare(DateTime.Today, stages[i].EndDate) <= 0)
+            for (byte i = 0; i < stages.Count; i++)
             {
-                // todays date is later than the begindate AND earlier than the enddate of the current stage
-                mCurrentStage = stages[i].Name;
-                break;
+                if (DateTime.Compare(DateTime.Today, stages[i].BeginDate) >= 0 && DateTime.Compare(DateTime.Today, stages[i].EndDate) <= 0)
+                {
+                    // todays date is later than the begindate AND earlier than the enddate of the current stage
+                    mCurrentStage = stages[i].Name;
+                    break;
+                }
             }
+        }
+
+        if(mCurrentStage == "")
+        {
+            mCurrentStage = "Geen fasen beschikbaar.";
         }
     }
 }

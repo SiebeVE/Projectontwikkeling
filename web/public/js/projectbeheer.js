@@ -1,7 +1,6 @@
 /**
  * Created by denis on 22-4-2016.
  */
-jQuery.noConflict();
 (function ($) {
 
     //Press Enter in INPUT moves cursor to next INPUT

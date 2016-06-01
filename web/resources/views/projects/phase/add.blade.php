@@ -437,4 +437,6 @@
 
         })(jQuery);
     </script>
+    <script src="{{ url('/js/dragLayout.js') }}"></script>
+
 @endsection
