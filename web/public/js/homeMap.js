@@ -106,7 +106,7 @@ function initMap() {
             //window.setTimeout(function() {
             marker = new google.maps.Marker({
                 position: latilongi,
-                title: 'new marker',
+                title: projects[count]['name'],
                 icon: '../images/googleMarker/googleMarker.png',
                 clickable: true,
                 animation: google.maps.Animation.DROP,
@@ -129,11 +129,11 @@ function initMap() {
             '" alt="project foto"/><div class="projectlink"><a class="pull-right" href="#">Bekijk het project!</a></div></div></div>',
             shadowStyle: 1,
             padding: 0,
-            backgroundColor: 'rgba(255,255,255,1)',
+            backgroundColor: 'rgba(255,255,255,0.975)',
             borderRadius: 8,
             arrowSize: 20,
             borderWidth: 1,
-            borderColor: 'white',
+            borderColor: 'rgb(255,255,255)',
             disableAutoPan: true,
             hideCloseButton: true,
             arrowPosition: 30,
@@ -153,7 +153,6 @@ function initMap() {
                 infowindow.close(map, this);
                 infowindow.opened = false;
             }*/
-
             if (!infoBubble.isOpen()) {
                 infoBubble.open(map, this);
                 infoBubble.setMap(null);
@@ -161,10 +160,19 @@ function initMap() {
             else {
                 infoBubble.close(map, this);
             }
+            toggleBounce(this);
+        });
+        new google.maps.event.addListener(marker, 'mouseover', function(e) {
+            if (!infoBubble.isOpen()) {
+                this.setAnimation(google.maps.Animation.BOUNCE);
+            }
+        });
+        new google.maps.event.addListener(marker, 'mouseout', function(e) {
+            if (!infoBubble.isOpen()) {
+                this.setAnimation(null);
+            }
         });
 
-        new google.maps.event.addListener(marker, 'mouseover', function(e) {toggleBounce(this)});
-        new google.maps.event.addListener(marker, 'mouseout', function(e) {toggleBounce(this)});
     }
 
     function setMapOnAll(map) {
@@ -186,18 +194,19 @@ function initMap() {
             for(var j = 0; j < projects.length; j++)
             {
                 //console.log(projects[j]['tags'].length);
-                for(var x = 0; x < projects[j]['tags'].length; x++)
-                //console.log(projects[j]['tags'][x]['name']);
-                if(this.id == projects[j]['tags'][x]['name'])
-                {
-                    console.log('test');
+                for(var x = 0; x < projects[j]['tags'].length; x++) {
+                    //console.log(projects[j]['tags'][x]['name']);
+                    if (this.id == projects[j]['tags'][x]['name']) {
+                        console.log('test');
+                        newMarkerPos = new google.maps.LatLng(projects[j]['latitude'], projects[j]['longitude']);
+                        addmarker(newMarkerPos, j);
+                    }
+                }
+                if(this.id == 'alle_projecten') {
                     newMarkerPos = new google.maps.LatLng(projects[j]['latitude'], projects[j]['longitude']);
                     addmarker(newMarkerPos, j);
                 }
-                else if(this.id == 'alle_projecten') {
-                    newMarkerPos = new google.maps.LatLng(projects[j]['latitude'], projects[j]['longitude']);
-                    addmarker(newMarkerPos, j);
-                }
+
             }
 
         });

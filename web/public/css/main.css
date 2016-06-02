@@ -409,7 +409,7 @@ i.fa.fa-times {
 .projectbekijken {
     min-height: 18em;
     margin-bottom: 1.5em;
-    padding-bottom: 1.5em;
+    padding-bottom: 2.5em;
     border-bottom: 1px solid rgba(0,0,0,0.3);
 }
 
@@ -435,5 +435,13 @@ i.fa.fa-times {
 
 .projectoverzicht h1 {
     margin-top: 1.5em;
+    padding-bottom: 0.65em;
+    margin-bottom: 0.3em;
+    border-bottom: 2px dotted black;
+}
+
+.projectoverzicht > h3 {
+    text-align: center;
+    margin-bottom: 1.5em;
 }
 

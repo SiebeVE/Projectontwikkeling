@@ -21,7 +21,8 @@
 
     <div class="container dashboard">
         <div class="col-md-12 projectoverzicht">
-            <h1>Overzicht Projecten</h1>
+            <h1>Overzicht</h1>
+            <h3>Bekijk en beoordeel jouw favoriete projecten</h3>
 
                     @foreach($projects as $project)
                         <div class="projectbekijken col-md-12">
