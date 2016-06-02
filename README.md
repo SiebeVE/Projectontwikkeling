@@ -1,7 +1,7 @@
 #Project A
 
 ##API
-API-url: `https://laravel.siebeve.be/api`
+API-url: `https://teamgctof.multimediatechnology.be/api`
 >For accessing the API you need the `[appSecret]`
 
 ###Authentication
