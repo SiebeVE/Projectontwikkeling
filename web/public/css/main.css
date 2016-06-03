@@ -380,13 +380,15 @@ i.fa.fa-facebook-official, i.fa.fa-twitter {
 .containerPhase .grid-item:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
-
-i.fa.fa-times {
-    display: none;
+ 
+.containerPhase .grid-item i.fa
+{
+	display: none;
 }
 
-.containerPhase .grid-item:hover i.fa.fa-times {
-    display: inline;
+.containerPhase .grid-item:hover i.fa
+{
+	display: inline;
 }
 
 /*******************************************************************PROJECT OVERZICHT****************************************/
