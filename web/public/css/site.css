@@ -206,6 +206,11 @@ button, input, select, textarea
 	line-height: inherit;
 }
 
+.fluid-width-video-wrapper
+{
+	background-color: rgba(0,0,0,.5);
+}
+
 div.bootstrap-tagsinput
 {
 	background-color: #FFF;

@@ -1,6 +1,18 @@
 (function ( $ ) {
+	function getYoutubeIdFromUrl( url ) {
+		var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+		var match = url.match(regExp);
+		if (match && match[ 2 ].length == 11) {
+			return match[ 2 ];
+		}
+		else {
+			return null
+		}
+	}
+
 	var rangeSlider = document.getElementById('slider');
 	var rangeSliderMedia = document.getElementById('slider-media');
+	var minimumRangeMedia = 1;
 
 	var settingsSlider = {
 		start: [ 1 ],
@@ -99,8 +111,18 @@
 			// 	<input type="text" id="question" name="question" class="form-control">
 			// 	</div>
 			case "youtube":
+				minimumRangeMedia = 2;
+				rangeSliderMedia.noUiSlider.set(2);
 				// Toevoegen van eventuele velden
 				var $div = $("<div>").addClass("form-group");
+				var $helpText = $("<p>").addClass("text-muted").text("De minimum breedte is 2 bij een video.");
+				var $labelT = $("<label>").addClass("control-label").attr("for", "youtube-title").text("Zet hier de titel voor boven de video.");
+				var $inputT = $("<input>")
+					.attr("type", "text")
+					.addClass("form-control")
+					.attr("name", "youtube-title")
+					.attr("id", "youtube-title")
+					.attr("placeholder", "Blok titel");
 				var $label = $("<label>").addClass("control-label").attr("for", "youtube-url").text("Plak hier de Youtube url.");
 				var $input = $("<input>")
 					.attr("type", "text")
@@ -108,12 +130,13 @@
 					.attr("name", "youtube-url")
 					.attr("id", "youtube-url")
 					.attr("placeholder", "Youtube url");
-				$div.append($label).append($input);
+				$div.append($helpText).append($labelT).append($inputT).append($label).append($input);
 				$inputPlace.slideUp(600, function () {
 					$inputPlace.empty().append($div).slideDown();
 				});
 				break;
 			case "picture":
+				minimumRangeMedia = 1;
 				break;
 			default:
 				$inputPlace.slideUp(600, function () {
@@ -283,6 +306,147 @@
 		}
 	});
 
+	$(".control-field").on("click", "#addBlockMedia", function ( e ) {
+		console.log(e);
+		e.preventDefault();
+		e.stopPropagation();
+
+		// Toevoegen van blok
+
+		var typeOfField = $("#sortMedia").val();
+		console.log("soort: " + typeOfField);
+		if (typeOfField == "" || typeOfField == null) {
+			swal(
+				'Foutje!',
+				'U moet een soort media kiezen',
+				'error'
+			)
+		}
+		else {
+			var blockNumber;
+			var $exampleField;
+			var widthOfBlock;
+			var question;
+			var className;
+			var $newBlock;
+			var inputName;
+			var $label;
+			var $input;
+			var ytPlayer;
+			var failedById = false;
+			// Ophalen blok nummer en wegschrijven
+			var isEditing = $(".grid").parent().find(".is-editing").length > 0;
+			if (isEditing) {
+				var $editingBlock = $(".grid").parent().find(".is-editing").first();
+				var $labelEdit = $editingBlock.find(".form-label");
+
+				blockNumber = $labelEdit.data("blocknumber");
+
+				$exampleField = $("#example-field");
+
+				widthOfBlock = Math.floor(rangeSliderMedia.noUiSlider.get());
+				console.log(rangeSliderMedia.noUiSlider.get());
+
+				$editingBlock.removeClass("grid-item--width" + $editingBlock.data("width"));
+
+				className = "grid-item--width" + widthOfBlock;
+
+				// Maken van blok
+				$newBlock = $editingBlock.addClass(className)/*.addClass("form-group")*/.addClass("grid-item").data("width", widthOfBlock);
+
+				inputName = "question-" + blockNumber;
+				$newBlock.empty();
+
+				console.log("editingFinish");
+			}
+			else {
+				blockNumber = parseInt($("#numberOfFields").val()) + 1;
+				$("#numberOfFields").val(blockNumber);
+
+				$exampleField = $("#example-field");
+
+				widthOfBlock = Math.floor(rangeSliderMedia.noUiSlider.get());
+				console.log(rangeSliderMedia.noUiSlider.get());
+
+				className = "grid-item--width" + widthOfBlock;
+
+				// Maken van blok
+				$newBlock = $("<div>").addClass(className)/*.addClass("form-group")*/.addClass("grid-item").data("width", widthOfBlock);
+
+				inputName = "media-" + blockNumber;
+			}
+			switch (typeOfField) {
+				case "youtube":
+					var youtubeUrl = $("#youtube-url").val();
+					var youtubeId = getYoutubeIdFromUrl(youtubeUrl);
+					if(youtubeId !== null) {
+						console.log(youtubeId);
+						// Toevoegen van inputs
+						$input = $("<div>").attr("id", inputName).data("youtubeurl", youtubeUrl);
+
+						$label = $("<b>").addClass("form-label").text($("#youtube-title").val()).data("sort", typeOfField).data("blocknumber", blockNumber);
+						// $input = $("<input>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
+						console.log($label);
+						console.log($input);
+					}
+					else {
+						swal(
+							'Geen geldige URL',
+							'De opgegeven URL is geen geldige Youtube url.',
+							'error'
+						)
+					}
+					break;
+				case "picture":
+					console.log("ok-area");
+					// Toevoegen van inputs
+					$label = $("<label>").addClass("form-label").text(question).attr("for", inputName).data("sort", typeOfField).data("blocknumber", blockNumber);
+					$input = $("<textarea>").addClass("form-control").attr("id", inputName).attr("name", inputName);
+					console.log($label);
+					console.log($input);
+					break;
+			}
+
+			if(!failedById) {
+				var $close = $("<div>").addClass("controls");
+				var $edit = $("<i>").addClass("fa").addClass("fa-pencil");
+				var $cross = $("<i>").addClass("cross").addClass("fa").addClass("fa-times");
+				$close.append($edit);
+				$close.append($cross);
+
+				$newBlock.append($close).append($label).append($input);
+				console.log($newBlock);
+
+				if (!isEditing) {
+					// Append new blok in examples
+					$grid.append($newBlock).packery('addItems', $newBlock);
+					console.log($exampleField);
+
+					// Make element draggable
+					var draggie = new Draggabilly($newBlock[ 0 ]);
+					// bind drag events to Packery
+					$grid.packery('bindDraggabillyEvents', draggie);
+				}
+
+				if (typeOfField == "youtube") {
+					ytPlayer = new YT.Player(inputName, {
+						videoId: youtubeId,
+						playerVars: {
+							showinfo: 0,
+							rel: 0
+						}
+					});
+					$newBlock.fitVids();
+				}
+
+				$grid.packery('shiftLayout');
+
+				// Empty form
+				$("#cancel-block-media").trigger("click");
+			}
+		}
+	});
+
 	// show item order after layout
 	function orderItems() {
 		console.log("okOrder");
@@ -339,9 +503,11 @@
 			rangeSlider.noUiSlider.set(1);
 		}
 	});
+
 	rangeSliderMedia.noUiSlider.on('slide', function () {
-		if (Math.floor(rangeSlider.noUiSlider.get()) == 0) {
-			rangeSlider.noUiSlider.set(1);
+		if (Math.floor(rangeSliderMedia.noUiSlider.get()) < minimumRangeMedia) {
+			console.log(minimumRangeMedia);
+			rangeSliderMedia.noUiSlider.set(minimumRangeMedia);
 		}
 	});
 

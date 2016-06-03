@@ -1328,6 +1328,7 @@
 		this.dragPoint.y = 0;
 
 		jQuery(this.element).parent().addClass("child-dragging");
+		jQuery("iframe").hide();
 
 		this.element.classList.add('is-dragging');
 		this.dispatchEvent( 'dragStart', event, [ pointer ] );
@@ -1451,6 +1452,7 @@
 		}
 
 		jQuery(this.element).parent().removeClass("child-dragging");
+		jQuery("iframe").show();
 
 		this.element.classList.remove('is-dragging');
 		this.dispatchEvent( 'dragEnd', event, [ pointer ] );
