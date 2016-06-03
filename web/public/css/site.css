@@ -104,6 +104,54 @@ form[name=create] .upload #imagePlaceholder,
 	cursor: move;
 }
 
+.sort-control span
+{
+	font-size: 1.25em;
+	padding: 0 10px;
+}
+
+.sort-control .form-group div
+{
+	cursor: pointer;
+	display: inline-block;
+	position: relative;
+	padding-bottom: 3px;
+}
+
+.sort-control .form-group div:after
+{
+	content: '';
+	display: block;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	height: 3px;
+	width: 0;
+	background: #0091D3;
+	transition: width .2s ease-out;
+}
+
+#media-control
+{
+	display: none;
+}
+
+.sort-control .form-group div:last-of-type
+{
+	left: -5px;
+}
+
+.sort-control .form-group div:last-of-type:after
+{
+	left: 0;
+	right: auto;
+}
+
+.sort-control .form-group div.active:after
+{
+	width: 100%;
+}
+
 .projectImageContainer #imagePlaceholder
 {
 	width: 267px;
@@ -469,7 +517,8 @@ form[name=create] .phase textarea#description
 }
 
 /******************************************************* Slider *******************************************************/
-#slider
+#slider,
+#slider-media
 {
 	margin: 0 25px 45px;
 }
