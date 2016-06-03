@@ -24,7 +24,7 @@ class ProjectController extends Controller
 	public function __construct()
 	{
 		$this->middleware('auth', [
-			'except' => 'overzicht'
+			'except' => ['overzicht', 'getOpinion', 'postOpinion']
 		]); //Temporally off
 	}
 

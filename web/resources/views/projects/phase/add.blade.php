@@ -41,33 +41,6 @@
                 <div id="example-field" class="grid">
                     <div class="gutter-sizer"></div>
                     <div class="grid-size"></div>
-                    <div class="grid-item--width1 grid-item" style="position: absolute; left: 0%; top: 0px;"
-                         data-width="1"><label
-                                class="form-label" for="question-1" data-sort="text">Vraag 1</label><textarea
-                                class="form-control" type="text"
-                                id="question-1"
-                                name="question-1"></textarea>
-                    </div>
-                    <div class="grid-item--width1 grid-item" style="position: absolute; left: 0%; top: 88px;"
-                         data-width="1"><label
-                                class="form-label" for="question-2" data-sort="textarea">Vraag 2</label><input
-                                class="form-control" type="text"
-                                id="question-2" name="question-2">
-                    </div>
-                    <div class="grid-item--width1 grid-item" style="position: absolute; left: 0%; top: 156px;"
-                         data-width="1"><b
-                                class="form-label" data-sort="checkbox">Vraag 3</b>
-                        <div>
-                            <div class="checkbox"><label><input type="checkbox" value="sd" name="question-3">sd</label>
-                            </div>
-                            <div class="checkbox"><label><input type="checkbox" value="d" name="question-3">d</label>
-                            </div>
-                            <div class="checkbox"><label><input type="checkbox" value="z" name="question-3">z</label>
-                            </div>
-                            <div class="checkbox"><label><input type="checkbox" value="r" name="question-3">r</label>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="col-md-12 control-field">
                     <div class="form-group">

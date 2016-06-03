@@ -6,7 +6,7 @@
 
 @section('content')
 	<div class="container">
-		<div class="col-md-12">
+		<div class="col-md-12 dashboard">
 			<div class="timelineBS">
 				<section class="cd-horizontal-timeline">
 					<div class="timeline">
