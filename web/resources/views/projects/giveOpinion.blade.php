@@ -6,7 +6,7 @@
 
 @section('content')
 	<div class="container">
-		<div class="col-md-12 dashboard">
+		<div class="col-md-12 dashboard giveOpinion">
 			<div class="timelineBS">
 				<section class="cd-horizontal-timeline">
 					<div class="timeline">
@@ -48,7 +48,16 @@
 									data-date="{{$phase["start"]->format("d/m/Y")}}">
 									@if($phase["currentPhase"])
 										<h1>Geef uw mening over {{ $data["projectName"] }}</h1>
-										<h2>{{ $data["phaseName"] }}</h2>
+										<h4>{{ $data["phaseName"] }}</h4>
+										<div class="phasebekijken col-md-8">
+											<h5>Beschrijving:</h5>
+											<p>{{$data["phaseDescription"]}}</p>
+										</div>
+									<div class="col-md-4" id="imagePlaceholder">
+										image
+									</div>
+									<div class="col-md-12">
+										<h4 id="questionList">Vragenlijst</h4>
 										<form method="post" name="opinion">
 											{{ csrf_field() }}
 											<div id="opinion" class="grid" style="height:{{ $data["parentHeight"] }}">
@@ -88,8 +97,9 @@
 												@endforeach
 											</div>
 
-											<button type="submit" class="btn btn-success">Verstuur</button>
+											<button type="submit" class="btn btn-primary pull-right createButton">Verstuur</button>
 										</form>
+									</div>
 									@else
 										Full
 									@endif

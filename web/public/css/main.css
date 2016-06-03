@@ -245,7 +245,7 @@ i.fa.fa-facebook-official, i.fa.fa-twitter {
     margin-top: 2.5%;
 }
 
-.containerProject .createButton.btn, .containerPhase .createButton.btn {
+.containerProject .createButton.btn, .containerPhase .createButton.btn, .giveOpinion .createButton.btn {
     margin-bottom: 2em;
     font-size: 1.2em;
     padding: 0.8em;
@@ -258,7 +258,7 @@ i.fa.fa-facebook-official, i.fa.fa-twitter {
     -webkit-transition: background-color .25s ease-in-out;
 }
 
-.containerProject .createButton.btn:hover, .containerPhase .createButton.btn:hover {
+.containerProject .createButton.btn:hover, .containerPhase .createButton.btn:hover, .giveOpinion .createButton.btn:hover {
     background-color: #0064B4;
 }
 
@@ -380,7 +380,7 @@ i.fa.fa-facebook-official, i.fa.fa-twitter {
 .containerPhase .grid-item:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
- 
+
 .containerPhase .grid-item i.fa
 {
 	display: none;
@@ -517,5 +517,34 @@ i.fa.fa-facebook-official, i.fa.fa-twitter {
     100% {font-size: 1.0em;}
 
 }
+
+/**************************************************************PHASE VIEW*******************************/
+
+.giveOpinion h4{
+    text-align: center;
+    font-family: AntwerpenRegular;
+    font-size: 1.8em;
+    padding: 1em 0 0.35em 0;
+}
+
+.giveOpinion #questionList {
+    border-bottom: solid 1px #a6a6a6;
+    margin-bottom: 1em;
+}
+
+.giveOpinion h1 {
+    border-bottom: 2px dotted black;
+    padding-bottom: 0.35em;
+}
+
+.giveOpinion h5 {
+    font-size: 1.2em;
+    font-family: AntwerpenRegular;
+}
+
+.cd-horizontal-timeline .events-content p {
+    color: black;
+}
+
 
 

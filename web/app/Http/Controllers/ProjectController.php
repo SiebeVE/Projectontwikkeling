@@ -177,7 +177,8 @@ class ProjectController extends Controller
 			$questionsArr = [
 				"projectName"  => $project->name,
 				"phaseName"    => $currentPhase->name,
-				"parentHeight" => $currentPhase->parentHeight
+				"parentHeight" => $currentPhase->parentHeight,
+				"phaseDescription" => $currentPhase->description
 			];
 			foreach ($currentPhase->questions as $questionNumber => $question)
 			{
