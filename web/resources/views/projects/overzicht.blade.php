@@ -26,7 +26,7 @@
                     @foreach($projects as $project)
                         <div class="projectbekijken col-md-12">
                             <div class="col-md-8 projectbekijkeninfo">
-                                <h3><a href="#">{{$project->name}}</a></h3>
+                                <h3><a href="{{ url('/project/beoordelen',$project->id) }}">{{$project->name}}</a></h3>
                                 <p>{{$project->description}}</p>
                                 <h5>Adres: {{$project->address}}</h5>
                                 <div class="datums col-md-12">
@@ -43,7 +43,9 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <img class="projectImage" src="{{$project->photo_path}}" alt="project foto"/>
+                                <div id="imagePlaceholder">
+                                    <img class="projectImage" style="left: {{$project->photo_left_offset}};" src="{{$project->photo_path}}" alt="project foto"/>
+                                </div>
                             </div>
                         </div>
                     @endforeach

@@ -61,7 +61,9 @@ form[name=create] b.control-label
 	/*font-size: 1.5em;*/
 }
 
-form[name=create] .upload #imagePlaceholder
+form[name=create] .upload #imagePlaceholder,
+.projectoverzicht #imagePlaceholder,
+.projectImageContainer #imagePlaceholder
 {
 	display: block;
 	width: 100%;
@@ -76,6 +78,12 @@ form[name=create] .upload #imagePlaceholder
 	cursor: move;
 }
 
+.projectoverzicht #imagePlaceholder,
+.projectImageContainer #imagePlaceholder
+{
+	cursor: default;
+}
+
 form[name=create] .upload #imagePlaceholder label
 {
 	position: absolute;
@@ -87,11 +95,19 @@ form[name=create] .upload #imagePlaceholder label
 	text-align: center;
 }
 
-form[name=create] .upload #imagePlaceholder img
+form[name=create] .upload #imagePlaceholder img,
+.projectoverzicht #imagePlaceholder img,
+.projectImageContainer #imagePlaceholder img
 {
 	display: none;
 	position: absolute;
 	height: 100%;
+}
+
+.projectoverzicht #imagePlaceholder img,
+.projectImageContainer #imagePlaceholder img
+{
+	display: block;
 }
 
 form[name=create] textarea#description
@@ -104,16 +120,17 @@ form[name=create] #phases .phase:last-child
 	margin-bottom: 15px;
 }
 
-button, input, select, textarea {
+button, input, select, textarea
+{
 	font-family: inherit;
 	font-size: inherit;
 	line-height: inherit;
 }
 
-
-div.bootstrap-tagsinput{
-	background-color: #fff;
-	border: 1px solid #ccc;
+div.bootstrap-tagsinput
+{
+	background-color: #FFF;
+	border: 1px solid #CCC;
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 	color: #555;
 	vertical-align: middle;
@@ -127,7 +144,8 @@ div.bootstrap-tagsinput{
 	margin-bottom: 1em;
 }
 
-.bootstrap-tagsinput input {
+.bootstrap-tagsinput input
+{
 	border: none;
 	box-shadow: none;
 	outline: none;
@@ -138,17 +156,20 @@ div.bootstrap-tagsinput{
 	max-width: inherit;
 }
 
-.label-info {
+.label-info
+{
 	background-color: #0091D3;
 }
 
-.label {
+.label
+{
 	padding: .2em .5em .2em;
 }
-.bootstrap-tagsinput .tag {
+
+.bootstrap-tagsinput .tag
+{
 	margin-right: 0.2em;
 }
-
 
 form[name=create] #phases .phase:not(:first-of-type):last-child,
 form[name=createPhase] .choices .choice:not(:first-of-type):last-child
@@ -207,7 +228,8 @@ footer.footer, nav.navbar
 	background-color: #CF0039;
 }
 
-.containerNav {
+.containerNav
+{
 	width: 80%;
 	margin: auto;
 }
@@ -256,7 +278,7 @@ nav .containerNav .navbar-brand
 {
 	margin: auto;
 	color: white;
-	background-color: rgba(0,0,0,0.4);
+	background-color: rgba(0, 0, 0, 0.4);
 }
 
 #app-navbar-collapse ul li a:hover
@@ -264,7 +286,8 @@ nav .containerNav .navbar-brand
 	color: black;
 }
 
-#app-navbar-collapse ul:first-child{
+#app-navbar-collapse ul:first-child
+{
 	margin-left: 2em;
 }
 
@@ -355,7 +378,8 @@ footer p.text-muted
   margin-left: -25px;*/
 }
 
-form[name=create] .phase textarea#description {
+form[name=create] .phase textarea#description
+{
 	height: 8em;
 }
 
