@@ -40,6 +40,32 @@ label, nav li {
 	font-family: AntwerpenRegular;
 }*/
 
+.grid .controls
+{
+	float: right;
+	font-size: 21px;
+	font-weight: 700;
+	line-height: 1;
+	color: #000;
+	text-shadow: 0 1px 0 #FFF;
+}
+
+.grid .controls i
+{
+	filter: alpha(opacity=20);
+	opacity: .2;
+}
+
+.grid .controls i:focus,
+.grid .controls i:hover
+{
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+	filter: alpha(opacity=50);
+	opacity: .5;
+}
+
 #content
 {
 	padding-bottom: 7em;
@@ -66,7 +92,7 @@ form[name=create] .upload #imagePlaceholder,
 .projectImageContainer #imagePlaceholder
 {
 	display: block;
-	width: 100%;
+	width: 340px;
 	height: 18em;
 	border: 1px solid #CCCCCC;
 	-webkit-border-radius: 4px;
@@ -76,6 +102,11 @@ form[name=create] .upload #imagePlaceholder,
 	overflow: hidden;
 	position: relative;
 	cursor: move;
+}
+
+.projectImageContainer #imagePlaceholder
+{
+	width: 267px;
 }
 
 .projectoverzicht #imagePlaceholder,

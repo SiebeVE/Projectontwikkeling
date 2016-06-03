@@ -1,6 +1,3 @@
-/**
- * Created by Siebe on 1/06/2016.
- */
 (function ( $ ) {
 	var rangeSlider = document.getElementById('slider');
 
@@ -111,6 +108,7 @@
 		var inputName = "question-" + blockNumber;
 		var $label;
 		var $input;
+
 		switch (typeOfField) {
 			case "text":
 				console.log("ok-texr");
@@ -168,7 +166,13 @@
 				break;
 		}
 
-		$newBlock.append($label).append($input);
+		var $close = $("<div>").addClass("controls");
+		var $edit = $("<i>").addClass("fa").addClass("fa-pencil");
+		var $cross = $("<i>").addClass("cross").addClass("fa").addClass("fa-times");
+		$close.append($edit);
+		$close.append($cross);
+
+		$newBlock.append($close).append($label).append($input);
 		console.log($newBlock);
 		// Append new blok in examples
 		$grid.append($newBlock).packery('addItems', $newBlock);
@@ -180,6 +184,11 @@
 		$grid.packery('bindDraggabillyEvents', draggie);
 
 		$grid.packery('shiftLayout');
+
+		// Empty form
+		$("#question").val("");
+		$("#sortQuestion").val("choose");
+		$("#sortQuestion").change();
 	});
 
 	// show item order after layout
@@ -321,5 +330,19 @@
 		$("body").append($dummyForm);
 		$dummyForm.submit();
 
+
 	});
+
+	/*******************************CLICK EVENT********************************/
+
+	$("#example-field")
+		.on("click", ".controls i.fa.fa-times", function () {
+			$(this).parent().parent().fadeOut(500, function () {
+				$(this).remove();
+			});
+		})
+		.on("click", ".controls i.fa.fa-pencil", function(){
+			console.log("edit");
+		});
+
 })(jQuery);

@@ -448,12 +448,12 @@ i.fa.fa-facebook-official, i.fa.fa-twitter
 	background-color: rgba(0, 0, 0, 0.1);
 }
 
-i.fa.fa-times
+.containerPhase .grid-item i.fa
 {
 	display: none;
 }
 
-.containerPhase .grid-item:hover i.fa.fa-times
+.containerPhase .grid-item:hover i.fa
 {
 	display: inline;
 }
