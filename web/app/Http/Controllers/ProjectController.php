@@ -23,7 +23,9 @@ class ProjectController extends Controller
 	 */
 	public function __construct()
 	{
-		$this->middleware('auth',  ['except' => 'overzicht']); //Temporally off
+		$this->middleware('auth', [
+			'except' => 'overzicht'
+		]); //Temporally off
 	}
 
 	/**
@@ -37,7 +39,8 @@ class ProjectController extends Controller
 		return view('projects.make', compact('tags'));
 	}
 
-	 /* Show the application dashboard
+	/**
+	 * Show the application dashboard
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
@@ -47,10 +50,11 @@ class ProjectController extends Controller
 		return view('projects.dashboard', compact('projects'));
 	}
 
-	/* Show the application overzicht
-    *
-    * @return \Illuminate\Http\Response
-    */
+	/**
+	 * Show the application overzicht
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
 	public function overzicht()
 	{
 		$projects = Project::all();
@@ -73,6 +77,14 @@ class ProjectController extends Controller
 		return view('projects.edit', compact('project', 'phases', 'tags'));
 	}
 
+	/**
+	 * Patch request for updating project
+	 *
+	 * @param Request $request
+	 * @param Project $project
+	 *
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 */
 	public function update(Request $request, Project $project)
 	{
 
@@ -149,6 +161,18 @@ class ProjectController extends Controller
 
 		if ($currentPhase != NULL)
 		{
+			// Build array for phases
+			$phasesArr = [];
+			foreach ($project->phases as $phase)
+			{
+				$phasesArr[] = [
+					"name"         => $phase->name,
+					"description"  => $phase->description,
+					"start"        => $phase->start,
+					"end"          => $phase->end,
+					"currentPhase" => $currentPhase == $phase,
+				];
+			}
 			// Build the array for the questions
 			$questionsArr = [
 				"projectName"  => $project->name,
@@ -173,8 +197,11 @@ class ProjectController extends Controller
 					}
 				}
 			}
-			//dd($questionsArr);
-			return view('projects.giveOpinion', ["data" => $questionsArr]);
+			//dd($phasesArr);
+			return view('projects.giveOpinion', [
+				"data"   => $questionsArr,
+				"phases" => $phasesArr,
+			]);
 		}
 		abort(404, "Geen huidige phase gevonden");
 		return NULL;
@@ -269,7 +296,8 @@ class ProjectController extends Controller
 		dd($request);
 	}
 
-	public function saveImage(Request $request, Project $project) {
+	public function saveImage(Request $request, Project $project)
+	{
 		$notAnImage = false;
 		$allowedExtensions = ["jpeg", "png"]; // from mime type => after the slash
 
@@ -328,7 +356,8 @@ class ProjectController extends Controller
 		$project->photo_path = $publicSaveFolder . "/" . $newImageName;
 	}
 
-	public function addTags(Request $request, Project $project) {
+	public function addTags(Request $request, Project $project)
+	{
 		//save tags with associated project
 		$project_tags = $request->input('tags');
 
@@ -337,17 +366,19 @@ class ProjectController extends Controller
 		$tagsId = array();
 		$tag_doesnt_exist = true;
 
-		foreach ( $project_tags as $project_tag )
+		foreach ($project_tags as $project_tag)
 		{
-			foreach( $all_tags as $all_tag)
+			foreach ($all_tags as $all_tag)
 			{
-				if($all_tag->name == $project_tag) {
+				if ($all_tag->name == $project_tag)
+				{
 					array_push($tagsId, $all_tag->id);
 					$tag_doesnt_exist = false;
 				}
 			}
 
-			if($tag_doesnt_exist) {
+			if ($tag_doesnt_exist)
+			{
 				$newTag = Tag::create(['name' => $project_tag]);
 				//$newTag = DB::table('tags')->select('id')->where('name', '=', $project_tag);
 				$newTagId = $newTag->id;
@@ -359,7 +390,8 @@ class ProjectController extends Controller
 		}
 
 		$cur_ids = array();
-		foreach($project->tags() as $tag){
+		foreach ($project->tags() as $tag)
+		{
 			$cur_ids[] = $tag->id;
 		}
 

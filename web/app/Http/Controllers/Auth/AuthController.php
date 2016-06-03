@@ -74,12 +74,15 @@ class AuthController extends Controller
 	 */
 	protected function create(array $data)
 	{
+		//dd(User::get()->count() == 0);
+		// Make the first added user the admin
 		return User::create([
 			'email'       => $data['email'],
 			'password'    => bcrypt($data['password']),
 			'firstname'   => $data['firstname'],
 			'lastname'    => $data['lastname'],
 			'postal_code' => $data['postal_code'],
+			'is_admin'    => User::get()->count() == 0,
 			'city'        => $data['city'],
 		]);
 	}
@@ -140,14 +143,15 @@ class AuthController extends Controller
 			else
 			{
 				// provider id not found in db, so add new user
-				$user = new User;
-				$user->firstname = $jsonData->firstName;
-				$user->lastname = $jsonData->lastName;
-				//$user->telephone = $jsonData->phonePrimary;
-				//$user->name = $jsonData->userName;
-				$user->email = $jsonData->emailPrimary;
+				$user = $this->create([
+					"email"       => $jsonData->emailPrimary,
+					"firstname"   => $jsonData->firstName,
+					"lastname"    => $jsonData->lastName,
+					"password"    => NULL,
+					"postal_code" => NULL,
+					"city"        => NULL,
+				]);
 				$user->verified = 1;
-				$user->save();
 				$user->token = NULL;
 				$user->save();
 
@@ -169,7 +173,7 @@ class AuthController extends Controller
 			dd($jsonResponse);
 		}
 		dd($jsonResponse->data);
-		return null;
+		return NULL;
 	}
 
 	/**

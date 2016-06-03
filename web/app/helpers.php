@@ -50,3 +50,12 @@ function checkIfWordIsIgnored($wordToCheck)
 	}
 	return false;
 }
+
+/**
+ * Gives back Carbon instance of today date
+ * @return string
+ *
+ */
+function today(){
+	return \Carbon\Carbon::today();
+}
