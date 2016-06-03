@@ -318,6 +318,8 @@ footer.footer, nav.navbar
 	background-color: rgba(248, 248, 248, 0);
 	border-color: transparent;
 	margin-bottom: 0;
+	overflow: hidden;
+	height: 90px;
 }
 
 nav .containerNav .navbar-header .navbar-brand img

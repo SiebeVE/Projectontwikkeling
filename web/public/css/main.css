@@ -1,451 +1,384 @@
-#wrapper
-{
-	width: 100%;
-	background: url(../images/stadbeeld.jpg) no-repeat;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
+#wrapper {
+    width: 100%;
+    background: url(../images/stadbeeld.jpg) no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
-nav.navbar
-{
-	background-color: transparent;
+nav.navbar {
+    background-color: transparent;
 }
 
-nav .container .navbar-brand
-{
-	height: 70px;
+nav .container .navbar-brand {
+    height: 70px;
 }
 
-#banner
-{
-	margin: auto;
-	padding: 3em 3em 0;
-	background: rgba(255, 255, 255, 0.7);
-	font-family: AntwerpenTall;
-	height: 11em;
-	color: black;
+#banner {
+    margin: auto;
+    padding: 3em 3em 0;
+    background: rgba(255, 255, 255, 0.7);
+    font-family: AntwerpenTall;
+    height: 11em;
+    color: black;
 }
 
-#banner #banner-wrapper
-{
-	width: 67.5em;
-	margin: auto;
+#banner #banner-wrapper {
+    width: 67.5em;
+    margin: auto;
 }
 
-#banner p
-{
-	padding: 0;
-	margin: 0;
+#banner p {
+    padding: 0;
+    margin: 0;
 }
 
-.banner-slogan
-{
-	font-size: 5.5em;
-	width: 10em;
-	float: left;
-	text-align: right;
-	margin-right: 1.5%;
-	line-height: 1.3em;
+.banner-slogan {
+    font-size: 5.5em;
+    width: 10em;
+    float: left;
+    text-align: right;
+    margin-right: 1.5%;
+    line-height: 1.3em;
 }
 
-.banner-text
-{
-	border-left: 5px black solid;
-	font-size: 1.5em;
-	width: 7em;
-	float: left;
-	padding-left: 1%;
-	line-height: 1.2em;
-	padding-top: 0.4em;
-	margin-top: 0;
+.banner-text {
+    border-left: 5px black solid;
+    font-size: 1.5em;
+    width: 7em;
+    float: left;
+    padding-left: 1%;
+    line-height: 1.2em;
+    padding-top: 0.4em;
+    margin-top: 0;
 }
 
-.banner-text p
-{
-	vertical-align: bottom;
+.banner-text p {
+    vertical-align: bottom;
 }
 
-div.infoBubble
-{
-	overflow: hidden !important;
-	line-height: 1.6;
-	color: white;
-	font-family: Roboto;
-	text-align: left;
+div.infoBubble {
+    overflow: hidden !important;
+    line-height: 1.6;
+    color: white;
+    font-family: Roboto;
+    text-align: left;
 
 }
 
-.infoProject
-{
-	margin: 0.5em;
-	padding: 2em;
-	padding-bottom: 0;
-	width: 600px;
-	min-height: 315px;
-	max-height: 450px;
-	overflow: hidden !important;
-	color: black;
+.infoProject {
+    margin: 0.5em;
+    padding: 2em;
+    padding-bottom: 0;
+    width: 600px;
+    min-height: 315px;
+    max-height: 450px;
+    overflow: hidden !important;
+    color: black;
 }
 
-.infoProject h3
-{
-	margin-bottom: 15px;
-	border-bottom: solid 2px black;
-	padding-bottom: 5px;
-	font-size: 2.4em;
-	margin-top: 0;
-	font-family: AntwerpenRegular;
+.infoProject h3 {
+    margin-bottom: 15px;
+    border-bottom: solid 2px black;
+    padding-bottom: 5px;
+    font-size: 2.4em;
+    margin-top: 0;
+    font-family: AntwerpenRegular;
 }
 
-.infoProject .projectlink
-{
-	margin-top: 0.5em;
-	font-size: 1.5em;
+.infoProject .projectlink {
+    margin-top: 0.5em;
+    font-size: 1.5em;
 }
 
-.infoProject .projectContent h5
-{
-	font-size: 1.4em;
-	font-family: AntwerpenRegular;
-	margin-bottom: 0.3em;
+.infoProject .projectContent h5 {
+    font-size: 1.4em;
+    font-family: AntwerpenRegular;
+    margin-bottom: 0.3em;
 }
 
-.infoProject h6
-{
-	font-size: 1.6em;
-	font-family: AntwerpenRegular;
-	margin-top: 2em;
+.infoProject h6 {
+    font-size: 1.6em;
+    font-family: AntwerpenRegular;
+    margin-top: 2em;
 }
 
-.infoBubble p
-{
-	font-size: 1.3em;
-	text-align: justify;
-	padding-right: 1em;
+.infoBubble p {
+    font-size: 1.3em;
+    text-align: justify;
+    padding-right: 1em;
 }
 
-.projectImageContainer
-{
-	width: 50%;
-	float: left;
-	height: 18em;
+.projectImageContainer {
+    width: 50%;
+    float: left;
+    height: 18em;
 }
 
-.projectImageContainer img
-{
-	height: 100%;
-	vertical-align: middle;
+.projectImageContainer img {
+    height: 100%;
+    vertical-align: middle;
 }
 
-.projectContent
-{
-	width: 50%;
-	float: left
+.projectContent {
+    width: 50%;
+    float: left
 }
 
-.projectImage
-{
-	/*width: 100%;*/
-	/*margin-top: 1.5em;*/
+.projectImageContainer .projectImage {
+    width: 100%;
+    /*margin-top: 1.5em;*/
 }
 
-footer.footer
-{
-	background-color: transparent;
+footer.footer {
+    background-color: transparent;
 }
 
 /***********************************************DASHBOARD***************************/
 
-.dashboard, .infoContainer, .containerProject, .register, .login, .admin, .containerPhase
-{
-	background: rgba(255, 255, 255, 0.9); /* For browsers that do not support gradients */
-	margin-top: 3.5%;
-	color: black;
+.dashboard, .infoContainer, .containerProject, .register, .login, .admin, .containerPhase {
+    background: rgba(255, 255, 255, 0.9); /* For browsers that do not support gradients */
+    margin-top: 3.5%;
+    color: black;
 }
 
-.table-hover > tbody > tr:hover
-{
-	background-color: inherit;
+.table-hover > tbody > tr:hover {
+    background-color: inherit;
 }
 
-.dashboard h1, .infoContainer h3
-{
-	font-family: AntwerpenRegular;
-	text-align: center;
-	margin-bottom: 1em;
+.dashboard h1, .infoContainer h3 {
+    font-family: AntwerpenRegular;
+    text-align: center;
+    margin-bottom: 1em;
 }
 
-.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th
-{
-	text-align: center;
-	font-size: 1.3em;
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    text-align: center;
+    font-size: 1.3em;
 
 }
 
-#createButton
-{
-	margin-bottom: 2em;
-	font-size: 1.3em;
-	margin-right: 1em;
+#createButton {
+    margin-bottom: 2em;
+    font-size: 1.3em;
+    margin-right: 1em;
 }
 
 /***********************************************Info pagina*******************************/
 
-.infoContainer h1, .register h1, .login h1, .admin h1
-{
-	font-size: 3em;
-	text-align: center;
-	margin-top: 1em;
-	padding-bottom: 0.5em;
-	border-bottom: dotted black 2px;
+.infoContainer h1, .register h1, .login h1, .admin h1 {
+    font-size: 3em;
+    text-align: center;
+    margin-top: 1em;
+    padding-bottom: 0.5em;
+    border-bottom: dotted black 2px;
 }
 
-.infoContainer #description
-{
-	height: 15.5em;
-	font-size: inherit;
+.infoContainer #description {
+    height: 15.5em;
+    font-size: inherit;
 }
 
-.infoContainer button
-{
-	margin-bottom: 3em;
+.infoContainer button {
+    margin-bottom: 3em;
 }
 
-i.fa.fa-map-marker, i.fa.fa-phone, i.fa.fa-envelope, i.fa.fa-instagram, i.fa.fa-facebook-official, i.fa.fa-twitter
-{
-	font-size: 4em;
+i.fa.fa-map-marker, i.fa.fa-phone, i.fa.fa-envelope, i.fa.fa-instagram, i.fa.fa-facebook-official, i.fa.fa-twitter {
+    font-size: 4em;
 }
 
-i.fa.fa-facebook-official, i.fa.fa-twitter
-{
-	margin-right: 0.4em;
+i.fa.fa-facebook-official, i.fa.fa-twitter {
+    margin-right: 0.4em;
 }
 
-.infoContainer #contact div div.icon
-{
-	text-align: center;
-	padding-left: 7.5em;
+.infoContainer #contact div div.icon {
+    text-align: center;
+    padding-left: 7.5em;
 }
 
-.infoContainer #contact div
-{
-	margin-top: 0.7em;
+.infoContainer #contact div {
+    margin-top: 0.7em;
 }
 
-.infoContainer #contact div p
-{
-	text-align: center;
+.infoContainer #contact div p {
+    text-align: center;
 }
 
-.infoContainer #contact div h3
-{
-	margin-bottom: 0.3em;
-	margin-top: 0.2em;
+.infoContainer #contact div h3 {
+    margin-bottom: 0.3em;
+    margin-top: 0.2em;
 }
 
-.infoContainer #contact #teleNumber, .infoContainer #contact #emailInfo
-{
-	margin-top: 2em;
+.infoContainer #contact #teleNumber, .infoContainer #contact #emailInfo {
+    margin-top: 2em;
 }
 
-.infoContainer #contact #teleNumber h3, .infoContainer #contact #emailInfo h3
-{
-	margin-top: 0.7em;
+.infoContainer #contact #teleNumber h3, .infoContainer #contact #emailInfo h3 {
+    margin-top: 0.7em;
 }
 
-.infoContainer #contact #social-media #iconsSocialMedia
-{
-	margin-top: 1em;
-	padding-top: 1em;
-	border-top: 1px solid black;
+.infoContainer #contact #social-media #iconsSocialMedia {
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: 1px solid black;
 }
 
-.infoContainer #contact #social-media #iconsSocialMedia div
-{
-	text-align: center;
+.infoContainer #contact #social-media #iconsSocialMedia div {
+    text-align: center;
 
 }
 
 /*********************************************************************PROJECT AANMAKEN******************************/
 
-#tags
-{
-	margin-top: 1.5em;
+#tags {
+    margin-top: 1.5em;
 }
 
-.containerProject h1, .containerPhase h1
-{
-	padding: 0.6em;
-	border-bottom: dotted 3px black;
-	margin-bottom: 1em;
+.containerProject h1, .containerPhase h1 {
+    padding: 0.6em;
+    border-bottom: dotted 3px black;
+    margin-bottom: 1em;
 }
 
-.containerProject
-{
-	margin-top: 2.5%;
+.containerProject {
+    margin-top: 2.5%;
 }
 
-.containerProject .createButton.btn, .containerPhase .createButton.btn
-{
-	margin-bottom: 2em;
-	font-size: 1.2em;
-	padding: 0.8em;
-	background-color: #0091D3;
-	border-radius: 4px;
-	border: none;
-	color: white;
-	transition: background-color .25s ease-in-out;
-	-moz-transition: background-color .25s ease-in-out;
-	-webkit-transition: background-color .25s ease-in-out;
+.containerProject .createButton.btn, .containerPhase .createButton.btn, .giveOpinion .createButton.btn {
+    margin-bottom: 2em;
+    font-size: 1.2em;
+    padding: 0.8em;
+    background-color: #0091D3;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    transition: background-color .25s ease-in-out;
+    -moz-transition: background-color .25s ease-in-out;
+    -webkit-transition: background-color .25s ease-in-out;
 }
 
-.containerProject .createButton.btn:hover, .containerPhase .createButton.btn:hover
-{
-	background-color: #0064B4;
+.containerProject .createButton.btn:hover, .containerPhase .createButton.btn:hover, .giveOpinion .createButton.btn:hover {
+    background-color: #0064B4;
 }
 
-.containerProject h2, .containerPhase h2
-{
-	border-bottom: black dotted 2px;
-	padding-bottom: 0.5em;
-	margin-bottom: 1em;
+.containerProject h2, .containerPhase h2 {
+    border-bottom: black dotted 2px;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
 }
 
-.containerProject label, .containerPhase label
-{
-	font-family: AntwerpenRegular;
+.containerProject label, .containerPhase label {
+    font-family: AntwerpenRegular;
 }
 
 /***************************************************REGISTER*******************/
 
-.register h3, .login h3, .admin h3
-{
-	font-family: AntwerpenRegular;
-	text-align: center;
-	margin-bottom: 1.25em;
+.register h3, .login h3, .admin h3 {
+    font-family: AntwerpenRegular;
+    text-align: center;
+    margin-bottom: 1.25em;
 }
 
-.register label, .login label, .admin h3
-{
-	font-family: AntwerpenRegular;
-	font-size: 1.3em;
+.register label, .login label, .admin h3 {
+    font-family: AntwerpenRegular;
+    font-size: 1.3em;
 }
 
-.register input, .login input[type=password], .login input[type=email], .admin input
-{
-	height: 46px;
-	padding: 10px 16px;
-	font-size: 18px;
-	line-height: 1.3333333;
-	border-radius: 6px;
+.register input, .login input[type=password], .login input[type=email], .admin input {
+    height: 46px;
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.3333333;
+    border-radius: 6px;
 }
 
-.register .registerButton, .messageButton, .login .loginButton
-{
-	margin-top: 0.5em;
-	padding: 0.5em 1em;
-	font-size: 1.3em;
+.register .registerButton, .messageButton, .login .loginButton {
+    margin-top: 0.5em;
+    padding: 0.5em 1em;
+    font-size: 1.3em;
 }
 
-.register #aProfiel, .login #aProfiel
-{
-	margin-bottom: 1em;
-	font-size: 1.3em;
+.register #aProfiel, .login #aProfiel {
+    margin-bottom: 1em;
+    font-size: 1.3em;
 }
 
 /*************************************************ADMIN*********************/
 
-.admin-panel
-{
-	text-align: center;
+.admin-panel {
+    text-align: center;
 }
 
-.admin-panel h2
-{
-	font-family: AntwerpenRegular;
-	margin-top: 1em;
+.admin-panel h2 {
+    font-family: AntwerpenRegular;
+    margin-top: 1em;
 }
 
-.admin-panel .admin-list
-{
-	text-align: right;
-	font-size: 1.2em;
+.admin-panel .admin-list {
+    text-align: right;
+    font-size: 1.2em;
 }
 
-.admin-panel .admin-info
-{
-	text-align: left;
-	font-size: 1.2em;
+.admin-panel .admin-info {
+    text-align: left;
+    font-size: 1.2em;
 }
 
-.admin-panel .danger-message
-{
-	margin-top: 2em;
-	margin-bottom: 3em;
+.admin-panel .danger-message {
+    margin-top: 2em;
+    margin-bottom: 3em;
 }
 
-.admin-panel .admin-controls
-{
-	margin-bottom: 1.5em;
-	margin-top: 2em;
+.admin-panel .admin-controls {
+    margin-bottom: 1.5em;
+    margin-top: 2em;
 }
 
-.admin-controls .text-danger
-{
-	font-size: 1.2em;
-	padding-top: 0.4em;
+.admin-controls .text-danger {
+    font-size: 1.2em;
+    padding-top: 0.4em;
 }
 
 /************************************************************ADD PHASE************************/
 
-.containerPhase .createButton.btn
-{
-	margin-top: 1em;
+.containerPhase .createButton.btn {
+    margin-top: 1em;
 }
 
-.noUi-base, .noUi-handle
-{
-	background-color: #0091D3;
+.noUi-base, .noUi-handle {
+    background-color: #0091D3;
 }
 
-.control-field
-{
-	padding: 2em;
-	margin-top: 1.5em;
+.control-field {
+    padding: 2em;
+    margin-top: 1.5em;
 }
 
-.containerPhase b.form-label
-{
-	font-family: AntwerpenRegular;
+.containerPhase b.form-label {
+    font-family: AntwerpenRegular;
 }
 
-.containerPhase h1
-{
-	margin-bottom: 0.3em;
+.containerPhase h1 {
+    margin-bottom: 0.3em;
 }
 
-.containerPhase p.text-muted
-{
-	margin-bottom: 2em;
-	margin-left: 1.5em;
+.containerPhase p.text-muted {
+    margin-bottom: 2em;
+    margin-left: 1.5em;
 }
 
-.containerPhase label.form-label
-{
+.containerPhase label.form-label {
 }
 
-.containerPhase .grid-item
-{
-	padding: 1em;
-	border: none;
-	border-radius: 2px;
+.containerPhase .grid-item {
+    padding: 1em;
+    border: none;
+    border-radius: 2px;
 }
 
-.containerPhase .grid-item:hover
-{
-	background-color: rgba(0, 0, 0, 0.1);
+.containerPhase .grid-item:hover {
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .containerPhase .grid-item i.fa
@@ -460,50 +393,158 @@ i.fa.fa-facebook-official, i.fa.fa-twitter
 
 /*******************************************************************PROJECT OVERZICHT****************************************/
 
-.projectbekijken h3, .projectbekijken h5
-{
-	font-family: AntwerpenRegular;
+.projectbekijken h3, .projectbekijken h5 {
+    font-family: AntwerpenRegular;
 }
 
-.projectbekijken h3
-{
-	font-size: 2.2em;
+.projectbekijken h3 {
+    font-size: 2.2em;
 }
 
-.projectbekijken
-{
-	min-height: 18em;
-	margin-bottom: 1.5em;
-	padding-bottom: 1.5em;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+.projectbekijken {
+    min-height: 18em;
+    margin-bottom: 2.5em;
+    padding-bottom: 2.5em;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    display: block;
 }
 
-.projectbekijken:last-child
-{
-	border-bottom: none;
-	margin-bottom: 2em;
+.projectbekijken:last-child {
+    border-bottom: none;
+    margin-bottom: 2em;
 }
 
-.projectbekijken p
-{
-	line-height: 2em;
+.projectbekijken p {
+    line-height: 2em;
 }
 
-.projectbekijken h5
-{
-	margin-top: 1em;
-	font-size: 1.2em;
+.projectbekijken h5 {
+    margin-top: 1em;
+    font-size: 1.2em;
 }
 
-.projectbekijken .datums
-{
-	padding-left: 0;
-	margin-top: 1em;
-	font-size: 1.3em;
+.projectbekijken .datums {
+    padding-left: 0;
+    margin-top: 1em;
+    font-size: 1.3em;
 }
 
-.projectoverzicht h1
-{
-	margin-top: 1.5em;
+.projectoverzicht h1 {
+    margin-top: 1.5em;
+    padding-bottom: 0.65em;
+    margin-bottom: 0.3em;
+    border-bottom: 2px dotted black;
 }
+
+.projectoverzicht > h3 {
+    text-align: center;
+    margin-bottom: 1.5em;
+}
+
+.linkToProject {
+    display: block;
+}
+
+.projectoverzicht .imagePlaceholder
+{
+    display: block;
+    width: 100%;
+    height: 26em;
+    border: 1px solid #CCCCCC;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.projectoverzicht .projectImageSlide {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+    horizontal-align: middle;
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+}
+
+.carousel {
+    width: 1050px;
+    margin: 0 30px;
+    margin-bottom: 3em;
+    margin-top: 2em;
+}
+
+.carousel-caption {
+    background-color: rgba(0,0,0,0.35);
+}
+
+.carousel-caption a {
+    color: white;
+    font-weight: 600;
+    border-bottom: white solid 1px;
+    margin-bottom: 1.5em;
+
+}
+
+.carousel-caption h3 {
+    font-family: AntwerpenTall;
+}
+
+.carousel-caption a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.hoverprojectlink {
+    height: 2em;
+    width: 11em;
+    margin: 0 auto;
+}
+
+.hoverprojectlink:hover {
+    -webkit-animation: pulsate 3s ease-out;
+    -webkit-animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes pulsate {
+    0% { font-size: 1.0em;}
+    5% { font-size: 1.0em;}
+    30% { font-size: 1.13em;}
+    55% { font-size: 1.0em;}
+    80% { font-size: 1.15em;}
+    100% {font-size: 1.0em;}
+
+}
+
+/**************************************************************PHASE VIEW*******************************/
+
+.giveOpinion h4{
+    text-align: center;
+    font-family: AntwerpenRegular;
+    font-size: 1.8em;
+    padding: 1em 0 0.35em 0;
+}
+
+.giveOpinion #questionList {
+    border-bottom: solid 1px #a6a6a6;
+    margin-bottom: 1em;
+}
+
+.giveOpinion h1 {
+    border-bottom: 2px dotted black;
+    padding-bottom: 0.35em;
+}
+
+.giveOpinion h5 {
+    font-size: 1.2em;
+    font-family: AntwerpenRegular;
+}
+
+.cd-horizontal-timeline .events-content p {
+    color: black;
+}
+
+
 

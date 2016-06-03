@@ -395,7 +395,7 @@ Main Components
 
 .cd-horizontal-timeline .events-content li > *
 {
-	margin: 0 auto;
+	margin: 0 auto 0.3em 0;
 }
 
 .cd-horizontal-timeline .events-content em
@@ -413,7 +413,7 @@ Main Components
 .cd-horizontal-timeline .events-content p
 {
 	font-size: 1.4rem;
-	color: #959595;
+	color: #4d4d4d;
 }
 
 .cd-horizontal-timeline .events-content em, .cd-horizontal-timeline .events-content p

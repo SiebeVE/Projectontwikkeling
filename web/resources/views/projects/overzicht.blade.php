@@ -21,10 +21,61 @@
 
     <div class="container dashboard">
         <div class="col-md-12 projectoverzicht">
-            <h1>Overzicht Projecten</h1>
+            <h1>Projecten van Stad Antwerpen</h1>
+            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    @foreach($projects as $project)
+                        <li data-target="#myCarousel" data-slide-to="{{$project->id}}" ></li>
+                    @endforeach
+                </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+
+                    <div  class="item active carouselholder">
+                        <div class="imagePlaceholder">
+                            <img class="projectImageSlide" src="{{ url('/images/Grote_Markt.jpg') }}" alt="project foto"/>
+                            <div class="carousel-caption">
+                                <h3>Bekijk en beoordeel de projecten</h3>
+                                <p>Elke fase van een project heeft jou mening nodig!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    @foreach($projects as $project)
+                        <div  class="item carouselholder">
+                            <div class="imagePlaceholder">
+                                <img class="projectImageSlide" src="{{$project->photo_path}}" alt="project foto"/>
+                                <div class="carousel-caption">
+                                    <h3>{{$project->name}}</h3>
+                                    <p>{{$project->description}}</p>
+                                    <div class="hoverprojectlink">
+                                    <a href="{{ url('/project/beoordelen',$project->id) }}">Bekijk het project</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+
+                <!-- Left and right controls -->
+                <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
 
                     @foreach($projects as $project)
                         <div class="projectbekijken col-md-12">
+
                             <div class="col-md-8 projectbekijkeninfo">
                                 <h3><a href="{{ url('/project/beoordelen',$project->id) }}">{{$project->name}}</a></h3>
                                 <p>{{$project->description}}</p>
