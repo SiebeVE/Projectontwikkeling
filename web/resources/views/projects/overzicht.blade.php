@@ -26,7 +26,7 @@
 
                     @foreach($projects as $project)
                         <div class="projectbekijken col-md-12">
-                            <div class="col-md-8 projectbekijkeninfo">
+                             <div class="col-md-8 projectbekijkeninfo">
                                 <h3><a href="#">{{$project->name}}</a></h3>
                                 <p>{{$project->description}}</p>
                                 <h5>Adres: {{$project->address}}</h5>

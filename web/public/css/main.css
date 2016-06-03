@@ -411,6 +411,7 @@ i.fa.fa-times {
     margin-bottom: 1.5em;
     padding-bottom: 2.5em;
     border-bottom: 1px solid rgba(0,0,0,0.3);
+    display:block;
 }
 
 .projectbekijken:last-child {
@@ -443,5 +444,9 @@ i.fa.fa-times {
 .projectoverzicht > h3 {
     text-align: center;
     margin-bottom: 1.5em;
+}
+
+.linkToProject {
+    display:block;
 }
 

@@ -36,7 +36,7 @@ function initMap() {
 
     var myOptions = {
         zoom: 13,
-        mapTypeId: google.maps.MapTypeId.SATELITE,
+        mapTypeId: google.maps.MapTypeId.TERRAIN,
         center: Antwerpen
     }
 
@@ -145,6 +145,7 @@ function initMap() {
         //infoBubble.open(map, marker);
 
         google.maps.event.addListener(marker, 'click', function () {
+            var currentmarker = this;
             /*if(!infowindow.opened) {
                 infowindow.open(map, this);
                 infowindow.opened = true;
@@ -160,7 +161,7 @@ function initMap() {
             else {
                 infoBubble.close(map, this);
             }
-            toggleBounce(this);
+            setTimeout(function(){ currentmarker.setAnimation(null);; }, 500);
         });
         new google.maps.event.addListener(marker, 'mouseover', function(e) {
             if (!infoBubble.isOpen()) {
