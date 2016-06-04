@@ -109,7 +109,8 @@ class ProjectController extends Controller
 			'description' => 'required|string|max:600',
 			'address'     => 'required',
 			'longitude'   => 'required',
-			'latitude'    => 'required',];
+			'latitude'    => 'required',
+			'tags[]'		=>	'required',];
 
 		$phases = $project->phases;
 
