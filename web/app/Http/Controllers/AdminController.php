@@ -299,6 +299,11 @@ class AdminController extends Controller
 						]);
 					}
 				}
+				if(array_has($question, "media") && $question["media"] != "")
+				{
+					$questionDatabase->media = $question["media"];
+					$questionDatabase->save();
+				}
 			}
 		}
 		else

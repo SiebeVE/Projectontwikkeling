@@ -461,7 +461,7 @@
 						$newBlock.data("youtubeurl", youtubeUrl);
 						$input = $("<div>").attr("id", inputName);
 
-						$label = $("<b>").addClass("form-label").text($("#youtube-title").val()).data("sort", typeOfField).data("blocknumber", blockNumber);
+						$label = $("<b>").addClass("form-label").text($("#youtube-title").val()).data("sort", typeOfField).data("blocknumber", blockNumber).data("youtubeid", youtubeId);
 						// $input = $("<input>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
 						console.log($label);
 						console.log($input);
@@ -684,6 +684,9 @@
 					$(itemElems).each(function ( i, itemElem ) {
 						var $question = $(itemElem).find(".form-label").first();
 						var $answers = $question.next();
+						console.log("questions");
+						console.log($question);
+						console.log("answers");
 						console.log($answers);
 						var questionText = $question.text();
 						var sortQuestion = $question.data("sort");
@@ -707,20 +710,15 @@
 						console.log(newElement);
 
 						switch (sortQuestion) {
-							case "text":
+							case "picture":
+								newElement.media = $answers.find("img").data("filename");
+								console.log($answers.find("img").data("filename"));
 								break;
-							case "textarea":
+							case "youtube":
+								newElement.media = $question.data("youtubeid");
+								console.log($question.data("youtubeid"));
 								break;
 							case "checkbox":
-								newElement.answers = {};
-								// Loop through divs with checkbox
-								$answers.children().each(function ( i ) {
-									console.log("antwoord: " + i);
-									var answer = $(this).find("label").first().text();
-									console.log(answer);
-									newElement.answers[ i ] = answer;
-								});
-								break;
 							case "radio":
 								newElement.answers = {};
 								// Loop through divs with checkbox
@@ -734,7 +732,7 @@
 						}
 
 						console.log("*******************");
-						console.log(newElement);
+						// console.log(newElement);
 
 						formData.elements[ i ] = newElement;
 					});
