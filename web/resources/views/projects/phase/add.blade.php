@@ -39,6 +39,7 @@
 			<form name="createPhase" method="POST">
 				{!! csrf_field() !!}
 				<input type="hidden" name="numberOfFields" id="numberOfFields" value="0">
+				<input type="hidden" class="hidden" name="token" id="token" value="{{ $token }}">
 				<div id="example-field" class="grid">
 					<div class="gutter-sizer"></div>
 					<div class="grid-size"></div>
@@ -47,10 +48,10 @@
 					<div class="sort-control">
 						<div class="form-group">
 							<b class="form-label">Wat wil je toevoegen?</b>
-							<div class="active" data-sort="question"><span><i class="fa fa-comment-o"
+							<div class="active controlsType" data-sort="question"><span><i class="fa fa-comment-o"
 																			  aria-hidden="true"></i> Vragen</span>
 							</div>
-							<div data-sort="media"><span><i class="fa fa-picture-o" aria-hidden="true"></i> Media</span>
+							<div data-sort="media" class="controlsType"><span><i class="fa fa-picture-o" aria-hidden="true"></i> Media</span>
 							</div>
 						</div>
 					</div>
@@ -194,6 +195,7 @@
 		})( window.jQuery || window.Zepto );
 	</script>
 	<script src="https://cdn.jsdelivr.net/sweetalert2/3.2.3/sweetalert2.min.js"></script>
+	<script src="{{ url('/js/jquery.form.min.js')}}"></script>
 	<script src="{{ url('/js/draggabilly.pkgd.js') }}"></script>
 	<script src="{{ url('/js/packery.pkgd.min.js') }}"></script>
 	<script src="{{ url('/js/nouislider.min.js') }}"></script>

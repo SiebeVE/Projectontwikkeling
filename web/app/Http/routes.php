@@ -97,6 +97,7 @@ Route::group(["prefix" => "api", 'middleware' => 'api'], function ()
 	Route::group(["prefix" => "post"], function ()
 	{
 		Route::post('statistics/word', 'ApiController@addIgnoredWord');
+		Route::post('picture/phase', 'ApiController@postPicture');
 	});
 
 	Route::group(["prefix" => "delete"], function ()

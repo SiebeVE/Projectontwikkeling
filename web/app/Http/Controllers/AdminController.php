@@ -203,9 +203,14 @@ class AdminController extends Controller
 	{
 		$projectWithRelations = $project->load('phases');
 		$requestedPhase = $projectWithRelations->phases[$phaseNumber - 1];
+
+		$user = Auth::user();
+		$token = JWTAuth::fromUser($user);
+
 		//dd($requestedPhase);
 		return view('projects.phase.add', [
-			'phase' => $requestedPhase
+			'phase' => $requestedPhase,
+			"token" => $token,
 		]);
 	}
 

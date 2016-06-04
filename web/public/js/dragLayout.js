@@ -1,4 +1,32 @@
 (function ( $ ) {
+	/* ----------------------------------------------Handle picture---------------------------------------------- */
+	/**
+	 * Function to get the image of the input file and put it in an img src
+	 *
+	 * @param input
+	 */
+	function readURL( input ) {
+		if (input.files && input.files[ 0 ]) {
+			var reader = new FileReader();
+
+			reader.onload = function ( e ) {
+				$('#imagePlaceholder').find('img').attr('src', e.target.result);
+				// console.log("loaded");
+				var $image = $(".upload #imagePlaceholder img");
+				$image.show();
+				$(".upload #imagePlaceholder label i").hide();
+				// console.log("done1");
+			};
+			// console.log("added");
+			reader.readAsDataURL(input.files[ 0 ]);
+		}
+	}
+
+	// When the image input has changed
+	$("#input-specific-media").on("change", "#image", function () {
+		readURL(this);
+	});
+
 	function getYoutubeIdFromUrl( url ) {
 		var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
 		var match = url.match(regExp);
@@ -10,9 +38,35 @@
 		}
 	}
 
+	// show item order after layout
+	function orderItems() {
+		console.log("okOrder");
+		var itemElems = $grid.packery('getItemElements');
+		$(itemElems).each(function ( i, itemElem ) {
+			// $( itemElem ).text( i + 1 );
+			console.log(itemElem);
+			console.log(i + 1);
+		});
+	}
+
+	function emptyForm() {
+		$("#question").val("");
+		$("#sortQuestion").val("choose");
+		$("#sortQuestion").change();
+	}
+
+	function emptyFormMedia() {
+		$("#sortMedia").val("choose");
+		$("#sortMedia").change();
+	}
+
 	var rangeSlider = document.getElementById('slider');
 	var rangeSliderMedia = document.getElementById('slider-media');
 	var minimumRangeMedia = 1;
+
+	var ytPlayers = {};
+
+	var pictureSubmit = false;
 
 	var settingsSlider = {
 		start: [ 1 ],
@@ -106,10 +160,6 @@
 		var $inputPlace = $("#input-specific-media");
 		console.log("ok");
 		switch ($(this).val()) {
-			// <div class="form-group">
-			// 	<label for="question" class="control-label">Vraag</label>
-			// 	<input type="text" id="question" name="question" class="form-control">
-			// 	</div>
 			case "youtube":
 				minimumRangeMedia = 2;
 				rangeSliderMedia.noUiSlider.set(2);
@@ -137,6 +187,33 @@
 				break;
 			case "picture":
 				minimumRangeMedia = 1;
+				var $div = $("<div>").addClass("form-group");
+				var $labelT = $("<label>").addClass("control-label").attr("for", "foto-title").text("Zet hier de titel voor boven de foto.");
+				var $inputT = $("<input>")
+					.attr("type", "text")
+					.addClass("form-control")
+					.attr("name", "foto-title")
+					.attr("id", "foto-title")
+					.attr("placeholder", "Blok titel");
+
+				var className = "grid-picture-" + Math.floor(rangeSliderMedia.noUiSlider.get());
+
+				var $upload = $("<div>").addClass("upload").addClass(className);
+				var $labelUpload = $("<label>").addClass("label-control").attr("for", "image").text("Upload foto");
+				var $placeholder = $("<div>").attr("id", "imagePlaceholder");
+				var $image = $("<img>").attr("alt", "Fase afbeelding");
+				var $labelImage = $("<label>").attr("for", "image").append($("<i>").addClass("fa").addClass("fa-plus"));
+				var $form = $("<form>").attr("enctype", "multipart/form-data").attr("method", "post").attr("id", "picture-form").attr("action", "/api/post/picture/phase");
+				var $inputImage = $("<input>").attr("type", "file").attr("name", "image").attr("id", "image");
+				$form.append($inputImage);
+
+				$placeholder.append($labelImage.append($image)).append($form);
+				$upload.append($labelUpload).append($placeholder);
+
+				$div.append($helpText).append($labelT).append($inputT).append($upload);
+				$inputPlace.slideUp(600, function () {
+					$inputPlace.empty().append($div).slideDown();
+				});
 				break;
 			default:
 				$inputPlace.slideUp(600, function () {
@@ -146,12 +223,6 @@
 		}
 		console.log($(this).val());
 	});
-
-	function emptyForm() {
-		$("#question").val("");
-		$("#sortQuestion").val("choose");
-		$("#sortQuestion").change();
-	}
 
 	$(".control-field").on("click", "#addBlock", function ( e ) {
 		console.log(e);
@@ -282,8 +353,8 @@
 			var $close = $("<div>").addClass("controls");
 			var $edit = $("<i>").addClass("fa").addClass("fa-pencil");
 			var $cross = $("<i>").addClass("cross").addClass("fa").addClass("fa-times");
-			$close.append($edit);
-			$close.append($cross);
+			var $move = $("<i>").addClass("fa").addClass("fa-arrows");
+			$close.append($move).append($edit).append($cross);
 
 			$newBlock.append($close).append($label).append($input);
 			console.log($newBlock);
@@ -375,14 +446,16 @@
 
 				inputName = "media-" + blockNumber;
 			}
+
 			switch (typeOfField) {
 				case "youtube":
 					var youtubeUrl = $("#youtube-url").val();
 					var youtubeId = getYoutubeIdFromUrl(youtubeUrl);
-					if(youtubeId !== null) {
+					if (youtubeId !== null) {
 						console.log(youtubeId);
 						// Toevoegen van inputs
-						$input = $("<div>").attr("id", inputName).data("youtubeurl", youtubeUrl);
+						$newBlock.data("youtubeurl", youtubeUrl);
+						$input = $("<div>").attr("id", inputName);
 
 						$label = $("<b>").addClass("form-label").text($("#youtube-title").val()).data("sort", typeOfField).data("blocknumber", blockNumber);
 						// $input = $("<input>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
@@ -394,25 +467,59 @@
 							'Geen geldige URL',
 							'De opgegeven URL is geen geldige Youtube url.',
 							'error'
-						)
+						);
+						failedById = true;
 					}
 					break;
 				case "picture":
 					console.log("ok-area");
+					// Uploaden ajax picture
+
+					var $imagePlaceholder = $("<div>").addClass("imagePlaceholder");
+					var $image = $("<img>");
+					var $waitText = $("<p>").text("Even geduld aub, de foto wordt geüpload...");
+
+					var optionsAjax = {
+						success: function ( response, statusText, xhr ) {
+							$image.attr("src", response[ "path" ] + "/" + response[ "filename" ]).data("filename", response["filename"]);
+							$image.show();
+							$waitText.hide();
+							$image[0].addEventListener("load", function () {
+								console.log("loaded image");
+								$grid.packery('shiftLayout');
+							});
+						},
+						// async: false,
+						beforeSend: function ( request ) {
+							request.setRequestHeader("Authorization", "Bearer " + $("#token").val());
+						},
+						dataType: 'json'
+					};
+					pictureSubmit = true;
+					$("#picture-form").ajaxForm(optionsAjax).submit();
+					pictureSubmit = false;
 					// Toevoegen van inputs
-					$label = $("<label>").addClass("form-label").text(question).attr("for", inputName).data("sort", typeOfField).data("blocknumber", blockNumber);
-					$input = $("<textarea>").addClass("form-control").attr("id", inputName).attr("name", inputName);
+
+					// http://blog.teamtreehouse.com/wp-content/uploads/2015/05/InternetSlowdown_Day.gif
+					$label = $("<b>").addClass("form-label").text($("#picture-title").val()).data("sort", typeOfField).data("blocknumber", blockNumber);
+
+					$input = $("<div>").attr("id", inputName);
+
+					$imagePlaceholder.append($image).append($waitText);
+					$image.hide();
+					$input.append($imagePlaceholder);
+
 					console.log($label);
 					console.log($input);
 					break;
 			}
 
-			if(!failedById) {
+			if (!failedById) {
 				var $close = $("<div>").addClass("controls");
-				var $edit = $("<i>").addClass("fa").addClass("fa-pencil");
+				var $edit = $("<i>").addClass("fa").addClass("fa-pencil").addClass("mediaControl");
 				var $cross = $("<i>").addClass("cross").addClass("fa").addClass("fa-times");
-				$close.append($edit);
-				$close.append($cross);
+				var $move = $("<i>").addClass("fa").addClass("fa-arrows");
+				$close.append($move).append($edit).append($cross);
 
 				$newBlock.append($close).append($label).append($input);
 				console.log($newBlock);
@@ -433,9 +540,13 @@
 						videoId: youtubeId,
 						playerVars: {
 							showinfo: 0,
-							rel: 0
+							rel: 0,
+							wmode: "opaque"
 						}
 					});
+
+					ytPlayers[ inputName ] = ytPlayer;
+					console.log(ytPlayers);
 					$newBlock.fitVids();
 				}
 
@@ -446,17 +557,6 @@
 			}
 		}
 	});
-
-	// show item order after layout
-	function orderItems() {
-		console.log("okOrder");
-		var itemElems = $grid.packery('getItemElements');
-		$(itemElems).each(function ( i, itemElem ) {
-			// $( itemElem ).text( i + 1 );
-			console.log(itemElem);
-			console.log(i + 1);
-		});
-	}
 
 	// Bind events
 	$grid.on('layoutComplete', orderItems);
@@ -509,105 +609,112 @@
 			console.log(minimumRangeMedia);
 			rangeSliderMedia.noUiSlider.set(minimumRangeMedia);
 		}
+
+		if ($("#sortMedia").val() == "picture") {
+			var className = "grid-picture-" + Math.floor(rangeSliderMedia.noUiSlider.get());
+			$(".upload").removeClass().addClass(className).addClass("upload");
+		}
 	});
 
 	$("form[name=createPhase]").submit(function ( e ) {
-		e.preventDefault();
-		e.stopPropagation();
-		swal({
-			title: 'Fase toevoegen',
-			text: "Ben je zeker dat je de fase wil toevoegen?",
-			type: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Ja, toevoegen die handel!',
-			cancelButtonText: 'Nee, ik ben nog iets vergeten!',
-			confirmButtonClass: 'btn btn-success',
-			cancelButtonClass: 'btn btn-danger',
-			buttonsStyling: false
-		}).then(function ( isConfirm ) {
-			if (isConfirm === true) {
-				console.log("Form submited");
-				var itemElems = $grid.packery('getItemElements');
+		if(!pictureSubmit) {
+			e.preventDefault();
+			e.stopPropagation();
+			swal({
+				title: 'Fase toevoegen',
+				text: "Ben je zeker dat je de fase wil toevoegen?",
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Ja, toevoegen die handel!',
+				cancelButtonText: 'Nee, ik ben nog iets vergeten!',
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger',
+				buttonsStyling: false
+			}).then(function ( isConfirm ) {
+				if (isConfirm === true) {
+					console.log("Form submited");
+					var itemElems = $grid.packery('getItemElements');
 
-				// Get height of parent
-				var parentHeight = $("#example-field").css("height");
-				var formData = {
-					parentHeight: parentHeight,
-					elements: {}
-				};
-				console.log(formData);
-				// Make json of the elements
-				$(itemElems).each(function ( i, itemElem ) {
-					var $question = $(itemElem).find(".form-label").first();
-					var $answers = $question.next();
-					console.log($answers);
-					var questionText = $question.text();
-					var sortQuestion = $question.data("sort");
-
-					var leftOffset = ((parseInt($(itemElem).css("left")) / $("#example-field").width() * 100).toFixed(4)) + "%";
-					var topOffset = $(itemElem).css("top");
-
-					var width = $(itemElem).data("width");
-
-
-					var newElement = {
-						sort: sortQuestion,
-						question: questionText,
-						options: {
-							left: leftOffset,
-							top: topOffset,
-							width: width
-						}
+					// Get height of parent
+					var parentHeight = $("#example-field").css("height");
+					var formData = {
+						parentHeight: parentHeight,
+						elements: {}
 					};
+					console.log(formData);
+					// Make json of the elements
+					$(itemElems).each(function ( i, itemElem ) {
+						var $question = $(itemElem).find(".form-label").first();
+						var $answers = $question.next();
+						console.log($answers);
+						var questionText = $question.text();
+						var sortQuestion = $question.data("sort");
 
-					console.log(newElement);
+						var leftOffset = ((parseInt($(itemElem).css("left")) / $("#example-field").width() * 100).toFixed(4)) + "%";
+						var topOffset = $(itemElem).css("top");
 
-					switch (sortQuestion) {
-						case "text":
-							break;
-						case "textarea":
-							break;
-						case "checkbox":
-							newElement.answers = {};
-							// Loop through divs with checkbox
-							$answers.children().each(function ( i ) {
-								console.log("antwoord: " + i);
-								var answer = $(this).find("label").first().text();
-								console.log(answer);
-								newElement.answers[ i ] = answer;
-							});
-							break;
-						case "radio":
-							newElement.answers = {};
-							// Loop through divs with checkbox
-							$answers.children().each(function ( i ) {
-								console.log("antwoord: " + i);
-								var answer = $(this).find("label").first().text();
-								console.log(answer);
-								newElement.answers[ i ] = answer;
-							});
-							break;
-					}
+						var width = $(itemElem).data("width");
 
-					console.log("*******************");
-					console.log(newElement);
 
-					formData.elements[ i ] = newElement;
-				});
-				console.log(formData);
+						var newElement = {
+							sort: sortQuestion,
+							question: questionText,
+							options: {
+								left: leftOffset,
+								top: topOffset,
+								width: width
+							}
+						};
 
-				// Make dummy form for sending builded json
-				var $dummyForm = $("<form>").attr("method", "POST");
-				var $dummyInput = $("<input>").attr("name", "data").val(JSON.stringify(formData));
-				// Fetch the csrf token
-				var $token = $("input[name=_token]").clone();
-				$dummyForm.append($dummyInput).append($token);
-				$("body").append($dummyForm);
-				$dummyForm.submit();
-			}
-		});
+						console.log(newElement);
+
+						switch (sortQuestion) {
+							case "text":
+								break;
+							case "textarea":
+								break;
+							case "checkbox":
+								newElement.answers = {};
+								// Loop through divs with checkbox
+								$answers.children().each(function ( i ) {
+									console.log("antwoord: " + i);
+									var answer = $(this).find("label").first().text();
+									console.log(answer);
+									newElement.answers[ i ] = answer;
+								});
+								break;
+							case "radio":
+								newElement.answers = {};
+								// Loop through divs with checkbox
+								$answers.children().each(function ( i ) {
+									console.log("antwoord: " + i);
+									var answer = $(this).find("label").first().text();
+									console.log(answer);
+									newElement.answers[ i ] = answer;
+								});
+								break;
+						}
+
+						console.log("*******************");
+						console.log(newElement);
+
+						formData.elements[ i ] = newElement;
+					});
+					console.log(formData);
+
+					// Make dummy form for sending builded json
+					var $dummyForm = $("<form>").attr("method", "POST");
+					var $dummyInput = $("<input>").attr("name", "data").val(JSON.stringify(formData));
+					// Fetch the csrf token
+					var $token = $("input[name=_token]").clone();
+					$dummyForm.append($dummyInput).append($token);
+					$("body").append($dummyForm);
+					$dummyForm.submit();
+				}
+			});
+		}
 	});
 
 	/*******************************CLICK EVENT********************************/
@@ -616,21 +723,26 @@
 		.on("click", ".controls i.fa.fa-times", function () {
 			$(this).parent().parent().fadeOut(500, function () {
 				$(this).remove();
+				$("#cancel-block").trigger("click");
 				$grid.packery('shiftLayout');
 			});
 		})
-		.on("click", ".controls i.fa.fa-pencil", function () {
+		.on("click", ".controls i.fa.fa-pencil:not(.mediaControl)", function () {
 			$("#addBlock").text("Blok aanpassen");
 			$("#cancel-block").show();
 			var $label = $(this).parent().next();
+			var sortQuestion = $label.data("sort");
 			var $gridItem = $label.parent();
 			$gridItem.parent().find(".is-editing").removeClass("is-editing");
+			$(".form-group div[data-sort=question]").trigger("click");
 			$gridItem.addClass("is-editing");
-			var sortQuestion = $label.data("sort");
 
 			$("#question").val($label.text());
 			$("#sortQuestion").val(sortQuestion);
 			$("#sortQuestion").change();
+
+			var blockWidth = $gridItem.data("width");
+			rangeSlider.noUiSlider.set(blockWidth);
 
 			var counter = 1;
 			if (sortQuestion == "radio" || sortQuestion == "checkbox") {
@@ -655,16 +767,54 @@
 			}
 
 			console.log(sortQuestion);
+		})
+		.on("click", ".controls i.fa.fa-pencil.mediaControl", function () {
+			$("#addBlockMedia").text("Blok aanpassen");
+			$("#cancel-block-media").show();
+			var $labelItem = $(this).parent().next();
+			var $gridItem = $labelItem.parent();
+			$gridItem.parent().find(".is-editing").removeClass("is-editing");
+			$(".form-group div[data-sort=media]").trigger("click");
+			$gridItem.addClass("is-editing");
+			var sortQuestion = $labelItem.data("sort");
+
+			$("#sortMedia").val(sortQuestion);
+			$("#sortMedia").change();
+
+			var blockWidth = $gridItem.data("width");
+			rangeSliderMedia.noUiSlider.set(blockWidth);
+
+			if (sortQuestion == "youtube") {
+				var youtubeUrl = $gridItem.data("youtubeurl");
+				minimumRangeMedia = 2;
+				// Toevoegen van eventuele velden
+				$("input#youtube-title").val($labelItem.text());
+				$("input#youtube-url").val(youtubeUrl);
+			}
+			else {
+				minimumRangeMedia = 1;
+				$("input#picture-title").val($labelItem.text());
+			}
+
+			console.log(sortQuestion);
 		});
 
-	$(".control-field").on("click", "#cancel-block", function () {
-		emptyForm();
-		$("#addBlock").text("Blok toevoegen");
-		$("#cancel-block").hide();
-		$(".grid").parent().find(".is-editing").removeClass("is-editing");
-	});
+	$(".control-field")
+		.on("click", "#cancel-block", function () {
+			emptyForm();
+			$("#addBlock").text("Blok toevoegen");
+			$("#cancel-block").hide();
+			$(".grid").parent().find(".is-editing").removeClass("is-editing");
+		})
+		.on("click", "#cancel-block-media", function () {
+			emptyFormMedia();
+			minimumRangeMedia = 1;
+			$("#addBlockMedia").text("Blok toevoegen");
+			$("#cancel-block-media").hide();
+			$(".grid").parent().find(".is-editing").removeClass("is-editing");
+		});
 
-	$(".control-field").on("click", ".form-group div", function () {
+	$(".control-field").on("click", ".form-group div.controlsType", function () {
 		if ($(".grid").parent().find(".is-editing").length > 0) {
 			swal(
 				'Kan niet wijzigen!',

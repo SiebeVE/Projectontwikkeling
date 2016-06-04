@@ -9,7 +9,8 @@
 	cursor: move;
 }
 
-.grid-size
+.grid-size,
+.grid-picture-1
 {
 	width: 23.5%
 }
@@ -19,17 +20,21 @@
 	width: 2%;
 }
 
-.grid-item--width2
+.grid-item--width2,
+.grid-picture-2
 {
 	width: 49%;
 }
 
-.grid-item--width3
+.grid-item--width3,
+.grid-picture-3
 {
 	width: 74%;
 }
 
-.grid-item--width4
+.grid-item--width4,
+.grid-picture-4,
+#example-field.grid .grid-item .imagePlaceholder img
 {
 	width: 100%;
 }

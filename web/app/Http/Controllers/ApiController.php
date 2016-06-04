@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Auth;
+use finfo;
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
 
@@ -139,6 +140,13 @@ class ApiController extends Controller
 		return response()->json($responseData, $httpCode);
 	}
 
+	/**
+	 * API request to add a word to the ignore words table
+	 *
+	 * @param Request $request
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
 	public function addIgnoredWord(Request $request)
 	{
 		$responseData = ["status" => "error", "authorization" => "success"];
@@ -162,6 +170,13 @@ class ApiController extends Controller
 		return response()->json($responseData);
 	}
 
+	/**
+	 * API request to delete a word in the table
+	 *
+	 * @param Request $request
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
 	public function deleteIgnoredWord(Request $request)
 	{
 		$responseData = ["status" => "error", "authorization" => "success"];
@@ -182,6 +197,64 @@ class ApiController extends Controller
 			$responseData["data"] = $request;
 		}
 		return response()->json($responseData);
+	}
+
+	/**
+	 * Receive picture for phases
+	 *
+	 * @param Request $request
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function postPicture(Request $request)
+	{
+		$notAnImage = false;
+		$allowedExtensions = ["jpeg", "png"]; // from mime type => after the slash
+
+		$publicTempSaveFolder = "/images/tempPhases";
+		$tempSaveFolder = base_path('public' . $publicTempSaveFolder);
+		//$publicSaveFolder = '/images/phases';
+		//$finalSaveFolder = base_path('public' . $publicSaveFolder);
+		$nameFile = "";
+
+		// Image handler, check if real image and upload to temp
+		if ($request->hasFile('image') && $request->file('image')->isValid())
+		{
+			$file = $request->file('image')->getRealPath();
+			$fileInfo = getimagesize($file);
+
+			if ($fileInfo)
+			{
+				// Get real mime type
+				$finfo = new finfo(FILEINFO_MIME_TYPE);
+				$mime = $finfo->buffer(file_get_contents($file));
+				$extension = substr($mime, strrpos($mime, '/') + 1);
+
+				if (in_array($extension, $allowedExtensions))
+				{
+					$image = file_get_contents($request->file('image')->getRealPath());
+					$hashImage = md5($image) . time();
+
+					$nameFile = $hashImage . "." . $extension;
+					$request->file('image')->move($tempSaveFolder, $nameFile);
+				}
+				else
+				{
+					$notAnImage = true;
+				}
+			}
+			else
+			{
+				$notAnImage = true;
+			}
+		}
+
+		if (!$notAnImage)
+		{
+			return response()->json(["status" => "ok", "path" => $publicTempSaveFolder, "filename" => $nameFile]);
+		}
+
+		return response()->json(["status" => "error", "error" => "Not an image"]);
 	}
 
 	/**

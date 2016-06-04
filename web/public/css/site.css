@@ -42,12 +42,21 @@ label, nav li {
 
 .grid .controls
 {
-	float: right;
 	font-size: 21px;
 	font-weight: 700;
 	line-height: 1;
 	color: #000;
 	text-shadow: 0 1px 0 #FFF;
+	position: absolute;
+	z-index: 20;
+	right: 14px;
+	background-color: rgba(255, 255, 255, .8);
+}
+
+.grid .grid-item:hover .controls
+{
+	padding: 5px;
+	border: 1px solid black;
 }
 
 .grid .controls i
@@ -88,6 +97,7 @@ form[name=create] b.control-label
 }
 
 form[name=create] .upload #imagePlaceholder,
+#input-specific-media .upload #imagePlaceholder,
 .projectoverzicht #imagePlaceholder,
 .projectImageContainer #imagePlaceholder
 {
@@ -102,6 +112,14 @@ form[name=create] .upload #imagePlaceholder,
 	overflow: hidden;
 	position: relative;
 	cursor: move;
+}
+
+#input-specific-media .upload #imagePlaceholder
+{
+	width: 100%;
+	height: auto;
+	margin: 0;
+	cursor: pointer;
 }
 
 .sort-control span
@@ -163,7 +181,8 @@ form[name=create] .upload #imagePlaceholder,
 	cursor: default;
 }
 
-form[name=create] .upload #imagePlaceholder label
+form[name=create] .upload #imagePlaceholder label,
+#input-specific-media .upload #imagePlaceholder label
 {
 	position: absolute;
 	height: 100%;
@@ -174,13 +193,38 @@ form[name=create] .upload #imagePlaceholder label
 	text-align: center;
 }
 
+#input-specific-media .upload #imagePlaceholder label
+{
+	position: relative;
+	padding: 5px;
+	font-size: 3em;
+}
+
+#input-specific-media .upload input
+{
+	display: none;
+}
+
+#input-specific-media .upload
+{
+	transition: width .3s ease-out;
+}
+
 form[name=create] .upload #imagePlaceholder img,
+#input-specific-media .upload #imagePlaceholder img,
 .projectoverzicht #imagePlaceholder img,
 .projectImageContainer #imagePlaceholder img
 {
 	display: none;
 	position: absolute;
 	height: 100%;
+}
+
+#input-specific-media .upload #imagePlaceholder img
+{
+	position: relative;
+	height: auto;
+	width: 100%;
 }
 
 .projectoverzicht #imagePlaceholder img,
@@ -208,7 +252,13 @@ button, input, select, textarea
 
 .fluid-width-video-wrapper
 {
-	background-color: rgba(0,0,0,.5);
+	background-color: rgba(0, 0, 0, .5);
+	z-index: 1;
+}
+
+.fa-arrows:before
+{
+	cursor: move;
 }
 
 div.bootstrap-tagsinput
