@@ -19,7 +19,8 @@ class Question extends Model
 		'leftOffset',
 		'topOffset',
 		'width',
-		'word_count'
+		'word_count',
+		'media'
 	];
 
 	/**
