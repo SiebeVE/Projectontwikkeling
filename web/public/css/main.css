@@ -518,6 +518,12 @@ i.fa.fa-facebook-official, i.fa.fa-twitter {
 
 }
 
+.afgesloten {
+    font-size: 0.6em;
+    font-weight: 300;
+    color: red;
+}
+
 /**************************************************************PHASE VIEW*******************************/
 
 .giveOpinion h4{

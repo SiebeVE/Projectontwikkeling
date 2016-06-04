@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Tag;
 use App\DB;
+use Carbon\Carbon;
 
 use App\Http\Requests;
 
@@ -98,7 +99,8 @@ class AdminController extends Controller
 			'description' => 'required|string|max:600',
 			"address"     => 'required',
 			'longitude'   => 'required',
-			'latitude'    => 'required',];
+			'latitude'    => 'required',
+			'tags'		=>	'required',];
 
 		// Phase validation handler, get all inputs of phase and put in validation array
 		//dd($request->numberOfPhases);
@@ -441,11 +443,12 @@ class AdminController extends Controller
 		$user = Auth::user();
 		$token = JWTAuth::fromUser($user);
 
-		return view('admin.statistics', [
-			"project"      => $project,
-			"stats"        => $stats,
-			"ignoredWords" => $ignoredWords,
-			"token"        => $token,
-		]);
+			return view('admin.statistics', [
+				"project"      => $project,
+				"stats"        => $stats,
+				"ignoredWords" => $ignoredWords,
+				"token"        => $token,
+			]);
+
 	}
 }
