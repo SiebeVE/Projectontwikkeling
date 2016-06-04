@@ -188,12 +188,12 @@
 			case "picture":
 				minimumRangeMedia = 1;
 				var $div = $("<div>").addClass("form-group");
-				var $labelT = $("<label>").addClass("control-label").attr("for", "foto-title").text("Zet hier de titel voor boven de foto.");
+				var $labelT = $("<label>").addClass("control-label").attr("for", "picture-title").text("Zet hier de titel voor boven de foto.");
 				var $inputT = $("<input>")
 					.attr("type", "text")
 					.addClass("form-control")
-					.attr("name", "foto-title")
-					.attr("id", "foto-title")
+					.attr("name", "picture-title")
+					.attr("id", "picture-title")
 					.attr("placeholder", "Blok titel");
 
 				var className = "grid-picture-" + Math.floor(rangeSliderMedia.noUiSlider.get());
@@ -397,7 +397,6 @@
 			var blockNumber;
 			var $exampleField;
 			var widthOfBlock;
-			var question;
 			var className;
 			var $newBlock;
 			var inputName;
@@ -405,11 +404,14 @@
 			var $input;
 			var ytPlayer;
 			var failedById = false;
+			var fromPicture = false;
+			var $labelEdit;
+			var $close;
 			// Ophalen blok nummer en wegschrijven
 			var isEditing = $(".grid").parent().find(".is-editing").length > 0;
 			if (isEditing) {
 				var $editingBlock = $(".grid").parent().find(".is-editing").first();
-				var $labelEdit = $editingBlock.find(".form-label");
+				$labelEdit = $editingBlock.find(".form-label");
 
 				blockNumber = $labelEdit.data("blocknumber");
 
@@ -425,8 +427,10 @@
 				// Maken van blok
 				$newBlock = $editingBlock.addClass(className)/*.addClass("form-group")*/.addClass("grid-item").data("width", widthOfBlock);
 
-				inputName = "question-" + blockNumber;
-				$newBlock.empty();
+				inputName = "media-" + blockNumber;
+				if(typeOfField != "picture") {
+					$newBlock.empty();
+				}
 
 				console.log("editingFinish");
 			}
@@ -473,6 +477,7 @@
 					break;
 				case "picture":
 					console.log("ok-area");
+					fromPicture = true;
 					// Uploaden ajax picture
 
 					var $imagePlaceholder = $("<div>").addClass("imagePlaceholder");
@@ -481,13 +486,32 @@
 
 					var optionsAjax = {
 						success: function ( response, statusText, xhr ) {
-							$image.attr("src", response[ "path" ] + "/" + response[ "filename" ]).data("filename", response["filename"]);
-							$image.show();
-							$waitText.hide();
-							$image[0].addEventListener("load", function () {
-								console.log("loaded image");
-								$grid.packery('shiftLayout');
-							});
+							if(response["status"] == "ok") {
+								if(isEditing) {
+									$newBlock.empty();
+									$newBlock.append($close).append($label).append($input);
+								}
+								$image.attr("src", response[ "path" ] + "/" + response[ "filename" ]).data("filename", response[ "filename" ]);
+								$image.show();
+								$label.data("imgpath", response[ "path" ] + "/" + response[ "filename" ]);
+								$waitText.hide();
+								$("#cancel-block-media").trigger("click");
+								$image[ 0 ].addEventListener("load", function () {
+									console.log("loaded image");
+									$grid.packery('shiftLayout');
+								});
+							}
+							else {
+								swal(
+									'Is geen foto!',
+									'De foto is volgens ons geen foto, probeer een andere.',
+									'error'
+								);
+								if(!isEditing) {
+									$newBlock.remove();
+									$grid.packery('shiftLayout');
+								}
+							}
 						},
 						// async: false,
 						beforeSend: function ( request ) {
@@ -496,7 +520,13 @@
 						dataType: 'json'
 					};
 					pictureSubmit = true;
-					$("#picture-form").ajaxForm(optionsAjax).submit();
+					if(!(isEditing && document.getElementById("image").files.length == 0)) {
+						console.log("upload");
+						$("#picture-form").ajaxForm(optionsAjax).submit();
+					}
+					else {
+						$labelEdit.text($("#picture-title").val());
+					}
 					pictureSubmit = false;
 					// Toevoegen van inputs
 
@@ -515,13 +545,17 @@
 			}
 
 			if (!failedById) {
-				var $close = $("<div>").addClass("controls");
+				$close = $("<div>").addClass("controls");
 				var $edit = $("<i>").addClass("fa").addClass("fa-pencil").addClass("mediaControl");
 				var $cross = $("<i>").addClass("cross").addClass("fa").addClass("fa-times");
 				var $move = $("<i>").addClass("fa").addClass("fa-arrows");
 				$close.append($move).append($edit).append($cross);
 
-				$newBlock.append($close).append($label).append($input);
+				if(!(isEditing && fromPicture))
+				{
+					console.log("appended");
+					$newBlock.append($close).append($label).append($input);
+				}
 				console.log($newBlock);
 
 				if (!isEditing) {
@@ -553,7 +587,9 @@
 				$grid.packery('shiftLayout');
 
 				// Empty form
-				$("#cancel-block-media").trigger("click");
+				if(!fromPicture || (isEditing && fromPicture)) {
+					$("#cancel-block-media").trigger("click");
+				}
 			}
 		}
 	});
@@ -794,6 +830,10 @@
 			else {
 				minimumRangeMedia = 1;
 				$("input#picture-title").val($labelItem.text());
+				$("#imagePlaceholder").find("img").attr("src", $labelItem.data("imgpath")).show();
+				$("#imagePlaceholder").find("i").hide();
+				var className = "grid-picture-" + Math.floor(rangeSliderMedia.noUiSlider.get());
+				$(".upload").removeClass().addClass(className).addClass("upload");
 			}
 
 			console.log(sortQuestion);
