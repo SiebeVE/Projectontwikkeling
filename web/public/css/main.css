@@ -540,11 +540,15 @@ i.fa.fa-facebook-official, i.fa.fa-twitter {
 .giveOpinion h5 {
     font-size: 1.2em;
     font-family: AntwerpenRegular;
+    color: #0064B4;
 }
 
 .cd-horizontal-timeline .events-content p {
     color: black;
 }
 
+.giveOpinion b.form-label, .giveOpinion label.form-label {
+    color: #0064B4;
+}
 
 

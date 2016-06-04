@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-	<div class="container">
+	<div class="container dashboard">
 		<div class="col-md-12">
 			<h1>Statistieken van {{ $project->name }}</h1>
 			<input type="hidden" class="hidden" name="token" id="token" value="{{ $token }}">
