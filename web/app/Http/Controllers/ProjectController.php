@@ -197,6 +197,10 @@ class ProjectController extends Controller
 						$questionsArr["elements"][$questionNumber]["answers"][$answerNumber]["id"] = $possibleAnswer->id;
 					}
 				}
+				if(isset($question->media) && $question->media != "")
+				{
+					$questionsArr["elements"][$questionNumber]["media"] = $question->media;
+				}
 			}
 			//dd($phasesArr);
 			return view('projects.giveOpinion', [

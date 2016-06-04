@@ -311,8 +311,13 @@ class AdminController extends Controller
 						$newImageName = "phasePicture-" . $project->id . $phase->id . $questionKey . "." . $extension;
 						// Move picture and rename
 						rename(base_path('public'.$tempSaveFolderPhasePicture) . "/" . $hashImage, $finalSaveFolder . "/" . $newImageName);
+						//dump($publicSaveFolder . "/" . $newImageName);
+						$questionDatabase->media = $publicSaveFolder . "/" . $newImageName;
 					}
-					$questionDatabase->media = $question["media"];
+					else
+					{
+						$questionDatabase->media = $question["media"];
+					}
 					$questionDatabase->save();
 				}
 			}
@@ -429,10 +434,13 @@ class AdminController extends Controller
 										break;
 									}
 								}
-								$questionArray["answers"][$answerId]["count"]++;
-								// Calculate percentage
-								$percentage = floor(($questionArray["answers"][$answerId]["count"] / $totalAnswers) * 100);
-								$questionArray["answers"][$answerId]["percentage"] = $percentage;
+								if($answerId != 0)
+								{
+									$questionArray["answers"][$answerId]["count"]++;
+									// Calculate percentage
+									$percentage = floor(($questionArray["answers"][$answerId]["count"] / $totalAnswers) * 100);
+									$questionArray["answers"][$answerId]["percentage"] = $percentage;
+								}
 							}
 						}
 						break;

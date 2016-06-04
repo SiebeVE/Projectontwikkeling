@@ -75,7 +75,7 @@
 																			<label><input type="{{ $question["sort"] }}"
 																						  value="{{ $question["sort"] == "checkbox" ? $answer["id"] : $answer["answer"] }}"
 																						  name="question-{{$idQuestion}}{{ $question["sort"] == "checkbox" ? "[]" : "" }}"
-																						{{ old("question-".$idQuestion) == $idAnswer ? "checked" : "" }}>{{ $answer["answer"] }}
+																						{{ old("question-".$idQuestion) == ($question["sort"] == "checkbox" ? $answer["id"] : $answer["answer"]) ? "checked" : "" }}>{{ $answer["answer"] }}
 																			</label>
 																		</div>
 																	@endforeach
@@ -94,7 +94,13 @@
 																		   name="question-{{ $idQuestion }}"
 																		   value="{{ old("question-".$idQuestion) }}">
 																@elseif($question["sort"] == "youtube")
+																	<div class="youtubeVid"
+																		 id="vid-{{$question["media"]}}"
+																		 data-youtubeid="{{$question["media"]}}"></div>
 																@elseif($question["sort"] == "picture")
+																	<div class="imagePlaceholder">
+																		<img src="{{ $question["media"] }}">
+																	</div>
 																@endif
 															@endif
 														</div>
@@ -125,6 +131,7 @@
 
 @section('pageJs')
 	<script src="{{ url('/js/modernizr.js') }}"></script>
+	<script src="{{ url('/js/fitVid.js')}}"></script>
 	<script>
 		jQuery(document).ready(function ( $ ) {
 			var timelines = $('.cd-horizontal-timeline'),
@@ -405,4 +412,5 @@
 			}
 		});
 	</script>
+	<script src="{{ url('/js/opinion.js') }}"></script>
 @endsection

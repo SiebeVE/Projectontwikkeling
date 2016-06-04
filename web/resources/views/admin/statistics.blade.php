@@ -19,30 +19,33 @@
 					<div class="text-muted">{{$dataPhase["start"]}} - {{$dataPhase["eind"]}}</div>
 					<div class="charts clearfix"></div>
 					@foreach($dataPhase["data"] as $question=>$questionData)
-						<div class="panel panel-default question" data-questionKey="{{$question}}">
-							<div class="panel-heading">{{$question}}</div>
-							<div class="panel-body">
-								@if(count($questionData["answers"]) > 0)
-									@if(array_key_exists("counted",$questionData))
-										<div class="hidden jsonData">{{ json_encode($questionData["counted"]) }}</div>
-										@foreach($questionData["answers"] as $answer)
-											<p>{{ $answer }}</p>
-										@endforeach
+						@if(!($questionData["type"] == "youtube" || $questionData["type"] == "picture"))
+							<div class="panel panel-default question" data-questionKey="{{$question}}">
+								<div class="panel-heading">{{$question}}</div>
+								<div class="panel-body">
+									@if(count($questionData["answers"]) > 0)
+										@if(array_key_exists("counted",$questionData))
+											<div class="hidden jsonData">{{ json_encode($questionData["counted"]) }}</div>
+											@foreach($questionData["answers"] as $answer)
+												<p>{{ $answer }}</p>
+											@endforeach
+										@else
+											<p data-answerd="{{ $questionData["totalAnswers"] }}">Totaal
+												beantwoord: <span
+														class="total">{{ $questionData["totalAnswers"] }}</span>
+											</p>
+											@foreach($questionData["answers"] as $answer)
+												<p><span class="answer">{{ $answer["answer"] }}</span>: <span
+															class="count">{{ $answer["count"] }}</span>
+													({{ $answer["percentage"] }}%)</p>
+											@endforeach
+										@endif
 									@else
-										<p data-answerd="{{ $questionData["totalAnswers"] }}">Totaal beantwoord: <span
-													class="total">{{ $questionData["totalAnswers"] }}</span>
-										</p>
-										@foreach($questionData["answers"] as $answer)
-											<p><span class="answer">{{ $answer["answer"] }}</span>: <span
-														class="count">{{ $answer["count"] }}</span>
-												({{ $answer["percentage"] }}%)</p>
-										@endforeach
+										<span>Er zijn nog geen antwoorden binnen gekomen</span>
 									@endif
-								@else
-									<span>Er zijn nog geen antwoorden binnen gekomen</span>
-								@endif
+								</div>
 							</div>
-						</div>
+						@endif
 					@endforeach
 				</div>
 			@endforeach
