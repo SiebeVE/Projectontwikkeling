@@ -208,7 +208,7 @@ class ApiController extends Controller
 	 */
 	public function postPicture(Request $request)
 	{
-		$notAnImage = false;
+		$notAnImage = true;
 		$allowedExtensions = ["jpeg", "png"]; // from mime type => after the slash
 
 		$publicTempSaveFolder = "/images/tempPhases";
@@ -237,17 +237,11 @@ class ApiController extends Controller
 
 					$nameFile = $hashImage . "." . $extension;
 					$request->file('image')->move($tempSaveFolder, $nameFile);
+					$notAnImage = false;
 				}
-				else
-				{
-					$notAnImage = true;
-				}
-			}
-			else
-			{
-				$notAnImage = true;
 			}
 		}
+
 
 		if (!$notAnImage)
 		{
