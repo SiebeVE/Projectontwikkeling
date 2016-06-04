@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 //use App\Phase;
+use App\Answer;
 use App\Project;
 //use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -175,9 +176,9 @@ class ProjectController extends Controller
 			}
 			// Build the array for the questions
 			$questionsArr = [
-				"projectName"  => $project->name,
-				"phaseName"    => $currentPhase->name,
-				"parentHeight" => $currentPhase->parentHeight,
+				"projectName"      => $project->name,
+				"phaseName"        => $currentPhase->name,
+				"parentHeight"     => $currentPhase->parentHeight,
 				"phaseDescription" => $currentPhase->description
 			];
 			foreach ($currentPhase->questions as $questionNumber => $question)
@@ -197,7 +198,7 @@ class ProjectController extends Controller
 						$questionsArr["elements"][$questionNumber]["answers"][$answerNumber]["id"] = $possibleAnswer->id;
 					}
 				}
-				if(isset($question->media) && $question->media != "")
+				if (isset($question->media) && $question->media != "")
 				{
 					$questionsArr["elements"][$questionNumber]["media"] = $question->media;
 				}
@@ -220,7 +221,7 @@ class ProjectController extends Controller
 	 */
 	public function postOpinion(Project $project, Request $request)
 	{
-		$user = Auth::user();
+		//$user = Auth::user();
 		$phase = $project->getCurrentPhase();
 
 		$questions = $phase->questions;
@@ -240,7 +241,8 @@ class ProjectController extends Controller
 					$multiAnswer = true;
 				}
 
-				$answered = $user->answers()->create([
+				$answered = Answer::create([
+					"user_id"         => Auth::check() ? Auth::user()->id : NULL,
 					"question_id"     => $question->id,
 					"answer"          => $answer,
 					"multipleAnswers" => $multiAnswer,
