@@ -178,7 +178,12 @@ class AdminController extends Controller
 		}
 
 		$project->tags()->attach($tagsId);
-		$project->defaultQuestions()->attach(array_flatten($request["standardQuestions"]));
+		$flatArray = [];
+		if(is_array($request["standardQuestions"]))
+		{
+			$flatArray = array_flatten($request["standardQuestions"]);
+		}
+		$project->defaultQuestions()->attach($flatArray);
 
 		$project->save();
 
