@@ -25,7 +25,7 @@ class AddMultiAnswersToAnswers extends Migration
     public function down()
     {
         Schema::table('answers', function (Blueprint $table) {
-            //
+            $table->dropColumn('multipleAnswers');
         });
     }
 }

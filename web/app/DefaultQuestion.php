@@ -5,23 +5,19 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Question extends Model
+class DefaultQuestion extends Model
 {
 	use SoftDeletes;
-	
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
 	protected $fillable = [
-		'sort',
-		'question',
-		'leftOffset',
-		'topOffset',
-		'width',
-		'word_count',
-		'media'
+		"sort",
+		"question",
+		"width"
 	];
 
 	/**
@@ -34,16 +30,6 @@ class Question extends Model
 	];
 
 	/**
-	 * Give all answers of question
-	 *
-	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
-	 */
-	public function answers()
-	{
-		return $this->hasMany('App\Answer');
-	}
-
-	/**
 	 * Give all possible answers of question (multiplechoice)
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -54,12 +40,13 @@ class Question extends Model
 	}
 
 	/**
-	 * Give phase of question
+	 * Get all projects with this default question
 	 *
-	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	 */
-	public function phases()
+	public function projects()
 	{
-		return $this->belongsTo('App\Phase');
+		return $this->belongsToMany('App\Project')->withTimestamps();
 	}
+
 }

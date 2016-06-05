@@ -88,13 +88,14 @@ class Project extends Model
 
 		return $currentPhase;
 	}
-	//public function setPhotoLeftOffset($value)
-	//{
-	//    if($value == "auto")
-	//    {
-	//        $value = 0;
-	//    }
-	//
-	//    return $value;
-	//}
+
+	/**
+	 * Get the default questions of this project
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
+	public function defaultQuestions()
+	{
+		return $this->belongsToMany('App\DefaultQuestion')->withTimestamps();
+	}
 }

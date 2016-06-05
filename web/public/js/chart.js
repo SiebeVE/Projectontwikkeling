@@ -8,6 +8,8 @@ var charts = [];
 	Chart.defaults.global.title.display = true;
 	Chart.defaults.global.title.padding = 5;
 	$(function () {
+		var isFromAdminPage = window.location.href.indexOf("admin") > -1;
+
 		$(".phase-stats").each(function () {
 			var $curentPhase = $(this);
 			var $chartsDiv = $curentPhase.find("div.charts");
@@ -89,7 +91,7 @@ var charts = [];
 
 					if (hasAnswers) {
 						$newCanvasDiv.append($newCanvas);
-						if (hasJsonData) {
+						if (hasJsonData && isFromAdminPage) {
 							$newCanvasDiv.append($controls);
 						}
 						$chartsDiv.append($newCanvasDiv);

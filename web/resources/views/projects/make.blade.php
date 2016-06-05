@@ -138,25 +138,15 @@
 					<h2>Standaard vragen</h2>
 					<p class="text-muted">Deze vragen zullen elke fase gevraagd worden.</p>
 					<div class="form-group">
+						@foreach($questions as $question)
 						<div class="checkbox">
 							<label>
 								{{--{{ dump(old('standardQuestions')) }}--}}
-								<input type="checkbox" {{ array_search("gender", (old('standardQuestions') ? old('standardQuestions') : []) ) !== false ? "checked" :"" }} value="gender" name="standardQuestions[]">
-								Geslacht
+								<input type="checkbox" {{ array_search($question->id, (old('standardQuestions') ? old('standardQuestions') : []) ) !== false ? "checked" :"" }} value="{{$question->id}}" name="standardQuestions[]">
+								{{$question->question}}
 							</label>
 						</div>
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" {{ array_search("age", (old('standardQuestions') ? old('standardQuestions') : []) ) !== false ? "checked" :"" }} value="age" name="standardQuestions[]">
-								Leeftijd
-							</label>
-						</div>
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" {{ array_search("postalcode", (old('standardQuestions') ? old('standardQuestions') : []) ) !== false ? "checked" :"" }} value="postalcode" name="standardQuestions[]">
-								Postcode
-							</label>
-						</div>
+						@endforeach
 					</div>
 				</div>
 				<div class="col-md-12">

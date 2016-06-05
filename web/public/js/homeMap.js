@@ -126,7 +126,7 @@ function initMap() {
             content: '<div class="infoProject clearfix" contenteditable="false"><h3>'
             + projects[count]['name'] + '</h3>' + '<div class="projectContent"><h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p><h6>Adres: ' +
             projects[count]['address'] + '</h6></div><div class="projectImageContainer"><div id="imagePlaceholder"><img class="projectImage" src="' + projects[count]['photo_path'] +
-            '" alt="project foto"/></div><div class="projectlink"><a class="pull-right" href="http://teamgctof.multimediatechnology.be/project/beoordelen/' + projects[count]['id'] + '">Bekijk het project!</a></div></div></div>',
+            '" alt="project foto"/></div><div class="projectlink"><a class="pull-right" href="/project/beoordelen/' + projects[count]['id'] + '">Bekijk het project!</a></div></div></div>',
             shadowStyle: 1,
             padding: 0,
             backgroundColor: 'rgba(255,255,255,0.975)',
