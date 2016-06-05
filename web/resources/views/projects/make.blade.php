@@ -3,6 +3,7 @@
 
 @section('pageCss')
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
+    <link rel="stylesheet" href="{{url('/css/cover.css')}}">
 @endsection
 
 @section('content')
