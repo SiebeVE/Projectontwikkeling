@@ -179,7 +179,7 @@ class AdminController extends Controller
 
 		$project->tags()->attach($tagsId);
 		$flatArray = [];
-		if(is_array($request["standardQuestions"]))
+		if(isset($request["standardQuestions"]) && is_array($request["standardQuestions"]))
 		{
 			$flatArray = array_flatten($request["standardQuestions"]);
 		}
@@ -377,6 +377,103 @@ class AdminController extends Controller
 	}
 
 	/**
+	 * Patch request for updating project
+	 *
+	 * @param Request $request
+	 * @param Project $project
+	 *
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 */
+	public function update(Request $request, Project $project)
+	{
+
+		$this->saveImage($request, $project);
+
+		$project->update(
+			[
+				$project->name = $request->input('name'),
+				$project->description = $request->description,
+				$project->address = $request->input('address'),
+				$project->latitude = $request->input('latitude'),
+				$project->longitude = $request->input('longitude'),
+				$project->photo_left_offset = $request->input('photoOffset'),
+			]
+		);
+
+		$this->addTags($request, $project);
+
+		$toValidate = [
+			// Check for project
+			'name'        => 'required',
+			'description' => 'required|string|max:600',
+			'address'     => 'required',
+			'longitude'   => 'required',
+			'latitude'    => 'required',
+			'tags'        => 'required',];
+
+		$phases = $project->phases;
+
+		foreach ($phases as $phase)
+		{
+			$phase->update(
+				[
+					$phase->name = $request->input('phase_name' . $phase->id),
+					$phase->description = $request->input('phase_description' . $phase->id),
+					$phase->start = $request->input('phaseStartDate' . $phase->id),
+					$phase->end = $request->input('phaseEndDate' . $phase->id)
+				]
+			);
+
+			// Make validation array
+			$toValidate['phase_name' . $phase->id] = 'required';
+			$toValidate['phaseStartDate' . $phase->id] = 'required|date';
+			$toValidate['phase_description' . $phase->id] = 'string|max:600';
+			$toValidate['phaseEndDate' . $phase->id] = 'required|date|after:' . $request->input('phaseStartDate' . $phase->id);
+
+		}
+
+		$this->validate($request, $toValidate);
+
+
+		//dd($request->all());
+
+		//dd($tagsId);
+
+		return redirect('admin/project/dashboard');
+	}
+
+	/**
+	 * Show the page to edit a project
+	 *
+	 * @param Project $project
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit(Project $project)
+	{
+		$phases = $project->phases;
+		$tags = $project->tags;
+
+		return view('projects.edit', compact('project', 'phases', 'tags'));
+	}
+
+	/**
+	 * Show the application dashboard
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function dashboard()
+	{
+		$projects = Project::all();
+		$defaultQuestions = DefaultQuestion::get();
+		//dd($defaultQuestions);
+		return view('projects.dashboard', [
+			"projects" => $projects,
+			"questions" => $defaultQuestions
+		]);
+	}
+
+	/**
 	 * Get the page of the admin panel
 	 *
 	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -527,11 +624,23 @@ class AdminController extends Controller
 
 	}
 
+	/**
+	 * Get the view for making a new standard question
+	 *
+	 * @return View
+	 */
 	public function getStandardQuestions()
 	{
 		return view('admin.makeQuestion');
 	}
 
+	/**
+	 * Handle post request for new standard question
+	 *
+	 * @param Request $request
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function postStandardQuestions(Request $request)
 	{
 		$data = json_decode($request["data"], true);
@@ -552,7 +661,7 @@ class AdminController extends Controller
 			}
 		}
 
-		dd($data);
-		return view('admin.makeQuestion');
+		//dd($data);
+		return redirect()->action("AdminController@dashboard");
 	}
 }

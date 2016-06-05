@@ -43,16 +43,16 @@ class ProjectController extends Controller
 		return view('projects.make', compact('tags'));
 	}
 
-	/**
-	 * Show the application dashboard
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function dashboard()
-	{
-		$projects = Project::all();
-		return view('projects.dashboard', compact('projects'));
-	}
+	///**
+	// * Show the application dashboard
+	// *
+	// * @return \Illuminate\Http\Response
+	// */
+	//public function dashboard()
+	//{
+	//	$projects = Project::all();
+	//	return view('projects.dashboard', compact('projects'));
+	//}
 
 	/**
 	 * Show the application overzicht
@@ -69,86 +69,86 @@ class ProjectController extends Controller
 	}
 
 
-	/**
-	 * Show the page to edit a project
-	 *
-	 * @param Project $project
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit(Project $project)
-	{
-		$phases = $project->phases;
-		$tags = $project->tags;
+	///**
+	// * Show the page to edit a project
+	// *
+	// * @param Project $project
+	// *
+	// * @return \Illuminate\Http\Response
+	// */
+	//public function edit(Project $project)
+	//{
+	//	$phases = $project->phases;
+	//	$tags = $project->tags;
+	//
+	//	return view('projects.edit', compact('project', 'phases', 'tags'));
+	//}
 
-		return view('projects.edit', compact('project', 'phases', 'tags'));
-	}
-
-	/**
-	 * Patch request for updating project
-	 *
-	 * @param Request $request
-	 * @param Project $project
-	 *
-	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-	 */
-	public function update(Request $request, Project $project)
-	{
-
-		$this->saveImage($request, $project);
-
-		$project->update(
-			[
-				$project->name = $request->input('name'),
-				$project->description = $request->description,
-				$project->address = $request->input('address'),
-				$project->latitude = $request->input('latitude'),
-				$project->longitude = $request->input('longitude'),
-				$project->photo_left_offset = $request->input('photoOffset'),
-			]
-		);
-
-		$this->addTags($request, $project);
-
-		$toValidate = [
-			// Check for project
-			'name'        => 'required',
-			'description' => 'required|string|max:600',
-			'address'     => 'required',
-			'longitude'   => 'required',
-			'latitude'    => 'required',
-			'tags'        => 'required',];
-
-		$phases = $project->phases;
-
-		foreach ($phases as $phase)
-		{
-			$phase->update(
-				[
-					$phase->name = $request->input('phase_name' . $phase->id),
-					$phase->description = $request->input('phase_description' . $phase->id),
-					$phase->start = $request->input('phaseStartDate' . $phase->id),
-					$phase->end = $request->input('phaseEndDate' . $phase->id)
-				]
-			);
-
-			// Make validation array
-			$toValidate['phase_name' . $phase->id] = 'required';
-			$toValidate['phaseStartDate' . $phase->id] = 'required|date';
-			$toValidate['phase_description' . $phase->id] = 'string|max:600';
-			$toValidate['phaseEndDate' . $phase->id] = 'required|date|after:' . $request->input('phaseStartDate' . $phase->id);
-
-		}
-
-		$this->validate($request, $toValidate);
-
-
-		//dd($request->all());
-
-		//dd($tagsId);
-
-		return redirect('admin/project/dashboard');
-	}
+	///**
+	// * Patch request for updating project
+	// *
+	// * @param Request $request
+	// * @param Project $project
+	// *
+	// * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	// */
+	//public function update(Request $request, Project $project)
+	//{
+	//
+	//	$this->saveImage($request, $project);
+	//
+	//	$project->update(
+	//		[
+	//			$project->name = $request->input('name'),
+	//			$project->description = $request->description,
+	//			$project->address = $request->input('address'),
+	//			$project->latitude = $request->input('latitude'),
+	//			$project->longitude = $request->input('longitude'),
+	//			$project->photo_left_offset = $request->input('photoOffset'),
+	//		]
+	//	);
+	//
+	//	$this->addTags($request, $project);
+	//
+	//	$toValidate = [
+	//		// Check for project
+	//		'name'        => 'required',
+	//		'description' => 'required|string|max:600',
+	//		'address'     => 'required',
+	//		'longitude'   => 'required',
+	//		'latitude'    => 'required',
+	//		'tags'        => 'required',];
+	//
+	//	$phases = $project->phases;
+	//
+	//	foreach ($phases as $phase)
+	//	{
+	//		$phase->update(
+	//			[
+	//				$phase->name = $request->input('phase_name' . $phase->id),
+	//				$phase->description = $request->input('phase_description' . $phase->id),
+	//				$phase->start = $request->input('phaseStartDate' . $phase->id),
+	//				$phase->end = $request->input('phaseEndDate' . $phase->id)
+	//			]
+	//		);
+	//
+	//		// Make validation array
+	//		$toValidate['phase_name' . $phase->id] = 'required';
+	//		$toValidate['phaseStartDate' . $phase->id] = 'required|date';
+	//		$toValidate['phase_description' . $phase->id] = 'string|max:600';
+	//		$toValidate['phaseEndDate' . $phase->id] = 'required|date|after:' . $request->input('phaseStartDate' . $phase->id);
+	//
+	//	}
+	//
+	//	$this->validate($request, $toValidate);
+	//
+	//
+	//	//dd($request->all());
+	//
+	//	//dd($tagsId);
+	//
+	//	return redirect('admin/project/dashboard');
+	//}
 
 	/**
 	 * Retrieve the page where users can give their opinion on a project

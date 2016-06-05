@@ -139,6 +139,7 @@
 					<h2>Standaard vragen</h2>
 					<p class="text-muted">Deze vragen zullen elke fase gevraagd worden.</p>
 					<div class="form-group">
+						@if(count($questions) > 0)
 						@foreach($questions as $question)
 						<div class="checkbox">
 							<label>
@@ -148,6 +149,9 @@
 							</label>
 						</div>
 						@endforeach
+							@else
+							<p>U heeft nog geen standaard vragen, u kan deze <a href="{{ url('/admin/vragen/maken') }}">hier</a> aanmaken.</p>
+						@endif
 					</div>
 				</div>
 				<div class="col-md-12">

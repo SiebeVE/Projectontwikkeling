@@ -68,10 +68,10 @@ Route::group(['middleware' => 'web'], function ()
 
 	Route::group(['prefix' => 'admin'], function ()
 	{
-		Route::get('project/dashboard', 'ProjectController@dashboard');
+		Route::get('project/dashboard', 'AdminController@dashboard');
 
-		Route::get('project/bewerk/{project}', 'ProjectController@edit');
-		Route::patch('project/bewerk/{project}', 'ProjectController@update');
+		Route::get('project/bewerk/{project}', 'AdminController@edit');
+		Route::patch('project/bewerk/{project}', 'AdminController@update');
 
 		Route::get('project/maken', 'AdminController@getMakeProject');
 		Route::post('project/maken', 'AdminController@postMakeProject');
