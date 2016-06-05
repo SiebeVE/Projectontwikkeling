@@ -30,7 +30,7 @@ class HomeController extends Controller
         $lng_array = array();
 
         $projects = Project::all();
-        $projectsWithRelationships = $projects->load('tags');
+        $projectsWithRelationships = $projects->load('tags', 'phases');
         $json = json_encode($projectsWithRelationships);
         $tags = array();
         $tag_names = array();

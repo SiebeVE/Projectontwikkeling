@@ -121,12 +121,69 @@ function initMap() {
         //    + projects[count]['name'] + '</div>'
         //});
 
+        function getDateTime() {
+            var now     = new Date();
+            var year    = now.getFullYear();
+            var month   = now.getMonth()+1;
+            var day     = now.getDate();
+            var hour    = now.getHours();
+            var minute  = now.getMinutes();
+            var second  = now.getSeconds();
+            if(month.toString().length == 1) {
+                var month = '0'+month;
+            }
+            if(day.toString().length == 1) {
+                var day = '0'+day;
+            }
+            if(hour.toString().length == 1) {
+                var hour = '0'+hour;
+            }
+            if(minute.toString().length == 1) {
+                var minute = '0'+minute;
+            }
+            if(second.toString().length == 1) {
+                var second = '0'+second;
+            }
+            var dateTime = year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second;
+            return dateTime;
+        }
+
+        var content;
+        var ended = false;
+        var currentTime = getDateTime();
+
+
+
+
+        for(var i = 0; i < projects[count]['phases'].length; i++){
+            console.log(projects[count]['phases'][i]['end']);
+            console.log(currentTime);
+            ended = false;
+            if(projects[count]['phases'][i]['end'] <= currentTime) {
+                console.log('test');
+                ended = true;
+            }
+
+        }
+
+        if(ended) {
+           bubbleContent = '<div class="infoProject clearfix" contenteditable="false"><h3>'
+               + projects[count]['name'] + '<span class="afgesloten"> (Afgesloten)</span></h3>' + '<div class="projectContent"><h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p><h6>Adres: ' +
+               projects[count]['address'] + '</h6></div><div class="projectImageContainer"><div id="imagePlaceholder"><img class="projectImage" src="' +
+               projects[count]['photo_path'] + '" alt="project foto"/></div><div class="projectlink"><a class="pull-right" href="' + window.location.origin +
+               '/project/statistieken/' + projects[count]['id'] + '">Bekijk de statistieken!</a></div></div></div>'
+        }
+        else {
+            bubbleContent = '<div class="infoProject clearfix" contenteditable="false"><h3>'
+                + projects[count]['name'] + '</h3>' + '<div class="projectContent"><h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p><h6>Adres: ' +
+                projects[count]['address'] + '</h6></div><div class="projectImageContainer"><div id="imagePlaceholder"><img class="projectImage" src="' +
+                projects[count]['photo_path'] + '" alt="project foto"/></div><div class="projectlink"><a class="pull-right" href="' + window.location.origin +
+                '/project/beoordelen/' + projects[count]['id'] + '">Bekijk het project!</a></div></div></div>'
+        }
+
         var infoBubble = new InfoBubble({
             map: map,
-            content: '<div class="infoProject clearfix" contenteditable="false"><h3>'
-            + projects[count]['name'] + '</h3>' + '<div class="projectContent"><h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p><h6>Adres: ' +
-            projects[count]['address'] + '</h6></div><div class="projectImageContainer"><div id="imagePlaceholder"><img class="projectImage" src="' + projects[count]['photo_path'] +
-            '" alt="project foto"/></div><div class="projectlink"><a class="pull-right" href="/project/beoordelen/' + projects[count]['id'] + '">Bekijk het project!</a></div></div></div>',
+            content: bubbleContent,
             shadowStyle: 1,
             padding: 0,
             backgroundColor: 'rgba(255,255,255,0.975)',
