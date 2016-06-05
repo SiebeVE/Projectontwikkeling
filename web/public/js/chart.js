@@ -36,7 +36,7 @@ var charts = [];
 						chartType = "radar";
 						labels = [];
 						data = [];
-						label = $currentQuestion.find(".panel-heading").text();
+						label = $currentQuestion.find(".question-heading").text();
 
 						var jsonText = JSON.parse($jsonCounted.text());
 						$controls.data("jsonData", jsonText);
@@ -59,9 +59,9 @@ var charts = [];
 					else {
 						// Was radio/checkbox
 						chartType = "polarArea";
-						var $answers = $currentQuestion.find(".panel-body p");
+						var $answers = $currentQuestion.find(".question-body p");
 						labels = [];
-						label = $currentQuestion.find(".panel-heading").text();
+						label = $currentQuestion.find(".question-heading").text();
 						data = [];
 						//									console.log($answers);
 						var hasAnswersSup = true;

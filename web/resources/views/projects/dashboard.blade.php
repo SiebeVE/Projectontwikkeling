@@ -52,6 +52,9 @@
                         <td>
                             <a href="{{ url('/admin/project/bewerk', $project->id) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                         </td>
+                        <td>
+                            <a href="{{ url('/admin/project/statistieken', $project->id) }}"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+                        </td>
                     </tr>
                 @endforeach
             </table>

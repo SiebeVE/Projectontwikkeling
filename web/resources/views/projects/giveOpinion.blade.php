@@ -5,6 +5,20 @@
 @endsection
 
 @section('content')
+	<div id="banner" >
+		<div id="banner-wrapper" class="clearfix">
+			<div class="banner-slogan">
+				<p>Atypisch Antwerpen</p>
+
+			</div>
+			<div class="banner-text">
+				<p>Projecten</p>
+				<p>in jouw</p>
+				<p>buurt</p>
+			</div>
+		</div>
+	</div>
+
 	<div class="container">
 		<div class="col-md-12 dashboard giveOpinion">
 			<div class="timelineBS">
@@ -49,13 +63,16 @@
 									data-date="{{$phase["start"]->format("d/m/Y")}}">
 									@if($phase["currentPhase"])
 										<h1>Geef uw mening over {{ $data["projectName"] }}</h1>
-										<h4>{{ $data["phaseName"] }}</h4>
-										<div class="phasebekijken col-md-8">
+
+										<div class="phaseDescription col-md-7">
+											<h4>{{ $data["phaseName"] }}</h4>
 											<h5>Beschrijving:</h5>
 											<p>{{$data["phaseDescription"]}}</p>
 										</div>
-										<div class="col-md-4" id="imagePlaceholder">
-											image
+										<div class="col-md-5" >
+											<div id="imagePlaceholder">
+												<img class="projectImage" src="{{$project->photo_path}}" style="left: {{$project->photo_left_offset}};" alt="project foto"/>
+											</div>
 										</div>
 										<div class="col-md-12">
 											<h4 id="questionList">Vragenlijst</h4>

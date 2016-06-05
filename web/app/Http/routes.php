@@ -64,6 +64,7 @@ Route::group(['middleware' => 'web'], function ()
 	Route::get('project/overzicht', 'ProjectController@overzicht');
 
 	Route::get('auth/token', 'Auth\AuthController@authAProfile');
+	Route::get('project/statistieken/{project}', 'ProjectController@getStats');
 
 	Route::group(['prefix' => 'admin'], function ()
 	{

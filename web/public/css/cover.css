@@ -1,0 +1,8 @@
+#wrapper {
+    width: 100%;
+    background: url(../images/shopping-street-1.jpg) no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}

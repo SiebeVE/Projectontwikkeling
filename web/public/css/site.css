@@ -99,7 +99,8 @@ form[name=create] b.control-label
 form[name=create] .upload #imagePlaceholder,
 #input-specific-media .upload #imagePlaceholder,
 .projectoverzicht #imagePlaceholder,
-.projectImageContainer #imagePlaceholder
+.projectImageContainer #imagePlaceholder,
+.giveOpinion #imagePlaceholder
 {
 	display: block;
 	width: 340px;
