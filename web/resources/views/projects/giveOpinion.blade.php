@@ -5,6 +5,20 @@
 @endsection
 
 @section('content')
+	<div id="banner" >
+		<div id="banner-wrapper" class="clearfix">
+			<div class="banner-slogan">
+				<p>Atypisch Antwerpen</p>
+
+			</div>
+			<div class="banner-text">
+				<p>Projecten</p>
+				<p>in jouw</p>
+				<p>buurt</p>
+			</div>
+		</div>
+	</div>
+
 	<div class="container">
 		<div class="col-md-12 dashboard giveOpinion">
 			<div class="timelineBS">
@@ -20,7 +34,8 @@
 											>Start {{$phase["name"]}}</a>
 										</li>
 										@if($phase["currentPhase"])
-											<li><a class="flipped today" data-date="{{ today()->format("d/m/Y") }}" href="#">Vandaag</a></li>
+											<li><a class="flipped today" data-date="{{ today()->format("d/m/Y") }}"
+												   href="#">Vandaag</a></li>
 										@endif
 										<li><a href="#0"
 											   data-date="{{$phase["end"]->format("d/m/Y")}}"
@@ -48,64 +63,78 @@
 									data-date="{{$phase["start"]->format("d/m/Y")}}">
 									@if($phase["currentPhase"])
 										<h1>Geef uw mening over {{ $data["projectName"] }}</h1>
-										<h4>{{ $data["phaseName"] }}</h4>
-										<div class="phasebekijken col-md-8">
+
+										<div class="phaseDescription col-md-7">
+											<h4>{{ $data["phaseName"] }}</h4>
 											<h5>Beschrijving:</h5>
 											<p>{{$data["phaseDescription"]}}</p>
 										</div>
-									<div class="col-md-4" id="imagePlaceholder">
-										image
-									</div>
-									<div class="col-md-12">
-										<h4 id="questionList">Vragenlijst</h4>
-										<form method="post" name="opinion">
-											{{ csrf_field() }}
-											<div id="opinion" class="grid" style="height:{{ $data["parentHeight"] }}">
-												@foreach($data["elements"] as $idQuestion=>$question)
-													<div class="grid-item--width{{$question["options"]["width"]}} grid-item"
-														 style="left: {{$question["options"]["left"]}}; top: {{$question["options"]["top"]}};">
-														@if(isset($question["answers"]) && count($question["answers"]) > 0)
-															{{-- Meer keuze vraag --}}
-															<b class="form-label">{{ $question["question"] }}</b>
-															<div>
-																@foreach($question["answers"] as $idAnswer=>$answer)
-																	<div class="{{ $question["sort"] }}">
-																		<label><input type="{{ $question["sort"] }}"
-																					  value="{{ $question["sort"] == "checkbox" ? $answer["id"] : $answer["answer"] }}"
-																					  name="question-{{$idQuestion}}{{ $question["sort"] == "checkbox" ? "[]" : "" }}"
-																					{{ old("question-".$idQuestion) == $idAnswer ? "checked" : "" }}>{{ $answer["answer"] }}
-																		</label>
-																	</div>
-																@endforeach
-															</div>
-														@else
-															{{--Enkele keuze vraag--}}
-															<label class="form-label"
-																   for="question-{{ $idQuestion }}">{{ $question["question"] }}</label>
-															@if($question["sort"] == "textarea")
-																<textarea class="form-control"
-																		  id="question-{{ $idQuestion }}"
-																		  name="question-{{ $idQuestion }}">{{ old("question-".$idQuestion) }}</textarea>
-															@else
-																<input class="form-control" type="text"
-																	   id="question-{{ $idQuestion }}"
-																	   name="question-{{ $idQuestion }}"
-																	   value="{{ old("question-".$idQuestion) }}">
-															@endif
-														@endif
-													</div>
-												@endforeach
+										<div class="col-md-5" >
+											<div id="imagePlaceholder">
+												<img class="projectImage" src="{{$project->photo_path}}" style="left: {{$project->photo_left_offset}};" alt="project foto"/>
 											</div>
+										</div>
+										<div class="col-md-12">
+											<h4 id="questionList">Vragenlijst</h4>
+											<form method="post" name="opinion">
+												{{ csrf_field() }}
+												<div id="opinion" class="grid"
+													 style="height:{{ $data["parentHeight"] }}">
+													@foreach($data["elements"] as $idQuestion=>$question)
+														<div class="grid-item--width{{$question["options"]["width"]}} grid-item"
+															 style="left: {{$question["options"]["left"]}}; top: {{$question["options"]["top"]}};">
+															@if(isset($question["answers"]) && count($question["answers"]) > 0)
+																{{-- Meer keuze vraag --}}
+																<b class="form-label">{{ $question["question"] }}</b>
+																<div>
+																	@foreach($question["answers"] as $idAnswer=>$answer)
+																		<div class="{{ $question["sort"] }}">
+																			<label><input type="{{ $question["sort"] }}"
+																						  value="{{ $question["sort"] == "checkbox" ? $answer["id"] : $answer["answer"] }}"
+																						  name="question-{{$idQuestion}}{{ $question["sort"] == "checkbox" ? "[]" : "" }}"
+																						{{ old("question-".$idQuestion) == ($question["sort"] == "checkbox" ? $answer["id"] : $answer["answer"]) ? "checked" : "" }}>{{ $answer["answer"] }}
+																			</label>
+																		</div>
+																	@endforeach
+																</div>
+															@else
+																{{--Enkele keuze vraag of video--}}
+																<label class="form-label"
+																	   for="question-{{ $idQuestion }}">{{ $question["question"] }}</label>
+																@if($question["sort"] == "textarea")
+																	<textarea class="form-control"
+																			  id="question-{{ $idQuestion }}"
+																			  name="question-{{ $idQuestion }}">{{ old("question-".$idQuestion) }}</textarea>
+																@elseif($question["sort"] == "text")
+																	<input class="form-control" type="text"
+																		   id="question-{{ $idQuestion }}"
+																		   name="question-{{ $idQuestion }}"
+																		   value="{{ old("question-".$idQuestion) }}">
+																@elseif($question["sort"] == "youtube")
+																	<div class="youtubeVid"
+																		 id="vid-{{$question["media"]}}"
+																		 data-youtubeid="{{$question["media"]}}"></div>
+																@elseif($question["sort"] == "picture")
+																	<div class="imagePlaceholder">
+																		<img src="{{ $question["media"] }}">
+																	</div>
+																@endif
+															@endif
+														</div>
+													@endforeach
+												</div>
 
-											<button type="submit" class="btn btn-primary pull-right createButton">Verstuur</button>
-										</form>
-									</div>
+												<button type="submit" class="btn btn-primary pull-right createButton">
+													Verstuur
+												</button>
+											</form>
+										</div>
 									@else
 										Full
 									@endif
 								</li>
 								@if($phase["currentPhase"])
-{{--									<li data-date="{{ today()->format("d/m/Y") }}">Candaag</li>--}}
+									{{--									<li data-date="{{ today()->format("d/m/Y") }}">Candaag</li>--}}
 								@endif
 								<li data-date="{{$phase["end"]->format("d/m/Y")}}">Empty</li>
 							@endforeach
@@ -119,6 +148,7 @@
 
 @section('pageJs')
 	<script src="{{ url('/js/modernizr.js') }}"></script>
+	<script src="{{ url('/js/fitVid.js')}}"></script>
 	<script>
 		jQuery(document).ready(function ( $ ) {
 			var timelines = $('.cd-horizontal-timeline'),
@@ -251,7 +281,7 @@
 						eventWidth = eventStyle.getPropertyValue("width");
 				eventLeft = Number(eventLeft.replace('px', '')) + Number(eventWidth.replace('px', '')) / 2;
 				var scaleValue = eventLeft / totWidth;
-//				console.log(selectedEvent);
+				//				console.log(selectedEvent);
 				setTransformValue(filling.get(0), 'scaleX', scaleValue);
 			}
 
@@ -399,4 +429,5 @@
 			}
 		});
 	</script>
+	<script src="{{ url('/js/opinion.js') }}"></script>
 @endsection

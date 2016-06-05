@@ -2,48 +2,72 @@
 
 @section('pageCss')
     <link href="{{ url('/') }}/css/typeahead.css" rel="stylesheet">
+    <link href="{{ url('/') }}/css/cover.css" rel="stylesheet">
 @endsection
 
 @section('content')
-    <div class="container dashboard">
+
+    <div id="banner" >
+        <div id="banner-wrapper" class="clearfix">
+            <div class="banner-slogan">
+                <p>Atypisch Antwerpen</p>
+
+            </div>
+            <div class="banner-text">
+                <p>Projecten</p>
+                <p>in jouw</p>
+                <p>buurt</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container dashboard statistics">
         <div class="col-md-12">
             <h1>Statistieken van {{ $project->name }}</h1>
             <input type="hidden" class="hidden" name="token" id="token" value="{{ $token }}">
-            <div class="col-sm-12">
-                <input type="text" id="wordInput">
-            </div>
             @foreach($stats as $phaseName=>$dataPhase)
                 <div class="phase-stats">
-                    <h2>{{ $phaseName }}</h2>
-                    <div class="text-muted">{{$dataPhase["description"]}}</div>
-                    <div class="text-muted">{{$dataPhase["start"]}} - {{$dataPhase["eind"]}}</div>
+                    <div class="phaseInfo">
+                        <h2>{{ $phaseName }}</h2>
+                        <div class="text-muted">{{$dataPhase["description"]}}</div>
+                        <div class="text-muted dates">{{$dataPhase["start"]}} - {{$dataPhase["eind"]}}</div>
+                    </div>
+                    <div class="col-sm-6 col-lg-offset-3 wordInputDiv">
+                        <input type="text" id="wordInput">
+                    </div>
+
                     <div class="charts clearfix"></div>
-                    @foreach($dataPhase["data"] as $question=>$questionData)
-                        <div class="panel panel-default question" data-questionKey="{{$question}}">
-                            <div class="panel-heading">{{$question}}</div>
-                            <div class="panel-body">
-                                @if(count($questionData["answers"]) > 0)
-                                    @if(array_key_exists("counted",$questionData))
-                                        <div class="hidden jsonData">{{ json_encode($questionData["counted"]) }}</div>
-                                        @foreach($questionData["answers"] as $answer)
-                                            <p>{{ $answer }}</p>
-                                        @endforeach
-                                    @else
-                                        <p data-answerd="{{ $questionData["totalAnswers"] }}">Totaal beantwoord: <span
-                                                    class="total">{{ $questionData["totalAnswers"] }}</span>
-                                        </p>
-                                        @foreach($questionData["answers"] as $answer)
-                                            <p><span class="answer">{{ $answer["answer"] }}</span>: <span
-                                                        class="count">{{ $answer["count"] }}</span>
-                                                ({{ $answer["percentage"] }}%)</p>
-                                        @endforeach
-                                    @endif
-                                @else
-                                    <span>Er zijn nog geen antwoorden binnen gekomen</span>
-                                @endif
-                            </div>
-                        </div>
-                    @endforeach
+                    <div class="questions">
+                        @foreach($dataPhase["data"] as $question=>$questionData)
+                            @if(!($questionData["type"] == "youtube" || $questionData["type"] == "picture"))
+                                <div class="question-default question" data-questionKey="{{$question}}">
+                                    <div class="question-heading">{{$question}}</div>
+                                    <div class="question-body">
+                                        @if(count($questionData["answers"]) > 0)
+                                            @if(array_key_exists("counted",$questionData))
+                                                <div class="hidden jsonData">{{ json_encode($questionData["counted"]) }}</div>
+                                                @foreach($questionData["answers"] as $answer)
+                                                    <p>{{ $answer }}</p>
+                                                @endforeach
+                                            @else
+                                                <p data-answerd="{{ $questionData["totalAnswers"] }}">Totaal
+                                                    beantwoord: <span
+                                                            class="total">{{ $questionData["totalAnswers"] }}</span>
+                                                </p>
+                                                @foreach($questionData["answers"] as $answer)
+                                                    <p><span class="answer">{{ $answer["answer"] }}</span>: <span
+                                                                class="count">{{ $answer["count"] }}</span>
+                                                        ({{ $answer["percentage"] }}%)</p>
+                                                @endforeach
+                                            @endif
+                                        @else
+                                            <span>Er zijn nog geen antwoorden binnen gekomen</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
             @endforeach
             <div class="hidden ignoredWords">
@@ -53,6 +77,14 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('footer')
+    <footer class="footer">
+        <div class="container text-center">
+            <p class="text-muted">&copy; 2016 Stad Antwerpen</p>
+        </div>
+    </footer>
 @endsection
 
 @section('pageJs')

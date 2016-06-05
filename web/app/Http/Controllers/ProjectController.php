@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 //use App\Phase;
+use App\Answer;
 use App\Project;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -181,6 +182,9 @@ class ProjectController extends Controller
 				"projectName" => $project->name,
 				"phaseName" => $currentPhase->name,
 				"parentHeight" => $currentPhase->parentHeight,
+				"projectName"      => $project->name,
+				"phaseName"        => $currentPhase->name,
+				"parentHeight"     => $currentPhase->parentHeight,
 				"phaseDescription" => $currentPhase->description
 			];
 			foreach ($currentPhase->questions as $questionNumber => $question) {
@@ -197,11 +201,16 @@ class ProjectController extends Controller
 						$questionsArr["elements"][$questionNumber]["answers"][$answerNumber]["id"] = $possibleAnswer->id;
 					}
 				}
+				if (isset($question->media) && $question->media != "")
+				{
+					$questionsArr["elements"][$questionNumber]["media"] = $question->media;
+				}
 			}
 			//dd($phasesArr);
 			return view('projects.giveOpinion', [
 				"data" => $questionsArr,
 				"phases" => $phasesArr,
+				"project" => $project,
 			]);
 		}
 		abort(404, "Geen huidige phase gevonden");
@@ -216,7 +225,7 @@ class ProjectController extends Controller
 	 */
 	public function postOpinion(Project $project, Request $request)
 	{
-		$user = Auth::user();
+		//$user = Auth::user();
 		$phase = $project->getCurrentPhase();
 
 		$questions = $phase->questions;
@@ -233,9 +242,10 @@ class ProjectController extends Controller
 					$multiAnswer = true;
 				}
 
-				$answered = $user->answers()->create([
-					"question_id" => $question->id,
-					"answer" => $answer,
+				$answered = Answer::create([
+					"user_id"         => Auth::check() ? Auth::user()->id : NULL,
+					"question_id"     => $question->id,
+					"answer"          => $answer,
 					"multipleAnswers" => $multiAnswer,
 				]);
 
@@ -376,58 +386,81 @@ class ProjectController extends Controller
 		$stats = NULL;
 		$fullProject = $project->load('phases.questions.answers.multipleAnswerdes', 'phases.questions.possibleAnswers');
 
-		foreach ($fullProject->phases as $phase) {
+		foreach ($fullProject->phases as $phase)
+		{
 			$phaseArray = [
-				"start" => $phase->start->format('d/m/Y'),
-				"eind" => $phase->end->format('d/m/Y'),
+				"start"       => $phase->start->format('d/m/Y'),
+				"eind"        => $phase->end->format('d/m/Y'),
 				"description" => $phase->description,
-				"data" => [],
+				"data"        => [],
 			];
-			foreach ($phase->questions as $question) {
+			foreach ($phase->questions as $question)
+			{
 				// [ "word" => count number]
 				$wordsArray = [];
 
 				$totalAnswers = count($question->answers);
 				$questionArray = [
-					"type" => $question->sort,
+					"type"         => $question->sort,
 					"totalAnswers" => $totalAnswers,
-					"answers" => [],
+					"answers"      => [],
 				];
-				switch ($question->sort) {
+				switch ($question->sort)
+				{
 					case "radio":
 					case "checkbox":
 						// Count the answers
-						foreach ($question->possibleAnswers as $possibleAnswer) {
+						foreach ($question->possibleAnswers as $possibleAnswer)
+						{
 							//dump($possibleAnswer);
 							$questionArray["answers"][$possibleAnswer->id] = [
-								"answer" => $possibleAnswer->answer,
-								"count" => 0,
+								"answer"     => $possibleAnswer->answer,
+								"count"      => 0,
 								"percentage" => 0,
 							];
 						}
 
-						foreach ($question->answers as $answer) {
+						foreach ($question->answers as $answer)
+						{
 							//dump($answer);
-							if ($answer->multipleAnswers == "1" && $answer->answer == NULL) {
+							if ($answer->multipleAnswers == "1" && $answer->answer == NULL)
+							{
 								// Checkbox
-								foreach ($answer->multipleAnswerdes as $multiAnswer) {
+								foreach ($answer->multipleAnswerdes as $multiAnswer)
+								{
 									//dump($multiAnswer);
 									$questionArray["answers"][$multiAnswer->possible_answer_id]["count"]++;
 									// Calculate percentage
 									$percentage = floor(($questionArray["answers"][$multiAnswer->possible_answer_id]["count"] / $totalAnswers) * 100);
 									$questionArray["answers"][$multiAnswer->possible_answer_id]["percentage"] = $percentage;
 								}
-							} else {
-								$questionArray["answers"][$answer->id]["count"]++;
-								// Calculate percentage
-								$percentage = floor(($questionArray["answers"][$answer->id]["count"] / $totalAnswers) * 100);
-								$questionArray["answers"][$answer->id]["percentage"] = $percentage;
+							}
+							else
+							{
+								//dump($answer);
+								//dd($questionArray);
+								$answerId = 0;
+								foreach ($questionArray["answers"] as $key => $answerR){
+									if($answerR["answer"] === $answer->answer)
+									{
+										$answerId = $key;
+										break;
+									}
+								}
+								if($answerId != 0)
+								{
+									$questionArray["answers"][$answerId]["count"]++;
+									// Calculate percentage
+									$percentage = floor(($questionArray["answers"][$answerId]["count"] / $totalAnswers) * 100);
+									$questionArray["answers"][$answerId]["percentage"] = $percentage;
+								}
 							}
 						}
 						break;
 					case "text":
 					case "textarea":
-						foreach ($question->answers as $answer) {
+						foreach ($question->answers as $answer)
+						{
 							// Just add them
 							$questionArray["answers"][] = $answer->answer;
 

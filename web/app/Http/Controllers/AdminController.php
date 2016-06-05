@@ -280,7 +280,7 @@ class AdminController extends Controller
 			$phase->parentHeight = $data["parentHeight"];
 			$phase->save();
 
-			foreach ($data["elements"] as $question)
+			foreach ($data["elements"] as $questionKey => $question)
 			{
 				// Save the new question
 				$questionDatabase = $phase->questions()->create([
@@ -301,9 +301,25 @@ class AdminController extends Controller
 						]);
 					}
 				}
-				if(array_has($question, "media") && $question["media"] != "")
+				if (array_has($question, "media") && $question["media"] != "")
 				{
-					$questionDatabase->media = $question["media"];
+					if ($question["sort"] == "picture")
+					{
+						$tempSaveFolderPhasePicture = "/images/tempPhases";
+						$hashImage = $question["media"];
+						$publicSaveFolder = '/images/phases';
+						$finalSaveFolder = base_path('public' . $publicSaveFolder);
+						$extension = substr($hashImage, strrpos($hashImage, '.') + 1);
+						$newImageName = "phasePicture-" . $project->id . $phase->id . $questionKey . "." . $extension;
+						// Move picture and rename
+						rename(base_path('public'.$tempSaveFolderPhasePicture) . "/" . $hashImage, $finalSaveFolder . "/" . $newImageName);
+						//dump($publicSaveFolder . "/" . $newImageName);
+						$questionDatabase->media = $publicSaveFolder . "/" . $newImageName;
+					}
+					else
+					{
+						$questionDatabase->media = $question["media"];
+					}
 					$questionDatabase->save();
 				}
 			}
@@ -320,6 +336,7 @@ class AdminController extends Controller
 		if ($numberOfPhases == $phaseRelativeId)
 		{
 			// Finished new phases
+			return 'done';
 			return redirect('admin/project/dashboard');
 		}
 		else
@@ -365,6 +382,7 @@ class AdminController extends Controller
 				"eind"        => $phase->end->format('d/m/Y'),
 				"description" => $phase->description,
 				"data"        => [],
+				"id"		=> $phase->id,
 			];
 			foreach ($phase->questions as $question)
 			{
@@ -409,10 +427,23 @@ class AdminController extends Controller
 							}
 							else
 							{
-								$questionArray["answers"][$answer->id]["count"]++;
-								// Calculate percentage
-								$percentage = floor(($questionArray["answers"][$answer->id]["count"] / $totalAnswers) * 100);
-								$questionArray["answers"][$answer->id]["percentage"] = $percentage;
+								//dump($answer);
+								//dd($questionArray);
+								$answerId = 0;
+								foreach ($questionArray["answers"] as $key => $answerR){
+									if($answerR["answer"] === $answer->answer)
+									{
+										$answerId = $key;
+										break;
+									}
+								}
+								if($answerId != 0)
+								{
+									$questionArray["answers"][$answerId]["count"]++;
+									// Calculate percentage
+									$percentage = floor(($questionArray["answers"][$answerId]["count"] / $totalAnswers) * 100);
+									$questionArray["answers"][$answerId]["percentage"] = $percentage;
+								}
 							}
 						}
 						break;

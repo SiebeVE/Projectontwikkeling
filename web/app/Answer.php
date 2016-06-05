@@ -17,6 +17,7 @@ class Answer extends Model
 		'question_id',
 		'answer',
 		"multipleAnswers",
+		"user_id"
 	];
 
 	/**

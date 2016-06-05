@@ -580,7 +580,7 @@
 					});
 
 					ytPlayers[ inputName ] = ytPlayer;
-					console.log(ytPlayers);
+					console.log($newBlock);
 					$newBlock.fitVids();
 				}
 

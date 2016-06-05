@@ -34,7 +34,7 @@
 
 .grid-item--width4,
 .grid-picture-4,
-#example-field.grid .grid-item .imagePlaceholder img
+.grid .grid-item .imagePlaceholder img
 {
 	width: 100%;
 }
