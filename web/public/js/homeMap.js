@@ -171,7 +171,7 @@ function initMap() {
                + projects[count]['name'] + '<span class="afgesloten"> (Afgesloten)</span></h3>' + '<div class="projectContent"><h5>Omschrijving: </h5><p>' + projects[count]['description'] + '</p><h6>Adres: ' +
                projects[count]['address'] + '</h6></div><div class="projectImageContainer"><div id="imagePlaceholder"><img class="projectImage" src="' +
                projects[count]['photo_path'] + '" alt="project foto"/></div><div class="projectlink"><a class="pull-right" href="' + window.location.origin +
-               '/project/statistieken/' + projects[count]['id'] + '">Bekijk het project!</a></div></div></div>'
+               '/project/statistieken/' + projects[count]['id'] + '">Bekijk de statistieken!</a></div></div></div>'
         }
         else {
             bubbleContent = '<div class="infoProject clearfix" contenteditable="false"><h3>'
