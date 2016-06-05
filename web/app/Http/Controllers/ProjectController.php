@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 //use App\Phase;
 use App\Answer;
+use App\DefaultQuestion;
 use App\Project;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -111,16 +112,17 @@ class ProjectController extends Controller
 
 		$toValidate = [
 			// Check for project
-			'name' => 'required',
+			'name'        => 'required',
 			'description' => 'required|string|max:600',
-			'address' => 'required',
-			'longitude' => 'required',
-			'latitude' => 'required',
-			'tags' => 'required',];
+			'address'     => 'required',
+			'longitude'   => 'required',
+			'latitude'    => 'required',
+			'tags'        => 'required',];
 
 		$phases = $project->phases;
 
-		foreach ($phases as $phase) {
+		foreach ($phases as $phase)
+		{
 			$phase->update(
 				[
 					$phase->name = $request->input('phase_name' . $phase->id),
@@ -165,38 +167,50 @@ class ProjectController extends Controller
 
 		$currentPhase = $project->getCurrentPhase();
 
-		if ($currentPhase != NULL) {
+		if ($currentPhase != NULL)
+		{
 			// Build array for phases
 			$phasesArr = [];
-			foreach ($project->phases as $phase) {
+			foreach ($project->phases as $phase)
+			{
 				$phasesArr[] = [
-					"name" => $phase->name,
-					"description" => $phase->description,
-					"start" => $phase->start,
-					"end" => $phase->end,
+					"name"         => $phase->name,
+					"description"  => $phase->description,
+					"start"        => $phase->start,
+					"end"          => $phase->end,
 					"currentPhase" => $currentPhase == $phase,
 				];
 			}
 			// Build the array for the questions
 			$questionsArr = [
-				"projectName" => $project->name,
-				"phaseName" => $currentPhase->name,
-				"parentHeight" => $currentPhase->parentHeight,
 				"projectName"      => $project->name,
 				"phaseName"        => $currentPhase->name,
 				"parentHeight"     => $currentPhase->parentHeight,
 				"phaseDescription" => $currentPhase->description
 			];
-			foreach ($currentPhase->questions as $questionNumber => $question) {
+			foreach ($currentPhase->questions as $questionNumber => $question)
+			{
+				if($question->sort == "default")
+				{
+					$defQuestion = DefaultQuestion::where('id', $question->default_question_id)->with("possibleAnswers")->first();
+					//dd($defQuestion);
+					$question->sort = $defQuestion->sort;
+					$question->question = $defQuestion->question;
+					$question->width = $defQuestion->width;
+					$question->possibleAnswers = $defQuestion->possibleAnswers;
+					//dd($question);
+				}
 				$questionsArr["elements"][$questionNumber]["sort"] = $question->sort;
 				$questionsArr["elements"][$questionNumber]["question"] = $question->question;
 				//$questionsArr["elements"][$questionNumber]["id"] = $question->id;
 				$questionsArr["elements"][$questionNumber]["options"]["left"] = $question->leftOffset;
 				$questionsArr["elements"][$questionNumber]["options"]["top"] = $question->topOffset;
 				$questionsArr["elements"][$questionNumber]["options"]["width"] = $question->width;
-				if (count($question->possibleAnswers) > 0) {
+				if (count($question->possibleAnswers) > 0)
+				{
 					// Has possible answers
-					foreach ($question->possibleAnswers as $answerNumber => $possibleAnswer) {
+					foreach ($question->possibleAnswers as $answerNumber => $possibleAnswer)
+					{
 						$questionsArr["elements"][$questionNumber]["answers"][$answerNumber]["answer"] = $possibleAnswer->answer;
 						$questionsArr["elements"][$questionNumber]["answers"][$answerNumber]["id"] = $possibleAnswer->id;
 					}
@@ -208,8 +222,8 @@ class ProjectController extends Controller
 			}
 			//dd($phasesArr);
 			return view('projects.giveOpinion', [
-				"data" => $questionsArr,
-				"phases" => $phasesArr,
+				"data"    => $questionsArr,
+				"phases"  => $phasesArr,
 				"project" => $project,
 			]);
 		}
@@ -230,16 +244,29 @@ class ProjectController extends Controller
 
 		$questions = $phase->questions;
 
-		foreach ($questions as $questionId => $question) {
-			if (isset($request["question-" . $questionId])) {
+		foreach ($questions as $questionId => $question)
+		{
+			if (isset($request["question-" . $questionId]))
+			{
 				// Save the opinion to the user
-				//dd($question->id);
+				dump($question);
 				$answer = $request["question-" . $questionId];
 				$multiAnswer = false;
-
-				if (is_array($answer)) {
+				dump($answer);
+				if (is_array($answer))
+				{
 					$answer = NULL;
 					$multiAnswer = true;
+				}
+
+				$defaultQuestion = false;
+				$newSort = "";
+				if($question->sort == "default")
+				{
+					$defQuestion = DefaultQuestion::where('id', $question->default_question_id)->first();
+					$defaultQuestion = true;
+					$newSort = $defQuestion->sort;
+					//dd($question);
 				}
 
 				$answered = Answer::create([
@@ -249,8 +276,10 @@ class ProjectController extends Controller
 					"multipleAnswers" => $multiAnswer,
 				]);
 
-				if ($multiAnswer) {
-					foreach ($request["question-" . $questionId] as $answer) {
+				if ($multiAnswer)
+				{
+					foreach ($request["question-" . $questionId] as $answer)
+					{
 						$answered->multipleAnswerdes()->create([
 							"possible_answer_id" => $answer
 						]);
@@ -258,21 +287,30 @@ class ProjectController extends Controller
 				}
 
 				// Handle for the answer count
-				if ($question->sort == "text" || $question->sort == "textarea") {
-					if ($question->word_count) {
+				if ($question->sort == "text" || $question->sort == "textarea" || ($defaultQuestion && ($newSort == "text" || $newSort == "textarea")))
+				{
+					if ($question->word_count)
+					{
 						$prevWordsArray = unserialize($question->word_count);
-					} else {
+					}
+					else
+					{
 						$prevWordsArray = [];
 					}
 					//dd($prevWordsArray);
 					// Re-count the array
 					$wordArray = stringToWordArray($answered->answer);
-					foreach ($wordArray as $word) {
+					foreach ($wordArray as $word)
+					{
 						$word = strtolower($word);
-						if (!checkIfWordIsIgnored($word)) {
-							if (key_exists($word, $prevWordsArray)) {
+						if (!checkIfWordIsIgnored($word))
+						{
+							if (key_exists($word, $prevWordsArray))
+							{
 								$prevWordsArray[$word]++;
-							} else {
+							}
+							else
+							{
 								$prevWordsArray[$word] = 1;
 							}
 						}
@@ -282,7 +320,9 @@ class ProjectController extends Controller
 					$question->save();
 				}
 				//dd($request["question-".$questionId]);
-			} else {
+			}
+			else
+			{
 				//dd("bestaat niet");
 			}
 		}
@@ -301,17 +341,20 @@ class ProjectController extends Controller
 		$finalSaveFolder = base_path('public' . $publicSaveFolder);
 
 		// Image handler, check if real image and upload to temp
-		if ($request->hasFile('image') && $request->file('image')->isValid()) {
+		if ($request->hasFile('image') && $request->file('image')->isValid())
+		{
 			$file = $request->file('image')->getRealPath();
 			$fileInfo = getimagesize($file);
 
-			if ($fileInfo) {
+			if ($fileInfo)
+			{
 				// Get real mime type
 				$finfo = new finfo(FILEINFO_MIME_TYPE);
 				$mime = $finfo->buffer(file_get_contents($file));
 				$extension = substr($mime, strrpos($mime, '/') + 1);
 
-				if (in_array($extension, $allowedExtensions)) {
+				if (in_array($extension, $allowedExtensions))
+				{
 					$image = file_get_contents($request->file('image')->getRealPath());
 					$hashImage = md5($image) . time();
 
@@ -321,16 +364,21 @@ class ProjectController extends Controller
 
 					$request->merge(array("hashImage" => $nameFile)); //Put hash in hidden input field
 					//$request->hashImage = $hashImage;
-				} else {
+				}
+				else
+				{
 					$notAnImage = true;
 				}
 
-			} else {
+			}
+			else
+			{
 				$notAnImage = true;
 			}
 		}
 
-		if ($notAnImage || $request->hashImage == "") {
+		if ($notAnImage || $request->hashImage == "")
+		{
 			// When the file has failed on mime or php getimagesize
 			return redirect("admin/project/maken")->withErrors(["U moet een foto toevoegen."])->withInput();
 		}
@@ -353,15 +401,19 @@ class ProjectController extends Controller
 		$tagsId = array();
 		$tag_doesnt_exist = true;
 
-		foreach ($project_tags as $project_tag) {
-			foreach ($all_tags as $all_tag) {
-				if ($all_tag->name == $project_tag) {
+		foreach ($project_tags as $project_tag)
+		{
+			foreach ($all_tags as $all_tag)
+			{
+				if ($all_tag->name == $project_tag)
+				{
 					array_push($tagsId, $all_tag->id);
 					$tag_doesnt_exist = false;
 				}
 			}
 
-			if ($tag_doesnt_exist) {
+			if ($tag_doesnt_exist)
+			{
 				$newTag = Tag::create(['name' => $project_tag]);
 				//$newTag = DB::table('tags')->select('id')->where('name', '=', $project_tag);
 				$newTagId = $newTag->id;
@@ -373,7 +425,8 @@ class ProjectController extends Controller
 		}
 
 		$cur_ids = array();
-		foreach ($project->tags() as $tag) {
+		foreach ($project->tags() as $tag)
+		{
 			$cur_ids[] = $tag->id;
 		}
 
@@ -393,7 +446,7 @@ class ProjectController extends Controller
 				"eind"        => $phase->end->format('d/m/Y'),
 				"description" => $phase->description,
 				"data"        => [],
-				"id"		=> $phase->id,
+				"id"          => $phase->id,
 			];
 			foreach ($phase->questions as $question)
 			{
@@ -442,14 +495,15 @@ class ProjectController extends Controller
 								//dump($answer);
 								//dd($questionArray);
 								$answerId = 0;
-								foreach ($questionArray["answers"] as $key => $answerR){
-									if($answerR["answer"] === $answer->answer)
+								foreach ($questionArray["answers"] as $key => $answerR)
+								{
+									if ($answerR["answer"] === $answer->answer)
 									{
 										$answerId = $key;
 										break;
 									}
 								}
-								if($answerId != 0)
+								if ($answerId != 0)
 								{
 									$questionArray["answers"][$answerId]["count"]++;
 									// Calculate percentage
@@ -491,22 +545,26 @@ class ProjectController extends Controller
 		$mytime = Carbon::now();
 		$mytime->toDateTimeString();
 
-		foreach($phases as $phase) {
+		foreach ($phases as $phase)
+		{
 			$access = false;
-			if($phase->end->toDateTimeString() <= $mytime) {
+			if ($phase->end->toDateTimeString() <= $mytime)
+			{
 				$access = true;
 			}
 		}
 
-		if(!$access) {
+		if (!$access)
+		{
 			return redirect()->back();
 		}
-		else {
+		else
+		{
 			return view('projects.statistics', [
-				"project" => $project,
-				"stats" => $stats,
+				"project"      => $project,
+				"stats"        => $stats,
 				"ignoredWords" => $ignoredWords,
-				"token" => $token,
+				"token"        => $token,
 			]);
 		}
 

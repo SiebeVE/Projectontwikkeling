@@ -21,7 +21,8 @@ class Question extends Model
 		'topOffset',
 		'width',
 		'word_count',
-		'media'
+		'media',
+		'default_question_id'
 	];
 
 	/**

@@ -337,12 +337,14 @@ class AdminController extends Controller
 				}
 				else
 				{
+					//dd($question);
 					$questionDatabase = $phase->questions()->create([
 						"sort"                => $question["sort"],
 						"leftOffset"          => $question["options"]["left"],
 						"topOffset"           => $question["options"]["top"],
 						"default_question_id" => $question["defaultid"]
 					]);
+					//dd($questionDatabase);
 				}
 			}
 		}
@@ -408,10 +410,19 @@ class AdminController extends Controller
 			];
 			foreach ($phase->questions as $question)
 			{
+				//dump("Nieuwe fase");
 				// [ "word" => count number]
 				$wordsArray = [];
 
 				$totalAnswers = count($question->answers);
+				if ($question->sort == "default")
+				{
+					//dump("Is default");
+					$defQuestion = DefaultQuestion::where('id', $question->default_question_id)->with("possibleAnswers")->first();
+					$question->sort = $defQuestion->sort;
+					$question->possibleAnswers = $defQuestion->possibleAnswers;
+					$question->question = $defQuestion->question;
+				}
 				$questionArray = [
 					"type"         => $question->sort,
 					"totalAnswers" => $totalAnswers,
@@ -421,10 +432,11 @@ class AdminController extends Controller
 				{
 					case "radio":
 					case "checkbox":
+						//dump($question);
 						// Count the answers
 						foreach ($question->possibleAnswers as $possibleAnswer)
 						{
-							//dump($possibleAnswer);
+							//dump($possibleAnswer->answer);
 							$questionArray["answers"][$possibleAnswer->id] = [
 								"answer"     => $possibleAnswer->answer,
 								"count"      => 0,
@@ -440,6 +452,7 @@ class AdminController extends Controller
 								// Checkbox
 								foreach ($answer->multipleAnswerdes as $multiAnswer)
 								{
+									//dd($multiAnswer);
 									//dump($multiAnswer);
 									$questionArray["answers"][$multiAnswer->possible_answer_id]["count"]++;
 									// Calculate percentage
@@ -484,6 +497,7 @@ class AdminController extends Controller
 						$questionArray["counted"] = $wordsArray;
 						break;
 				}
+				//dump($question->question);
 				$phaseArray["data"][$question->question] = $questionArray;
 			}
 			$stats[$phase->name] = $phaseArray;
@@ -496,6 +510,8 @@ class AdminController extends Controller
 
 		$user = Auth::user();
 		$token = JWTAuth::fromUser($user);
+
+		//dump($stats);
 
 		return view('admin.statistics', [
 			"project"      => $project,

@@ -12,8 +12,7 @@ class Phase extends Model
 		'name',
 		'description',
 		'start',
-		'end',
-		"default_question_id"
+		'end'
 	];
 
 	/**
