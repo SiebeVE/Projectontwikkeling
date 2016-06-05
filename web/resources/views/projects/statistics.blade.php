@@ -7,7 +7,7 @@
 
 @section('content')
 
-    <div id="banner" >
+    <div id="banner">
         <div id="banner-wrapper" class="clearfix">
             <div class="banner-slogan">
                 <p>Atypisch Antwerpen</p>
@@ -32,41 +32,56 @@
                         <div class="text-muted">{{$dataPhase["description"]}}</div>
                         <div class="text-muted dates">{{$dataPhase["start"]}} - {{$dataPhase["eind"]}}</div>
                     </div>
-                    <div class="col-sm-6 col-lg-offset-3 wordInputDiv">
-                        <input type="text" id="wordInput">
-                    </div>
 
-                    <div class="charts clearfix"></div>
-                    <div class="questions">
-                        @foreach($dataPhase["data"] as $question=>$questionData)
-                            @if(!($questionData["type"] == "youtube" || $questionData["type"] == "picture"))
-                                <div class="question-default question" data-questionKey="{{$question}}">
-                                    <div class="question-heading">{{$question}}</div>
-                                    <div class="question-body">
-                                        @if(count($questionData["answers"]) > 0)
-                                            @if(array_key_exists("counted",$questionData))
-                                                <div class="hidden jsonData">{{ json_encode($questionData["counted"]) }}</div>
-                                                @foreach($questionData["answers"] as $answer)
-                                                    <p>{{ $answer }}</p>
-                                                @endforeach
-                                            @else
-                                                <p data-answerd="{{ $questionData["totalAnswers"] }}">Totaal
-                                                    beantwoord: <span
-                                                            class="total">{{ $questionData["totalAnswers"] }}</span>
-                                                </p>
-                                                @foreach($questionData["answers"] as $answer)
-                                                    <p><span class="answer">{{ $answer["answer"] }}</span>: <span
-                                                                class="count">{{ $answer["count"] }}</span>
-                                                        ({{ $answer["percentage"] }}%)</p>
-                                                @endforeach
-                                            @endif
-                                        @else
-                                            <span>Er zijn nog geen antwoorden binnen gekomen</span>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#charts{{$dataPhase["id"]}}">Grafieken</a></li>
+                            <li><a data-toggle="tab" href="#questions{{$dataPhase["id"]}}">Vragen</a></li>
+
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+
+                        <div id="charts{{$dataPhase["id"]}}" class="tab-pane fade in active">
+                            <div class="col-sm-6 col-lg-offset-3 wordInputDiv">
+                                <input type="text" id="wordInput">
+                            </div>
+                            <div class="charts clearfix"></div>
+                        </div>
+                        <div id="questions{{$dataPhase["id"]}}" class="tab-pane fade">
+                            <div class="questions">
+                                @foreach($dataPhase["data"] as $question=>$questionData)
+                                    @if(!($questionData["type"] == "youtube" || $questionData["type"] == "picture"))
+                                        <div class="question-default question" data-questionKey="{{$question}}">
+                                            <div class="question-heading">{{$question}}</div>
+                                            <div class="question-body">
+                                                @if(count($questionData["answers"]) > 0)
+                                                    @if(array_key_exists("counted",$questionData))
+                                                        <div class="hidden jsonData">{{ json_encode($questionData["counted"]) }}</div>
+                                                        @foreach($questionData["answers"] as $answer)
+                                                            <p>{{ $answer }}</p>
+                                                        @endforeach
+                                                    @else
+                                                        <p data-answerd="{{ $questionData["totalAnswers"] }}">Totaal
+                                                            beantwoord: <span
+                                                                    class="total">{{ $questionData["totalAnswers"] }}</span>
+                                                        </p>
+                                                        @foreach($questionData["answers"] as $answer)
+                                                            <p>
+                                                                <span class="answer">{{ $answer["answer"] }}</span>: <span
+                                                                        class="count">{{ $answer["count"] }}</span>
+                                                                ({{ $answer["percentage"] }}%)</p>
+                                                        @endforeach
+                                                    @endif
+                                                @else
+                                                    <span>Er zijn nog geen antwoorden binnen gekomen</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
             @endforeach
@@ -93,4 +108,4 @@
     <script src="{{ url('/js/typeahead.bundle.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
     <script src="{{ url('/js/tagsTypeAhead.js') }}"></script>
-@endsection
+    @endsection

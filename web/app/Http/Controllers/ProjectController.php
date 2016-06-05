@@ -393,6 +393,7 @@ class ProjectController extends Controller
 				"eind"        => $phase->end->format('d/m/Y'),
 				"description" => $phase->description,
 				"data"        => [],
+				"id"		=> $phase->id,
 			];
 			foreach ($phase->questions as $question)
 			{
@@ -404,6 +405,7 @@ class ProjectController extends Controller
 					"type"         => $question->sort,
 					"totalAnswers" => $totalAnswers,
 					"answers"      => [],
+
 				];
 				switch ($question->sort)
 				{
