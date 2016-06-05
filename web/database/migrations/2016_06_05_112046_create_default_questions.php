@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableMultiAnswerd extends Migration
+class CreateDefaultQuestions extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,12 @@ class CreateTableMultiAnswerd extends Migration
      */
     public function up()
     {
-        Schema::create('multiple_answerds', function (Blueprint $table) {
+        Schema::create('default_questions', function (Blueprint $table) {
             $table->increments('id');
+			$table->string("sort");
+			$table->string("question");
+			$table->integer("width")->unsigned();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -25,6 +29,6 @@ class CreateTableMultiAnswerd extends Migration
      */
     public function down()
     {
-        Schema::drop('multiple_answreds');
+        Schema::drop('default_questions');
     }
 }

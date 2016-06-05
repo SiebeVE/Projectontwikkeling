@@ -15,6 +15,7 @@ class PossibleAnswer extends Model
 	 */
 	protected $fillable = [
 		'answer',
+		'default_question_id'
 	];
 
 	/**
@@ -34,5 +35,15 @@ class PossibleAnswer extends Model
 	public function questions()
 	{
 		return $this->belongsTo('App\Question');
+	}
+
+	/**
+	 * Get the default question of this possible answer
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function defaultQuestions()
+	{
+		return $this->belongsTo('App\DefaultQuestion');
 	}
 }

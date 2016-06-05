@@ -6,6 +6,9 @@ jQuery.noConflict();
 (function ($) {
     $(function () {
         /* ----------------------------------------------Handle picture---------------------------------------------- */
+        $("#imagePlaceholder").on("click", "img.ui-draggable", function(){
+           $("#image").click();
+        });
         /**
          * Function to make image in create form draggable
          */

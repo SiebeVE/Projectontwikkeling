@@ -4,7 +4,7 @@
 	/*height: 75px;*/
 }
 
-#example-field .grid-item
+.containerPhase #example-field .grid-item
 {
 	cursor: move;
 }

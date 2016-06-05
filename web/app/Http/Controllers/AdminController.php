@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\DefaultQuestion;
+use App\PossibleAnswer;
 use App\Project;
 use App\User;
 use App\Word;
@@ -37,7 +39,8 @@ class AdminController extends Controller
 	public function getMakeProject()
 	{
 		$tags = Tag::lists('name', 'id');
-		return view('projects.make', compact('tags'));
+		$defaultQuestions = DefaultQuestion::get();
+		return view('projects.make', ["tags" => $tags, "questions" => $defaultQuestions]);
 	}
 
 	/**
@@ -49,6 +52,8 @@ class AdminController extends Controller
 	 */
 	public function postMakeProject(Request $request)
 	{
+		//dd($request);
+
 		$notAnImage = false;
 		$allowedExtensions = ["jpeg", "png"]; // from mime type => after the slash
 
@@ -100,7 +105,7 @@ class AdminController extends Controller
 			"address"     => 'required',
 			'longitude'   => 'required',
 			'latitude'    => 'required',
-			'tags'		=>	'required',];
+			'tags'        => 'required',];
 
 		// Phase validation handler, get all inputs of phase and put in validation array
 		//dd($request->numberOfPhases);
@@ -173,6 +178,7 @@ class AdminController extends Controller
 		}
 
 		$project->tags()->attach($tagsId);
+		$project->defaultQuestions()->attach(array_flatten($request["standardQuestions"]));
 
 		$project->save();
 
@@ -209,10 +215,14 @@ class AdminController extends Controller
 		$user = Auth::user();
 		$token = JWTAuth::fromUser($user);
 
+		$defaultQuestions = $project->defaultQuestions()->with("possibleAnswers")->get();
+		//dd($defaultQuestions);
+
 		//dd($requestedPhase);
 		return view('projects.phase.add', [
-			'phase' => $requestedPhase,
-			"token" => $token,
+			'phase'     => $requestedPhase,
+			"questions" => $defaultQuestions,
+			"token"     => $token,
 		]);
 	}
 
@@ -282,45 +292,57 @@ class AdminController extends Controller
 
 			foreach ($data["elements"] as $questionKey => $question)
 			{
-				// Save the new question
-				$questionDatabase = $phase->questions()->create([
-					"sort"       => $question["sort"],
-					"question"   => $question["question"],
-					"leftOffset" => $question["options"]["left"],
-					"topOffset"  => $question["options"]["top"],
-					"width"      => $question["options"]["width"],
-				]);
-
-				if (array_has($question, "answers") && count($question["answers"]) > 0)
+				if ($question["sort"] != "default")
 				{
-					// Has multiple possible answers
-					foreach ($question["answers"] as $answer)
+					// Save the new question
+					$questionDatabase = $phase->questions()->create([
+						"sort"       => $question["sort"],
+						"question"   => $question["question"],
+						"leftOffset" => $question["options"]["left"],
+						"topOffset"  => $question["options"]["top"],
+						"width"      => $question["options"]["width"],
+					]);
+
+					if (array_has($question, "answers") && count($question["answers"]) > 0)
 					{
-						$possibleAnswer = $questionDatabase->possibleAnswers()->create([
-							"answer" => $answer
-						]);
+						// Has multiple possible answers
+						foreach ($question["answers"] as $answer)
+						{
+							$possibleAnswer = $questionDatabase->possibleAnswers()->create([
+								"answer" => $answer
+							]);
+						}
+					}
+					if (array_has($question, "media") && $question["media"] != "")
+					{
+						if ($question["sort"] == "picture")
+						{
+							$tempSaveFolderPhasePicture = "/images/tempPhases";
+							$hashImage = $question["media"];
+							$publicSaveFolder = '/images/phases';
+							$finalSaveFolder = base_path('public' . $publicSaveFolder);
+							$extension = substr($hashImage, strrpos($hashImage, '.') + 1);
+							$newImageName = "phasePicture-" . $project->id . $phase->id . $questionKey . "." . $extension;
+							// Move picture and rename
+							rename(base_path('public' . $tempSaveFolderPhasePicture) . "/" . $hashImage, $finalSaveFolder . "/" . $newImageName);
+							//dump($publicSaveFolder . "/" . $newImageName);
+							$questionDatabase->media = $publicSaveFolder . "/" . $newImageName;
+						}
+						else
+						{
+							$questionDatabase->media = $question["media"];
+						}
+						$questionDatabase->save();
 					}
 				}
-				if (array_has($question, "media") && $question["media"] != "")
+				else
 				{
-					if ($question["sort"] == "picture")
-					{
-						$tempSaveFolderPhasePicture = "/images/tempPhases";
-						$hashImage = $question["media"];
-						$publicSaveFolder = '/images/phases';
-						$finalSaveFolder = base_path('public' . $publicSaveFolder);
-						$extension = substr($hashImage, strrpos($hashImage, '.') + 1);
-						$newImageName = "phasePicture-" . $project->id . $phase->id . $questionKey . "." . $extension;
-						// Move picture and rename
-						rename(base_path('public'.$tempSaveFolderPhasePicture) . "/" . $hashImage, $finalSaveFolder . "/" . $newImageName);
-						//dump($publicSaveFolder . "/" . $newImageName);
-						$questionDatabase->media = $publicSaveFolder . "/" . $newImageName;
-					}
-					else
-					{
-						$questionDatabase->media = $question["media"];
-					}
-					$questionDatabase->save();
+					$questionDatabase = $phase->questions()->create([
+						"sort"                => $question["sort"],
+						"leftOffset"          => $question["options"]["left"],
+						"topOffset"           => $question["options"]["top"],
+						"default_question_id" => $question["defaultid"]
+					]);
 				}
 			}
 		}
@@ -336,7 +358,7 @@ class AdminController extends Controller
 		if ($numberOfPhases == $phaseRelativeId)
 		{
 			// Finished new phases
-			return 'done';
+			//return 'done';
 			return redirect('admin/project/dashboard');
 		}
 		else
@@ -382,7 +404,7 @@ class AdminController extends Controller
 				"eind"        => $phase->end->format('d/m/Y'),
 				"description" => $phase->description,
 				"data"        => [],
-				"id"		=> $phase->id,
+				"id"          => $phase->id,
 			];
 			foreach ($phase->questions as $question)
 			{
@@ -430,14 +452,15 @@ class AdminController extends Controller
 								//dump($answer);
 								//dd($questionArray);
 								$answerId = 0;
-								foreach ($questionArray["answers"] as $key => $answerR){
-									if($answerR["answer"] === $answer->answer)
+								foreach ($questionArray["answers"] as $key => $answerR)
+								{
+									if ($answerR["answer"] === $answer->answer)
 									{
 										$answerId = $key;
 										break;
 									}
 								}
-								if($answerId != 0)
+								if ($answerId != 0)
 								{
 									$questionArray["answers"][$answerId]["count"]++;
 									// Calculate percentage
@@ -474,12 +497,41 @@ class AdminController extends Controller
 		$user = Auth::user();
 		$token = JWTAuth::fromUser($user);
 
-			return view('admin.statistics', [
-				"project"      => $project,
-				"stats"        => $stats,
-				"ignoredWords" => $ignoredWords,
-				"token"        => $token,
-			]);
+		return view('admin.statistics', [
+			"project"      => $project,
+			"stats"        => $stats,
+			"ignoredWords" => $ignoredWords,
+			"token"        => $token,
+		]);
 
+	}
+
+	public function getStandardQuestions()
+	{
+		return view('admin.makeQuestion');
+	}
+
+	public function postStandardQuestions(Request $request)
+	{
+		$data = json_decode($request["data"], true);
+		$newDefault = DefaultQuestion::create([
+			"sort"     => $data["elements"][0]["sort"],
+			"question" => $data["elements"][0]["question"],
+			"width"    => $data["elements"][0]["options"]["width"],
+		]);
+
+		if (array_has($data["elements"][0], "answers") && count($data["elements"][0]["answers"]) > 0)
+		{
+			foreach ($data["elements"][0]["answers"] as $answer)
+			{
+				PossibleAnswer::create([
+					"default_question_id" => $newDefault->id,
+					"answer"              => $answer
+				]);
+			}
+		}
+
+		dd($data);
+		return view('admin.makeQuestion');
 	}
 }

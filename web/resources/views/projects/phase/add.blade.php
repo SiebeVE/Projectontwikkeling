@@ -2,7 +2,6 @@
 
 @section('pageCss')
 	<link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
-	<link href="{{ url('/') }}/css/main.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/3.2.3/sweetalert2.min.css">
 @endsection
 
@@ -40,6 +39,21 @@
 				{!! csrf_field() !!}
 				<input type="hidden" name="numberOfFields" id="numberOfFields" value="0">
 				<input type="hidden" class="hidden" name="token" id="token" value="{{ $token }}">
+				<div id="defaultQuestions" class="hidden">
+					@foreach($questions as $question)
+						<div class="default-question" data-id="{{$question->id}}">
+							<span data-sort="{{$question->sort}}"
+								  data-width="{{$question->width}}">{{$question->question}}</span>
+							@if(count($question->possibleAnswers) > 0)
+								<div class="possibleAnswers">
+									@foreach($question->possibleAnswers as $answer)
+										<span data-id="{{$answer->id}}">{{$answer->answer}}</span>
+									@endforeach
+								</div>
+							@endif
+						</div>
+					@endforeach
+				</div>
 				<div id="example-field" class="grid">
 					<div class="gutter-sizer"></div>
 					<div class="grid-size"></div>
@@ -49,9 +63,10 @@
 						<div class="form-group">
 							<b class="form-label">Wat wil je toevoegen?</b>
 							<div class="active controlsType" data-sort="question"><span><i class="fa fa-comment-o"
-																			  aria-hidden="true"></i> Vragen</span>
+																						   aria-hidden="true"></i> Vragen</span>
 							</div>
-							<div data-sort="media" class="controlsType"><span><i class="fa fa-picture-o" aria-hidden="true"></i> Media</span>
+							<div data-sort="media" class="controlsType"><span><i class="fa fa-picture-o"
+																				 aria-hidden="true"></i> Media</span>
 							</div>
 						</div>
 					</div>

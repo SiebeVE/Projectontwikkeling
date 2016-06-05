@@ -43,9 +43,9 @@
                     <div class="tab-content">
 
                         <div id="charts{{$dataPhase["id"]}}" class="tab-pane fade in active">
-                            <div class="col-sm-6 col-lg-offset-3 wordInputDiv">
-                                <input type="text" id="wordInput">
-                            </div>
+                            {{--<div class="col-sm-6 col-lg-offset-3 wordInputDiv">--}}
+                                {{--<input type="text" id="wordInput">--}}
+                            {{--</div>--}}
                             <div class="charts clearfix"></div>
                         </div>
                         <div id="questions{{$dataPhase["id"]}}" class="tab-pane fade">

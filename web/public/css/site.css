@@ -201,7 +201,7 @@ form[name=create] .upload #imagePlaceholder label,
 	font-size: 3em;
 }
 
-#input-specific-media .upload input
+.upload input
 {
 	display: none;
 }
