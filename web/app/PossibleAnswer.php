@@ -15,7 +15,8 @@ class PossibleAnswer extends Model
 	 */
 	protected $fillable = [
 		'answer',
-		'default_question_id'
+		'default_question_id',
+		'question_id'
 	];
 
 	/**

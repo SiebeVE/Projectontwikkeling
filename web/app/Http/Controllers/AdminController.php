@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\DefaultQuestion;
+use App\MultipleAnswerd;
 use App\PossibleAnswer;
 use App\Project;
+use App\Question;
 use App\User;
 use App\Word;
 use finfo;
@@ -179,7 +181,7 @@ class AdminController extends Controller
 
 		$project->tags()->attach($tagsId);
 		$flatArray = [];
-		if(isset($request["standardQuestions"]) && is_array($request["standardQuestions"]))
+		if (isset($request["standardQuestions"]) && is_array($request["standardQuestions"]))
 		{
 			$flatArray = array_flatten($request["standardQuestions"]);
 		}
@@ -229,6 +231,256 @@ class AdminController extends Controller
 			"questions" => $defaultQuestions,
 			"token"     => $token,
 		]);
+	}
+
+	/**
+	 * Get the page for editing a phase
+	 *
+	 * @param Project $project
+	 * @param $phaseNumber
+	 *
+	 * @return View
+	 */
+	public function getPhaseEdit(Project $project, $phaseNumber)
+	{
+		$projectWithRelations = $project->load('phases');
+		$requestedPhase = $projectWithRelations->phases[$phaseNumber - 1];
+
+		$user = Auth::user();
+		$token = JWTAuth::fromUser($user);
+
+		$defaultQuestions = $project->defaultQuestions()->with("possibleAnswers")->get();
+		$previousQuestions = $requestedPhase->questions()->with("possibleAnswers")->get();
+		//dump($previousQuestions);
+
+		$questions = $defaultQuestions->merge($previousQuestions);
+		$partedQuestions = ["default" => [], "previous" => []];
+
+		foreach ($questions as $question)
+		{
+			if (class_basename($question) == "DefaultQuestion")
+			{
+				$partedQuestions["default"][] = ["quest" => $question, "questId" => ""];
+			}
+			else if ($question->sort != "default")
+			{
+				$partedQuestions["previous"][] = $question;
+			}
+			else
+			{
+				foreach ($partedQuestions["default"] as $key => $defaultQuest)
+				{
+					if ($defaultQuest["quest"]->id == $question->default_question_id)
+					{
+						$partedQuestions["default"][$key]["questId"] = $question->id;
+						//dump($partedQuestions["default"][$key]);
+						break;
+					}
+				}
+			}
+		}
+		//dd($partedQuestions);
+
+		return view('projects.phase.edit', [
+			'phase'     => $requestedPhase,
+			"questions" => $partedQuestions,
+			"token"     => $token
+		]);
+	}
+
+	/**
+	 * Handle the request for editing a phase
+	 *
+	 * @param Request $request
+	 * @param Project $project
+	 * @param $phase
+	 *
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 */
+	public function postPhaseEdit(Request $request, Project $project, $phase)
+	{
+		//dump($request);
+		$phaseRelativeId = $phase;
+		// Check if request has data
+		$toValidate = ["data" => "required"];
+		$this->validate($request, $toValidate);
+
+		$data = json_decode($request->data, true);
+		//dump($data);
+
+		$projectPhases = $project->phases;
+		//dd($projectPhases[$phase+1]);
+		$phase = $projectPhases[$phase - 1];
+		$questions = $phase->questions()->with("possibleAnswers")->get();
+
+		if (array_has($data, "elements") && count($data["elements"]) > 0)
+		{
+			//dump($questions);
+			foreach ($questions as $questionKey => $question)
+			{
+				if (array_has($data["elements"], $question->id))
+				{
+					$currentRequestData = $data["elements"][$question->id];
+					$currentEditQuestion = Question::where("id", $question->id)->with("possibleAnswers")->first();
+					if ($currentEditQuestion->sort == $currentRequestData["sort"])
+					{
+						$phase->parentHeight = $data["parentHeight"];
+						$phase->save();
+
+						if ($currentRequestData["sort"] != "default")
+						{
+							$currentEditQuestion->question = $currentRequestData["question"];
+							$currentEditQuestion->leftOffset = $currentRequestData["options"]["left"];
+							$currentEditQuestion->topOffset = $currentRequestData["options"]["top"];
+							$currentEditQuestion->width = $currentRequestData["options"]["width"];
+
+							if (array_has($currentRequestData, "media"))
+							{
+								if ($currentRequestData["sort"] == "youtube")
+								{
+									$currentEditQuestion->media = $currentRequestData["media"];
+								}
+								else
+								{
+									$tempSaveFolderPhasePicture = "/images/tempPhases";
+									$hashImage = $currentRequestData["media"];
+									$publicSaveFolder = '/images/phases';
+									$finalSaveFolder = base_path('public' . $publicSaveFolder);
+									$extension = substr($hashImage, strrpos($hashImage, '.') + 1);
+									$newImageName = "phasePicture-" . $project->id . $phase->id . $questionKey . "." . $extension;
+									// Move picture and rename
+									rename(base_path('public' . $tempSaveFolderPhasePicture) . "/" . $hashImage, $finalSaveFolder . "/" . $newImageName);
+									//dump($publicSaveFolder . "/" . $newImageName);
+									$currentEditQuestion->media = $publicSaveFolder . "/" . $newImageName;
+								}
+							}
+							else if (array_has($currentRequestData, "answers"))
+							{
+								$currentPossibleAnswers = $currentEditQuestion->possibleAnswers;
+								//dump("pos ans");
+								//dump($currentPossibleAnswers);
+								if (count($currentPossibleAnswers) == count($currentRequestData["answers"]))
+								{
+									foreach ($currentPossibleAnswers as $keyAnswers => $possibleAnswer)
+									{
+										//dump($possibleAnswer);
+										//dump($possibleAnswer->answer);
+										//dump($currentRequestData["answers"][$keyAnswers]);
+										$possibleAnswer->answer = $currentRequestData["answers"][$keyAnswers];
+										$possibleAnswer->save();
+									}
+								}
+								else if (count($currentPossibleAnswers) > count($currentRequestData["answers"]))
+								{
+									$lastKey = 0;
+									foreach ($currentRequestData["answers"] as $keyAnswersN => $newAnswer)
+									{
+										//dump($newAnswer);
+										$currentPossibleAnswers[$keyAnswersN]->answer = $newAnswer;
+										$currentPossibleAnswers[$keyAnswersN]->save();
+										$lastKey = $keyAnswersN;
+									}
+									$lastKey++;
+									// Delete
+									for ($lastKeyCounter = $lastKey; count($currentPossibleAnswers) > $lastKeyCounter; $lastKeyCounter++)
+									{
+										$currentPossibleAnswers[$lastKeyCounter]->delete();
+									}
+								}
+								else
+								{
+									$lastKey = 0;
+									foreach ($currentPossibleAnswers as $keyAnswers => $possibleAnswer)
+									{
+										//dump($possibleAnswer);
+										//dump($possibleAnswer->answer);
+										//dump($currentRequestData["answers"][$keyAnswers]);
+										$possibleAnswer->answer = $currentRequestData["answers"][$keyAnswers];
+										$possibleAnswer->save();
+										$lastKey = $keyAnswers;
+									}
+									// Add new
+									$lastKey++;
+									//dump(count($currentRequestData["answers"]));
+									for ($lastKeyCounter = $lastKey; count($currentRequestData["answers"]) > $lastKeyCounter; $lastKeyCounter++)
+									{
+										$newPossible = PossibleAnswer::create([
+											"answer"      => $currentRequestData["answers"][$lastKeyCounter],
+											"question_id" => $question->id
+										]);
+
+									}
+								}
+								//dump($currentPossibleAnswers);
+							}
+
+							$currentEditQuestion->save();
+						}
+					}
+					else
+					{
+						// ignore (sort is different)
+					}
+					//dump($currentEditQuestion);
+				}
+				else
+				{
+					PossibleAnswer::where('question_id', $question->id)->delete();
+					$question->delete();
+				}
+			}
+
+			foreach ($data["elements"]["new"] as $question)
+			{
+				// Save the new question
+				$questionDatabase = $phase->questions()->create([
+					"sort"       => $question["sort"],
+					"question"   => $question["question"],
+					"leftOffset" => $question["options"]["left"],
+					"topOffset"  => $question["options"]["top"],
+					"width"      => $question["options"]["width"],
+				]);
+
+				if (array_has($question, "answers") && count($question["answers"]) > 0)
+				{
+					// Has multiple possible answers
+					foreach ($question["answers"] as $answer)
+					{
+						$possibleAnswer = $questionDatabase->possibleAnswers()->create([
+							"answer" => $answer
+						]);
+					}
+				}
+				if (array_has($question, "media") && $question["media"] != "")
+				{
+					if ($question["sort"] == "picture")
+					{
+						$tempSaveFolderPhasePicture = "/images/tempPhases";
+						$hashImage = $question["media"];
+						$publicSaveFolder = '/images/phases';
+						$finalSaveFolder = base_path('public' . $publicSaveFolder);
+						$extension = substr($hashImage, strrpos($hashImage, '.') + 1);
+						$newImageName = "phasePicture-" . $project->id . $phase->id . $questionKey . "." . $extension;
+						// Move picture and rename
+						rename(base_path('public' . $tempSaveFolderPhasePicture) . "/" . $hashImage, $finalSaveFolder . "/" . $newImageName);
+						//dump($publicSaveFolder . "/" . $newImageName);
+						$questionDatabase->media = $publicSaveFolder . "/" . $newImageName;
+					}
+					else
+					{
+						$questionDatabase->media = $question["media"];
+					}
+					$questionDatabase->save();
+				}
+			}
+		}
+		else
+		{
+			abort(412, "Er is geen data beschikbaar.");
+		}
+
+		//dd("finished");
+		return redirect('/project/beoordelen/'.$project->id);
 	}
 
 	/**
@@ -468,7 +720,7 @@ class AdminController extends Controller
 		$defaultQuestions = DefaultQuestion::get();
 		//dd($defaultQuestions);
 		return view('projects.dashboard', [
-			"projects" => $projects,
+			"projects"  => $projects,
 			"questions" => $defaultQuestions
 		]);
 	}

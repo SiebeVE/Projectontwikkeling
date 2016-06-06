@@ -226,6 +226,7 @@
 
 	$(function () {
 		var $children = $("#defaultQuestions").children(".default-question");
+		var $childrenPrevious = $("#defaultQuestions").children(".previous-question");
 		console.log("Kinderen: ");
 		console.log($children);
 		if ($children.length > 0) {
@@ -261,7 +262,7 @@
 				className = "grid-item--width" + widthOfBlock;
 
 				// Maken van blok
-				$newBlock = $("<div>").addClass(className).addClass("grid-item").data("width", widthOfBlock);
+				$newBlock = $("<div>").addClass(className).addClass("grid-item").data("width", widthOfBlock).data("previousBlockId", $currentChild.data("questid"));
 
 				inputName = "question-" + blockNumber;
 				switch (sort) {
@@ -338,11 +339,203 @@
 				var draggie = new Draggabilly($newBlock[ 0 ]);
 				// bind drag events to Packery
 				$grid.packery('bindDraggabillyEvents', draggie);
-
-				$grid.packery('shiftLayout');
 			});
 		}
+		if ($childrenPrevious.length > 0) {
+			$childrenPrevious.each(function () {
+				var $currentChild = $(this);
+				var $question = $currentChild.find("span").first();
+				var sort = $question.data("sort");
+				var width = $question.data("width");
+				var questionText = $question.text();
+
+				console.log("soort: " + sort);
+				console.log("width: " + width);
+				console.log("tekst" + questionText);
+
+				var blockNumber;
+				var $exampleField;
+				var widthOfBlock;
+				var question;
+				var className;
+				var $newBlock;
+				var inputName;
+				var $label;
+				var $input;
+
+				blockNumber = parseInt($("#numberOfFields").val()) + 1;
+				$("#numberOfFields").val(blockNumber);
+
+				$exampleField = $("#example-field");
+
+				widthOfBlock = width;
+				question = questionText;
+
+				className = "grid-item--width" + widthOfBlock;
+
+				// Maken van blok
+				$newBlock = $("<div>").addClass(className).addClass("grid-item").data("width", widthOfBlock).data("previousBlockId", $currentChild.data("id"));
+
+				inputName = "question-" + blockNumber;
+				switch (sort) {
+					case "text":
+						console.log("ok-text");
+						// Toevoegen van inputs
+						$label = $("<label>").addClass("form-label").text(question).attr("for", inputName).data("sort", sort).data("blocknumber", blockNumber);
+						$input = $("<input>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
+						console.log($label);
+						console.log($input);
+						break;
+					case "textarea":
+						console.log("ok-area");
+						// Toevoegen van inputs
+						$label = $("<label>").addClass("form-label").text(question).attr("for", inputName).data("sort", sort).data("blocknumber", blockNumber);
+						$input = $("<textarea>").addClass("form-control").attr("id", inputName).attr("name", inputName);
+						console.log($label);
+						console.log($input);
+						break;
+					case "radio":
+						console.log("ok-radio");
+						$label = $("<b>").addClass("form-label").text(question).data("sort", sort).data("blocknumber", blockNumber);
+						$input = $("<div>");
+						// get all posible answers
+						var $inputs = $question.next().find("span");
+						$inputs.each(function () {
+							if ($(this).text() != "") {
+								// Make label and checkbox for each answer
+								var $div = $("<div>").addClass("radio");
+								var $checkLabel = $("<label>").text($(this).text());
+								var $checkInput = $("<input>").attr("type", "radio").val($(this).text()).attr("name", inputName);
+
+								$checkLabel.prepend($checkInput);
+								$div.append($checkLabel);
+								$input.append($div);
+							}
+						});
+						break;
+					case "checkbox":
+						console.log("ok-check");
+						$label = $("<b>").addClass("form-label").text(question).data("sort", sort).data("blocknumber", blockNumber);
+						$input = $("<div>");
+						// get all posible answers
+						var $inputs = $question.next().find("span");
+						console.log("checking inputs");
+						console.log($inputs);
+						$inputs.each(function () {
+							if ($(this).text() != "") {
+								// Make label and checkbox for each answer
+								var $div = $("<div>").addClass("checkbox");
+								var $checkLabel = $("<label>").text($(this).text());
+								var $checkInput = $("<input>").attr("type", "checkbox").val($(this).text()).attr("name", inputName);
+
+								$checkLabel.prepend($checkInput);
+								$div.append($checkLabel);
+								$input.append($div);
+							}
+						});
+						break;
+					case "picture":
+						// Uploaden ajax picture
+
+						var $imagePlaceholder = $("<div>").addClass("imagePlaceholder");
+						// var $image = $("<img>");
+						console.log("Picture-------------")
+						console.log($(this));
+						// $image[0].src = $(this).data("media");
+						var $image = $("<img>").attr("src", $question.data("media"));
+						// $image.show();
+						$label = $("<b>").addClass("form-label").text($question.text()).data("sort", sort).data("blocknumber", blockNumber).data("imgpath", $question.data("media"));
+
+						$image[ 0 ].addEventListener("load", function () {
+							console.log("loaded image");
+							$grid.packery('shiftLayout');
+						});
+
+						// Toevoegen van inputs
+						$input = $("<div>").attr("id", inputName);
+
+						$imagePlaceholder.append($image);
+						$input.append($imagePlaceholder);
+
+						console.log($label);
+						console.log($input);
+						break;
+					case "youtube":
+						var youtubeUrl = "https://www.youtube.com/watch?v=" + $question.data("media");
+						var youtubeId = getYoutubeIdFromUrl(youtubeUrl);
+						if (youtubeId !== null) {
+							console.log(youtubeId);
+							// Toevoegen van inputs
+							$newBlock.data("youtubeurl", youtubeUrl);
+							$input = $("<div>").attr("id", inputName).addClass("youtubeVid").data("youtubeid", youtubeId);
+
+							$label = $("<b>").addClass("form-label").text($question.text()).data("sort", sort).data("blocknumber", blockNumber).data("youtubeid", youtubeId);
+							// $input = $("<input>").addClass("form-control").attr("type", "text").attr("id", inputName).attr("name", inputName);
+							console.log($label);
+							console.log($input);
+						}
+						break;
+				}
+
+				var $close = $("<div>").addClass("controls");
+				var $edit = $("<i>").addClass("fa").addClass("fa-pencil");
+				if (sort == "youtube" || sort == "picture") {
+					$edit.addClass("mediaControl");
+				}
+				var $cross = $("<i>").addClass("cross").addClass("fa").addClass("fa-times");
+				var $move = $("<i>").addClass("fa").addClass("fa-arrows");
+				$close.append($move).append($edit).append($cross);
+
+				$newBlock.append($close).append($label).append($input);
+				console.log($newBlock);
+
+				// Append new blok in examples
+				$grid.append($newBlock).packery('addItems', $newBlock);
+				console.log($exampleField);
+
+				// Make element draggable
+				var draggie = new Draggabilly($newBlock[ 0 ]);
+				// bind drag events to Packery
+				$grid.packery('bindDraggabillyEvents', draggie);
+
+				// if (sort == "youtube") {
+				// 	ytPlayers[ inputName ] = {
+				// 		inputid: inputName,
+				// 		videoId: youtubeId,
+				// 		playerVars: {
+				// 			showinfo: 0,
+				// 			rel: 0,
+				// 			wmode: "opaque"
+				// 		}
+				// 	};
+				// 	console.log($newBlock);
+				// 	$newBlock.fitVids();
+				// }
+			});
+		}
+		$grid.packery('layout');
 	});
+	window.onYouTubePlayerAPIReady = function () {
+		var hasVids = false;
+		$(".youtubeVid").each(function () {
+			hasVids = true;
+			var $currentVid = $(this);
+			var $parent = $currentVid.parent();
+			var currentId = $currentVid.attr("id");
+			var ytPlayer = new YT.Player(currentId, {
+				videoId: $currentVid.data("youtubeid"),
+				playerVars: {
+					showinfo: 0,
+					rel: 0,
+					wmode: "opaque"
+				}
+			});
+			$parent.fitVids();
+		});
+		if (hasVids) {
+			$grid.packery('layout');
+		}
+	};
 
 	$(".control-field").on("click", "#addBlock", function ( e ) {
 		console.log(e);
@@ -812,7 +1005,7 @@
 						var topOffset = $(itemElem).css("top");
 						var width = $(itemElem).data("width");
 
-						console.log("default id"+$question.data("defaultid"));
+						console.log("default id" + $question.data("defaultid"));
 
 						if ($question.data("defaultid") == undefined) {
 							var questionText = $question.text();
@@ -866,6 +1059,128 @@
 							};
 						}
 						formData.elements[ i ] = newElement;
+					});
+					console.log(formData);
+
+					// Make dummy form for sending builded json
+					var $dummyForm = $("<form>").attr("method", "POST");
+					var $dummyInput = $("<input>").attr("name", "data").val(JSON.stringify(formData));
+					// Fetch the csrf token
+					var $token = $("input[name=_token]").clone();
+					$dummyForm.append($dummyInput).append($token);
+					$("body").append($dummyForm);
+					$dummyForm.submit();
+				}
+			});
+		}
+	});
+
+	$("form[name=editPhase]").submit(function ( e ) {
+		if (!pictureSubmit) {
+			e.preventDefault();
+			e.stopPropagation();
+			swal({
+				title: 'Fase aanpassen',
+				text: "Ben je zeker dat je de fase wil aanpassen?",
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Ja, aanpassen die handel!',
+				cancelButtonText: 'Nee, ik ben nog iets vergeten!',
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger',
+				buttonsStyling: false
+			}).then(function ( isConfirm ) {
+				if (isConfirm === true) {
+					console.log("Form submited");
+					var itemElems = $grid.packery('getItemElements');
+
+					// Get height of parent
+					var parentHeight = $("#example-field").css("height");
+					var formData = {
+						parentHeight: parentHeight,
+						elements: {
+							new: [],
+						}
+					};
+					console.log(formData);
+					// Make json of the elements
+					$(itemElems).each(function ( i, itemElem ) {
+						var $question = $(itemElem).find(".form-label").first();
+						var $answers = $question.next();
+						console.log("questions");
+						console.log($question);
+						console.log("answers");
+						console.log($answers);
+						var newElement;
+						var leftOffset = ((parseInt($(itemElem).css("left")) / $("#example-field").width() * 100).toFixed(4)) + "%";
+						var topOffset = $(itemElem).css("top");
+						var width = $(itemElem).data("width");
+
+						console.log("default id" + $question.data("defaultid"));
+
+						if ($question.data("defaultid") == undefined) {
+							var questionText = $question.text();
+							var sortQuestion = $question.data("sort");
+
+							newElement = {
+								sort: sortQuestion,
+								question: questionText,
+								options: {
+									left: leftOffset,
+									top: topOffset,
+									width: width
+								}
+							};
+
+							if ($(itemElem).data("previousBlockId") != undefined) {
+								newElement.previousId = $(itemElem).data("previousBlockId");
+							}
+
+							console.log(newElement);
+
+							switch (sortQuestion) {
+								case "picture":
+									newElement.media = $answers.find("img").data("filename");
+									console.log($answers.find("img").data("filename"));
+									break;
+								case "youtube":
+									newElement.media = $question.data("youtubeid");
+									console.log($question.data("youtubeid"));
+									break;
+								case "checkbox":
+								case "radio":
+									newElement.answers = {};
+									// Loop through divs with checkbox
+									$answers.children().each(function ( i ) {
+										console.log("antwoord: " + i);
+										var answer = $(this).find("label").first().text();
+										console.log(answer);
+										newElement.answers[ i ] = answer;
+									});
+									break;
+							}
+
+							console.log("*******************");
+							// console.log(newElement);
+						}
+						else {
+							newElement = {
+								sort: "default",
+								defaultid: $question.data("defaultid"),
+								options: {
+									left: leftOffset,
+									top: topOffset
+								}
+							};
+						}
+						if ($(itemElem).data("previousBlockId") == undefined) {
+							formData.elements.new.push(newElement);
+						}
+						else {
+							formData.elements[ $(itemElem).data("previousBlockId") ] = newElement;
+						}
 					});
 					console.log(formData);
 
