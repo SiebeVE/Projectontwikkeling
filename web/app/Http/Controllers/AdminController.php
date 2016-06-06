@@ -840,6 +840,46 @@ class AdminController extends Controller
 		]);
 	}
 
+	private function recursiveRelation($fullProject, $newProject)
+	{
+		foreach ($fullProject->getRelations() as $relation => $items)
+		{
+			dump($relation);
+			dump($items);
+			foreach ($items as $item)
+			{
+				unset($item->id);
+				$newItem = $newProject->{$relation}()->create($item->toArray());
+				if (count($fullProject->getRelations()) > 0)
+				{
+					$this->recursiveRelation($item, $newItem);
+				}
+			}
+		}
+	}
+
+	public function handleCloneProject(Project $project)
+	{
+		$fullProject = $project->load('phases.questions.possibleAnswers');
+		$newProject = $fullProject->replicate();
+		$newProject->push();
+		$newProject->user_id = Auth::user()->id;
+		$this->recursiveRelation($fullProject, $newProject);
+		$projectWithTags = $project->load("tags", "defaultQuestions");
+		foreach ($projectWithTags->getRelation("tags") as $relation=>$value)
+		{
+			$newProject->tags()->create($value->toArray());
+		}
+		foreach ($projectWithTags->getRelation("defaultQuestions") as $relation=>$value)
+		{
+			$newProject->defaultQuestions()->create($value->toArray());
+		}
+		$newProject->save();
+		//dump($newProject);
+		//dd("finished");
+		return redirect('/admin/project/dashboard');
+	}
+
 	/**
 	 * Get the page of the admin panel
 	 *

@@ -56,6 +56,7 @@
 											class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 								<a href="{{ url('/admin/project/statistieken', $project->id) }}"><i
 											class="fa fa-pie-chart" aria-hidden="true"></i></a>
+								<a href="{{url('/admin/project/kloon', $project->id)}}"><i class="fa fa-files-o" aria-hidden="true"></i></a>
 							</td>
 						</tr>
 					@endforeach
