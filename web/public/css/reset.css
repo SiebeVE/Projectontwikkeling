@@ -37,7 +37,7 @@
 	/*line-height: 1;*/
 /*}*/
 
-.timelineBS ol, .timelineBS ul
+.timelineBS  ol, .timelineBS .timeline ul
 {
 	margin: 0;
 	padding: 0;

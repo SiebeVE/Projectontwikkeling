@@ -284,7 +284,8 @@ class AdminController extends Controller
 		return view('projects.phase.edit', [
 			'phase'     => $requestedPhase,
 			"questions" => $partedQuestions,
-			"token"     => $token
+			"token"     => $token,
+			"projectId" => $project->id
 		]);
 	}
 
@@ -480,7 +481,117 @@ class AdminController extends Controller
 		}
 
 		//dd("finished");
-		return redirect('/project/beoordelen/'.$project->id);
+		return redirect('/admin/project/dashboard');
+	}
+
+	/**
+	 * @param $question
+	 *
+	 * @return View
+	 */
+	public function getEditStandardQuestions(DefaultQuestion $question)
+	{
+		return view('projects.editQuestion', ["question" => $question->load("possibleAnswers")]);
+	}
+
+	/**
+	 * @param Request $request
+	 * @param DefaultQuestion $question
+	 *
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 */
+	public function postEditStandardQuestions(Request $request, DefaultQuestion $question)
+	{
+		$toValidate = ["data" => "required"];
+		$this->validate($request, $toValidate);
+
+		$data = json_decode($request->data, true);
+		//dump($data);
+
+		$newElement = $data["elements"][0];
+		if (array_has($data, "elements") && count($newElement) > 0)
+		{
+			$currentEditQuestion = $question;
+			if ($currentEditQuestion->sort == $newElement["sort"])
+			{
+				$currentEditQuestion->question = $newElement["question"];
+				$currentEditQuestion->width = $newElement["options"]["width"];
+
+				if (array_has($newElement, "answers"))
+				{
+					$currentPossibleAnswers = $currentEditQuestion->possibleAnswers;
+					//dump("pos ans");
+					//dump($currentPossibleAnswers);
+					if (count($currentPossibleAnswers) == count($newElement["answers"]))
+					{
+						foreach ($currentPossibleAnswers as $keyAnswers => $possibleAnswer)
+						{
+							//dump($possibleAnswer);
+							//dump($possibleAnswer->answer);
+							//dump($newElement["answers"][$keyAnswers]);
+							$possibleAnswer->answer = $newElement["answers"][$keyAnswers];
+							$possibleAnswer->save();
+						}
+					}
+					else if (count($currentPossibleAnswers) > count($newElement["answers"]))
+					{
+						$lastKey = 0;
+						foreach ($newElement["answers"] as $keyAnswersN => $newAnswer)
+						{
+							//dump($newAnswer);
+							$currentPossibleAnswers[$keyAnswersN]->answer = $newAnswer;
+							$currentPossibleAnswers[$keyAnswersN]->save();
+							$lastKey = $keyAnswersN;
+						}
+						$lastKey++;
+						// Delete
+						for ($lastKeyCounter = $lastKey; count($currentPossibleAnswers) > $lastKeyCounter; $lastKeyCounter++)
+						{
+							$currentPossibleAnswers[$lastKeyCounter]->delete();
+						}
+					}
+					else
+					{
+						//dump("nieuwe");
+						$lastKey = 0;
+						foreach ($currentPossibleAnswers as $keyAnswers => $possibleAnswer)
+						{
+							//dump($possibleAnswer);
+							//dump($possibleAnswer->answer);
+							//dump($newElement["answers"][$keyAnswers]);
+							$possibleAnswer->answer = $newElement["answers"][$keyAnswers];
+							$possibleAnswer->save();
+							$lastKey = $keyAnswers;
+						}
+						// Add new
+						$lastKey++;
+						//dump(count($newElement["answers"]));
+						for ($lastKeyCounter = $lastKey; count($newElement["answers"]) > $lastKeyCounter; $lastKeyCounter++)
+						{
+							$newPossible = PossibleAnswer::create([
+								"answer"              => $newElement["answers"][$lastKeyCounter],
+								"default_question_id" => $question->id
+							]);
+
+						}
+					}
+					//dump($currentPossibleAnswers);
+				}
+
+				$currentEditQuestion->save();
+			}
+			else
+			{
+				// ignore (sort is different)
+			}
+			//dump($currentEditQuestion);
+		}
+		else
+		{
+			abort(412, "Er is geen data beschikbaar.");
+		}
+
+		return redirect('/admin/project/dashboard');
 	}
 
 	/**
@@ -527,7 +638,8 @@ class AdminController extends Controller
 	 *
 	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
 	 */
-	public function postPhaseMake(Request $request, Project $project, $phase)
+	public
+	function postPhaseMake(Request $request, Project $project, $phase)
 	{
 		$phaseRelativeId = $phase;
 		// Check if request has data
@@ -636,7 +748,8 @@ class AdminController extends Controller
 	 *
 	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
 	 */
-	public function update(Request $request, Project $project)
+	public
+	function update(Request $request, Project $project)
 	{
 
 		$this->saveImage($request, $project);
@@ -701,7 +814,8 @@ class AdminController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit(Project $project)
+	public
+	function edit(Project $project)
 	{
 		$phases = $project->phases;
 		$tags = $project->tags;
@@ -714,7 +828,8 @@ class AdminController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function dashboard()
+	public
+	function dashboard()
 	{
 		$projects = Project::all();
 		$defaultQuestions = DefaultQuestion::get();
@@ -730,7 +845,8 @@ class AdminController extends Controller
 	 *
 	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
 	 */
-	public function getPanel()
+	public
+	function getPanel()
 	{
 		// Get all users
 		$users = User::orderBy('is_admin', 'desc')->orderBy('lastname', 'asc')->orderBy('firstname', 'asc')->get();
@@ -748,7 +864,8 @@ class AdminController extends Controller
 	 *
 	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
 	 */
-	public function getStats(Project $project)
+	public
+	function getStats(Project $project)
 	{
 		$stats = NULL;
 		$fullProject = $project->load('phases.questions.answers.multipleAnswerdes', 'phases.questions.possibleAnswers');
@@ -881,7 +998,8 @@ class AdminController extends Controller
 	 *
 	 * @return View
 	 */
-	public function getStandardQuestions()
+	public
+	function getStandardQuestions()
 	{
 		return view('admin.makeQuestion');
 	}
@@ -893,7 +1011,8 @@ class AdminController extends Controller
 	 *
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	public function postStandardQuestions(Request $request)
+	public
+	function postStandardQuestions(Request $request)
 	{
 		$data = json_decode($request["data"], true);
 		$newDefault = DefaultQuestion::create([
@@ -915,5 +1034,108 @@ class AdminController extends Controller
 
 		//dd($data);
 		return redirect()->action("AdminController@dashboard");
+	}
+
+	public function saveImage(Request $request, Project $project)
+	{
+		$notAnImage = false;
+		$allowedExtensions = ["jpeg", "png"]; // from mime type => after the slash
+
+		$tempSaveFolder = base_path('public/images/tempProject');
+		$publicSaveFolder = '/images/project/head';
+		$finalSaveFolder = base_path('public' . $publicSaveFolder);
+
+		// Image handler, check if real image and upload to temp
+		if ($request->hasFile('image') && $request->file('image')->isValid())
+		{
+			$file = $request->file('image')->getRealPath();
+			$fileInfo = getimagesize($file);
+
+			if ($fileInfo)
+			{
+				// Get real mime type
+				$finfo = new finfo(FILEINFO_MIME_TYPE);
+				$mime = $finfo->buffer(file_get_contents($file));
+				$extension = substr($mime, strrpos($mime, '/') + 1);
+
+				if (in_array($extension, $allowedExtensions))
+				{
+					$image = file_get_contents($request->file('image')->getRealPath());
+					$hashImage = md5($image) . time();
+
+					$nameFile = $hashImage . "." . $extension;
+					$request->file('image')->move($tempSaveFolder, $nameFile);
+					//Storage::disk('tempUploads')->put($hashImage . "." . $extension, $image);
+
+					$request->merge(array("hashImage" => $nameFile)); //Put hash in hidden input field
+					//$request->hashImage = $hashImage;
+				}
+				else
+				{
+					$notAnImage = true;
+				}
+
+			}
+			else
+			{
+				$notAnImage = true;
+			}
+		}
+
+		if ($notAnImage || $request->hashImage == "")
+		{
+			// When the file has failed on mime or php getimagesize
+			return redirect("admin/project/maken")->withErrors(["U moet een foto toevoegen."])->withInput();
+		}
+
+		// Move picture and rename and save path in database
+		$extension = substr($request->hashImage, strrpos($request->hashImage, '.') + 1);
+		$newImageName = "projectHead" . $project->id . "." . $extension;
+		rename($tempSaveFolder . "/" . $request->hashImage, $finalSaveFolder . "/" . $newImageName);
+
+		$project->photo_path = $publicSaveFolder . "/" . $newImageName;
+	}
+
+	public function addTags(Request $request, Project $project)
+	{
+		//save tags with associated project
+		$project_tags = $request->input('tags');
+
+		$all_tags = Tag::all();
+
+		$tagsId = array();
+		$tag_doesnt_exist = true;
+
+		foreach ($project_tags as $project_tag)
+		{
+			foreach ($all_tags as $all_tag)
+			{
+				if ($all_tag->name == $project_tag)
+				{
+					array_push($tagsId, $all_tag->id);
+					$tag_doesnt_exist = false;
+				}
+			}
+
+			if ($tag_doesnt_exist)
+			{
+				$newTag = Tag::create(['name' => $project_tag]);
+				//$newTag = DB::table('tags')->select('id')->where('name', '=', $project_tag);
+				$newTagId = $newTag->id;
+
+				array_push($tagsId, $newTagId);
+			}
+
+			$tag_doesnt_exist = true;
+		}
+
+		$cur_ids = array();
+		foreach ($project->tags() as $tag)
+		{
+			$cur_ids[] = $tag->id;
+		}
+
+		$project->tags()->detach($cur_ids);
+		$project->tags()->attach($tagsId);
 	}
 }

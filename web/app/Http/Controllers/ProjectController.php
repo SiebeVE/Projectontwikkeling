@@ -160,26 +160,120 @@ class ProjectController extends Controller
 	 */
 	public function getOpinion(Project $project)
 	{
-		$project = $project->load('phases.questions.possibleAnswers');
+		//$project = $project->load('phases.questions.possibleAnswers');
+		$project = $project->load('phases.questions.answers.multipleAnswerdes', 'phases.questions.possibleAnswers');
 		//dd($project);
 
 		//$C_now = Carbon::now();
 
 		$currentPhase = $project->getCurrentPhase();
 
+		$stats = NULL;
+
 		if ($currentPhase != NULL)
 		{
 			// Build array for phases
 			$phasesArr = [];
-			foreach ($project->phases as $phase)
+			foreach ($project->phases as $keyPhase => $phase)
 			{
 				$phasesArr[] = [
 					"name"         => $phase->name,
+					"id"           => $phase->id,
 					"description"  => $phase->description,
+					"data"         => [],
 					"start"        => $phase->start,
 					"end"          => $phase->end,
 					"currentPhase" => $currentPhase == $phase,
 				];
+				foreach ($phase->questions as $question)
+				{
+					// [ "word" => count number]
+					$wordsArray = [];
+
+					$totalAnswers = count($question->answers);
+					if ($question->sort == "default")
+					{
+						$defQuestion = DefaultQuestion::where('id', $question->default_question_id)->with("possibleAnswers")->first();
+						$question->sort = $defQuestion->sort;
+						$question->possibleAnswers = $defQuestion->possibleAnswers;
+						$question->question = $defQuestion->question;
+					}
+					$questionArray = [
+						"type"         => $question->sort,
+						"totalAnswers" => $totalAnswers,
+						"answers"      => [],
+
+					];
+					switch ($question->sort)
+					{
+						case "radio":
+						case "checkbox":
+							// Count the answers
+							foreach ($question->possibleAnswers as $possibleAnswer)
+							{
+								//dump($possibleAnswer);
+								$questionArray["answers"][$possibleAnswer->id] = [
+									"answer"     => $possibleAnswer->answer,
+									"count"      => 0,
+									"percentage" => 0,
+								];
+							}
+
+							foreach ($question->answers as $answer)
+							{
+								//dump($answer);
+								if ($answer->multipleAnswers == "1" && $answer->answer == NULL)
+								{
+									// Checkbox
+									foreach ($answer->multipleAnswerdes as $multiAnswer)
+									{
+										//dump($multiAnswer);
+										$questionArray["answers"][$multiAnswer->possible_answer_id]["count"]++;
+										// Calculate percentage
+										$percentage = floor(($questionArray["answers"][$multiAnswer->possible_answer_id]["count"] / $totalAnswers) * 100);
+										$questionArray["answers"][$multiAnswer->possible_answer_id]["percentage"] = $percentage;
+									}
+								}
+								else
+								{
+									//dump($answer);
+									//dd($questionArray);
+									$answerId = 0;
+									foreach ($questionArray["answers"] as $key => $answerR)
+									{
+										if ($answerR["answer"] === $answer->answer)
+										{
+											$answerId = $key;
+											break;
+										}
+									}
+									if ($answerId != 0)
+									{
+										$questionArray["answers"][$answerId]["count"]++;
+										// Calculate percentage
+										$percentage = floor(($questionArray["answers"][$answerId]["count"] / $totalAnswers) * 100);
+										$questionArray["answers"][$answerId]["percentage"] = $percentage;
+									}
+								}
+							}
+							break;
+						case "text":
+						case "textarea":
+							foreach ($question->answers as $answer)
+							{
+								// Just add them
+								$questionArray["answers"][] = $answer->answer;
+
+								// Smart count function ==> put in projectController, postOpinion
+								$wordsArray = unserialize($question->word_count);
+								//dump($wordsArray);
+							}
+							$questionArray["counted"] = $wordsArray;
+							break;
+					}
+					$phasesArr[$keyPhase]["data"][$question->question] = $questionArray;
+				}
+				$stats[$phase->name] = $phasesArr;
 			}
 			// Build the array for the questions
 			$questionsArr = [
@@ -190,7 +284,7 @@ class ProjectController extends Controller
 			];
 			foreach ($currentPhase->questions as $questionNumber => $question)
 			{
-				if($question->sort == "default")
+				if ($question->sort == "default")
 				{
 					$defQuestion = DefaultQuestion::where('id', $question->default_question_id)->with("possibleAnswers")->first();
 					//dd($defQuestion);
@@ -220,11 +314,14 @@ class ProjectController extends Controller
 					$questionsArr["elements"][$questionNumber]["media"] = $question->media;
 				}
 			}
+			$ignoredWords = Word::get();
 			//dd($phasesArr);
 			return view('projects.giveOpinion', [
-				"data"    => $questionsArr,
-				"phases"  => $phasesArr,
-				"project" => $project,
+				"data"         => $questionsArr,
+				"phases"       => $phasesArr,
+				"dataPhase"    => $stats,
+				"project"      => $project,
+				"ignoredWords" => $ignoredWords,
 			]);
 		}
 		abort(404, "Geen huidige phase gevonden");
@@ -261,7 +358,7 @@ class ProjectController extends Controller
 
 				$defaultQuestion = false;
 				$newSort = "";
-				if($question->sort == "default")
+				if ($question->sort == "default")
 				{
 					$defQuestion = DefaultQuestion::where('id', $question->default_question_id)->first();
 					$defaultQuestion = true;
@@ -331,109 +428,6 @@ class ProjectController extends Controller
 		dd($request);
 	}
 
-	public function saveImage(Request $request, Project $project)
-	{
-		$notAnImage = false;
-		$allowedExtensions = ["jpeg", "png"]; // from mime type => after the slash
-
-		$tempSaveFolder = base_path('public/images/tempProject');
-		$publicSaveFolder = '/images/project/head';
-		$finalSaveFolder = base_path('public' . $publicSaveFolder);
-
-		// Image handler, check if real image and upload to temp
-		if ($request->hasFile('image') && $request->file('image')->isValid())
-		{
-			$file = $request->file('image')->getRealPath();
-			$fileInfo = getimagesize($file);
-
-			if ($fileInfo)
-			{
-				// Get real mime type
-				$finfo = new finfo(FILEINFO_MIME_TYPE);
-				$mime = $finfo->buffer(file_get_contents($file));
-				$extension = substr($mime, strrpos($mime, '/') + 1);
-
-				if (in_array($extension, $allowedExtensions))
-				{
-					$image = file_get_contents($request->file('image')->getRealPath());
-					$hashImage = md5($image) . time();
-
-					$nameFile = $hashImage . "." . $extension;
-					$request->file('image')->move($tempSaveFolder, $nameFile);
-					//Storage::disk('tempUploads')->put($hashImage . "." . $extension, $image);
-
-					$request->merge(array("hashImage" => $nameFile)); //Put hash in hidden input field
-					//$request->hashImage = $hashImage;
-				}
-				else
-				{
-					$notAnImage = true;
-				}
-
-			}
-			else
-			{
-				$notAnImage = true;
-			}
-		}
-
-		if ($notAnImage || $request->hashImage == "")
-		{
-			// When the file has failed on mime or php getimagesize
-			return redirect("admin/project/maken")->withErrors(["U moet een foto toevoegen."])->withInput();
-		}
-
-		// Move picture and rename and save path in database
-		$extension = substr($request->hashImage, strrpos($request->hashImage, '.') + 1);
-		$newImageName = "projectHead" . $project->id . "." . $extension;
-		rename($tempSaveFolder . "/" . $request->hashImage, $finalSaveFolder . "/" . $newImageName);
-
-		$project->photo_path = $publicSaveFolder . "/" . $newImageName;
-	}
-
-	public function addTags(Request $request, Project $project)
-	{
-		//save tags with associated project
-		$project_tags = $request->input('tags');
-
-		$all_tags = Tag::all();
-
-		$tagsId = array();
-		$tag_doesnt_exist = true;
-
-		foreach ($project_tags as $project_tag)
-		{
-			foreach ($all_tags as $all_tag)
-			{
-				if ($all_tag->name == $project_tag)
-				{
-					array_push($tagsId, $all_tag->id);
-					$tag_doesnt_exist = false;
-				}
-			}
-
-			if ($tag_doesnt_exist)
-			{
-				$newTag = Tag::create(['name' => $project_tag]);
-				//$newTag = DB::table('tags')->select('id')->where('name', '=', $project_tag);
-				$newTagId = $newTag->id;
-
-				array_push($tagsId, $newTagId);
-			}
-
-			$tag_doesnt_exist = true;
-		}
-
-		$cur_ids = array();
-		foreach ($project->tags() as $tag)
-		{
-			$cur_ids[] = $tag->id;
-		}
-
-		$project->tags()->detach($cur_ids);
-		$project->tags()->attach($tagsId);
-	}
-
 	public function getStats(Project $project)
 	{
 		$stats = NULL;
@@ -454,6 +448,13 @@ class ProjectController extends Controller
 				$wordsArray = [];
 
 				$totalAnswers = count($question->answers);
+				if ($question->sort == "default")
+				{
+					$defQuestion = DefaultQuestion::where('id', $question->default_question_id)->with("possibleAnswers")->first();
+					$question->sort = $defQuestion->sort;
+					$question->possibleAnswers = $defQuestion->possibleAnswers;
+					$question->question = $defQuestion->question;
+				}
 				$questionArray = [
 					"type"         => $question->sort,
 					"totalAnswers" => $totalAnswers,

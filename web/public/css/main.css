@@ -541,6 +541,12 @@ i.fa.fa-facebook-official, i.fa.fa-twitter
 	display: block;
 }
 
+.containerPhase #cancel.text-danger
+{
+	padding: .8em;
+	margin-top:1.5em;
+}
+
 .projectoverzicht .imagePlaceholder,
 .giveOpinion .imagePlaceholder
 {

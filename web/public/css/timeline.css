@@ -52,8 +52,8 @@ body
 
 a
 {
-	color: #7B9D6F;
-	text-decoration: none;
+	/*color: #7B9D6F;*/
+	/*text-decoration: none;*/
 }
 
 /* --------------------------------
@@ -149,7 +149,7 @@ Main Components
 	top: 0;
 	height: 100%;
 	width: 100%;
-	background-color: #7B9D6F;
+	background-color: #0064B4;
 	-webkit-transform: scaleX(0);
 	-moz-transform: scaleX(0);
 	-ms-transform: scaleX(0);
@@ -337,7 +337,7 @@ Main Components
 	transition: height 0.4s;
 }
 
-.cd-horizontal-timeline .events-content li
+.cd-horizontal-timeline .events-content ol > li
 {
 	position: absolute;
 	z-index: 1;
@@ -393,7 +393,7 @@ Main Components
 	animation-direction: reverse;
 }
 
-.cd-horizontal-timeline .events-content li > *
+.cd-horizontal-timeline .events-content li > *:not(a)
 {
 	margin: 0 auto 1em 0;
 }
@@ -425,17 +425,17 @@ Main Components
 {
 	.cd-horizontal-timeline .events-content h2
 	{
-		font-size: 7rem;
+		/*font-size: 7rem;*/
 	}
 
 	.cd-horizontal-timeline .events-content em
 	{
-		font-size: 2rem;
+		/*font-size: 2rem;*/
 	}
 
 	.cd-horizontal-timeline .events-content p
 	{
-		font-size: 1.8rem;
+		/*font-size: 1.8rem;*/
 	}
 }
 

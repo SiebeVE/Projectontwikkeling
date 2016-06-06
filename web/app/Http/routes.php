@@ -90,6 +90,9 @@ Route::group(['middleware' => 'web'], function ()
 
 		Route::get('vragen/maken', 'AdminController@getStandardQuestions');
 		Route::post('vragen/maken', 'AdminController@postStandardQuestions');
+
+		Route::get('vragen/bewerk/{question}', 'AdminController@getEditStandardQuestions');
+		Route::post('vragen/bewerk/{question}', 'AdminController@postEditStandardQuestions');
 	});
 });
 

@@ -104,11 +104,12 @@
                     <h2>Fases bewerken</h2>
                     <div class="phase">
                         <ul>
-                            @foreach($phases as $phase){{--
+                            @foreach($phases as $key => $phase)
+                                {{--
                                 <li>
                                     <input type="checkbox" id="cb{{ $phase->id }}"/>
                                     <label for="cb{{ $phase->id }}" class="label-header">{{ $phase->name }}</label>--}}
-                                    @include('projects/phase-edit', ['phase' => $phase])
+                                    @include('projects/phase-edit', ['phase' => $phase, 'key' => $key])
                               {{--  </li>--}}
                             @endforeach
                             {{--<li>

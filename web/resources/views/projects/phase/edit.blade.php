@@ -41,7 +41,8 @@
 				<input type="hidden" class="hidden" name="token" id="token" value="{{ $token }}">
 				<div id="defaultQuestions" class="hidden">
 					@foreach($questions["default"] as $question)
-						<div class="default-question" data-id="{{$question["quest"]->id}}" data-questid="{{$question["questId"]}}">
+						<div class="default-question" data-id="{{$question["quest"]->id}}"
+							 data-questid="{{$question["questId"]}}">
 							<span data-sort="{{$question["quest"]->sort}}"
 								  data-width="{{$question["quest"]->width}}">{{$question["quest"]->question}}</span>
 							@if(count($question["quest"]->possibleAnswers) > 0)
@@ -57,7 +58,7 @@
 						<div class="previous-question" data-id="{{$question->id}}">
 							<span data-sort="{{$question->sort}}"
 								  @if($question->sort == "youtube" || $question->sort=="picture")
-										  data-media="{{$question->media}}"
+								  data-media="{{$question->media}}"
 								  @endif
 								  data-width="{{$question->width}}">{{$question->question}}</span>
 							@if(count($question->possibleAnswers) > 0)
@@ -91,10 +92,10 @@
 							<label for="sortQuestion">Kies je soort vraag</label>
 							<select id="sortQuestion" name="sortQuestion">
 								<option value="choose" selected disabled>Maak een keuze</option>
-								<option value="text">Open vraag 1 regel</option>
-								<option value="textarea">Open vraag meerdere regels</option>
-								<option value="checkbox">Meerkeuze vraag</option>
-								<option value="radio">Enkele keuze</option>
+								<option value="text">Open vraag - 1 regel</option>
+								<option value="textarea">Open vraag - Meerdere regels</option>
+								<option value="radio">Meerkeuze vraag - 1 keuze</option>
+								<option value="checkbox">Meerkeuze vraag - meerdere keuzes</option>
 							</select>
 						</div>
 						<div class="form-group">
@@ -129,7 +130,10 @@
 						<a id="cancel-block-media" class="text-danger">Annuleer blok aanpassen</a>
 					</div>
 				</div>
-				<button type="submit" class="btn btn-succes createButton pull-right">Fase aanpassen</button>
+				<div>
+					<button type="submit" class="btn btn-succes createButton pull-right">Fase aanpassen</button>
+					<a id="cancel" href="{{url('/admin/project/bewerk/'.$projectId)}}" class="text-danger pull-right">Annuleer</a>
+				</div>
 			</form>
 		</div>
 	</div>

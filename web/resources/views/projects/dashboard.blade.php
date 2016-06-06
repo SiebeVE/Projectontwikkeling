@@ -83,7 +83,7 @@
 							<td>{{ $question->question }}</td>
 							<td>{{ $question->sort }}</td>
 							<td>
-								<a href="{{ url('/admin/project/bewerk', $question->id) }}"><i
+								<a href="{{ url('/admin/vragen/bewerk', $question->id) }}"><i
 											class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 							</td>
 						</tr>
